@@ -97,7 +97,7 @@ const getActiveStep = (data: UserData) => {
 export default function ProgressBar() {
   const context = useData()
 
-  const activeStep = context?.data ? getActiveStep(context?.data) : 0
+  const activeStep = context?.data ? getActiveStep(context?.data.user) : 0
 
   return (
     <div style={{ padding: '3em' }}>

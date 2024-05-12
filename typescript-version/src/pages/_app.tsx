@@ -30,6 +30,9 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 // ** Global css styles
 import '../../styles/globals.css'
 import HypotecarLayoutWrapper from 'src/layouts/HipotecarLayoutWrapper'
+import { Credit, banksCsvUrl, creditsCsvUrl, loadDataFromCSV } from 'src/configs/constants'
+import { useEffect, useState } from 'react'
+import { useAsync } from 'react-async'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
@@ -71,8 +74,8 @@ const App = (props: ExtendedAppProps) => {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>{`HipotecAR - Tu aliado para surfear la ola de creditos`}</title>
-        <meta name='description' content={`HipotecAR - Tu aliado para surfear la ola de creditos`} />
+        <title>{`Mi credito hipotecario - Tu aliado para surfear la ola de creditos`}</title>
+        <meta name='description' content={`Mi credito hipotecario - Tu aliado para surfear la ola de creditos`} />
         <meta name='keywords' content='Hipotecas, Creditos Hipotecarios, Argentina' />
         <meta name='viewport' content='initial-scale=1, width=device-width' />
       </Head>

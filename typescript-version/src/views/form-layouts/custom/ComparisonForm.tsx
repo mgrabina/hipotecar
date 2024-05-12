@@ -1,5 +1,5 @@
 // ** React Imports
-import { ChangeEvent, MouseEvent, useState, SyntheticEvent } from 'react'
+import { ChangeEvent, MouseEvent, useState, SyntheticEvent, useEffect } from 'react'
 
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
@@ -22,58 +22,56 @@ import TableContainer from '@mui/material/TableContainer'
 // ** Icons Imports
 import EyeOutline from 'mdi-material-ui/EyeOutline'
 import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
-import { Checkbox, FormControlLabel, FormGroup } from '@mui/material'
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Link
+} from '@mui/material'
 import { useRouter } from 'next/router'
-import { TimerOutline } from 'mdi-material-ui'
-import { Credits, credits } from 'src/configs/credits'
-import { useData } from 'src/@core/layouts/HipotecarLayout'
+import {
+  ArrowDown,
+  ArrowDownBoldOutline,
+  ExpandAll,
+  ExpandAllOutline,
+  TimerOutline,
+  WalletOutline
+} from 'mdi-material-ui'
+import { Credit } from 'src/configs/constants'
+import { UserData, useData } from 'src/@core/layouts/HipotecarLayout'
 import { parseMoney } from 'src/@core/utils/string'
-
-interface State {
-  password: string
-  showPassword: boolean
-}
+import {
+  CreditEvaluationResult,
+  calcularAdelanto,
+  calcularCuotaMensual,
+  getCompatibleCredits
+} from 'src/@core/utils/misc'
+import { useAsync } from 'react-async'
 
 const ComparisonForm = () => {
   const router = useRouter()
   const context = useData()
 
-  // ** States
-  const [values, setValues] = useState<State>({
-    password: '',
-    showPassword: false
-  })
-  const [confirmPassValues, setConfirmPassValues] = useState<State>({
-    password: '',
-    showPassword: false
-  })
-
-  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
-
-  const handleConfirmPassChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setConfirmPassValues({ ...confirmPassValues, [prop]: event.target.value })
-  }
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
-  }
-
-  const handleClickConfirmPassShow = () => {
-    setConfirmPassValues({ ...confirmPassValues, showPassword: !confirmPassValues.showPassword })
-  }
-
-  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
-
   const handleClick = () => {
-    router.push('/preferences')
+    console.log('save data')
   }
 
-  const compatibleCredits = credits
-    .filter(credit => credit.type === context?.data.creditType)
-    .sort((a, b) => a.tna - b.tna)
+  const [compatibleCreditsResults, setCompatibleCreditsResult] = useState<CreditEvaluationResult>({
+    creditosCompatibles: [],
+    razonesDeLosRestantes: []
+  })
+
+  useEffect(() => {
+    const compatibleCredits = getCompatibleCredits(context?.data.credits ?? [], context?.data.user ?? {})
+    setCompatibleCreditsResult(compatibleCredits)
+  }, [context?.data.user, context?.data.credits])
+
+  const handleChange = (prop: keyof UserData) => (event: ChangeEvent<HTMLInputElement>) => {
+    context?.setData({ ...context.data, user: { ...context.data.user, [prop]: event.target.value } })
+  }
 
   return (
     <Card>
@@ -86,6 +84,42 @@ const ComparisonForm = () => {
         <form onSubmit={e => e.preventDefault()}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
+              <Grid container columns={2} gap={2}>
+                <Grid item>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    defaultValue={context?.data.user.budget}
+                    label='Presupuesto del inmueble (en ARS)'
+                    onChange={handleChange('budget')}
+                    placeholder='$100000000'
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position='start'>
+                          <WalletOutline />
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    label='Años'
+                    defaultValue={context?.data.user.duration}
+                    onChange={handleChange('duration')}
+                    placeholder='30'
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position='start'>
+                          <TimerOutline />
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+              </Grid>
               <TableContainer>
                 <Table sx={{ minWidth: 800 }} aria-label='table in dashboard'>
                   <TableHead>
@@ -93,26 +127,23 @@ const ComparisonForm = () => {
                       {/* Image */}
                       <TableCell></TableCell>
                       <TableCell>Creditos Recomendados</TableCell>
-                      <TableCell>TNA</TableCell>
                       <TableCell>Cuota</TableCell>
-                      {/* <TableCell>Date</TableCell>
-                      <TableCell>Salary</TableCell>
-                      <TableCell>Age</TableCell>
-                      <TableCell>Status</TableCell> */}
+                      <TableCell>Adelanto</TableCell>
+                      <TableCell></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {compatibleCredits.map((row: Credits, index) => (
+                    {compatibleCreditsResults.creditosCompatibles.map((row: Credit, index) => (
                       <TableRow
-                        hover
-                        key={row.name}
+                        hover={row.Link.length > 0}
+                        key={index}
                         style={{ opacity: index === 0 ? 1 : 0.5 }}
                         sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
                       >
                         <TableCell width={30}>
                           <img
-                            src={`/images/banks/${row.bank}.png`}
-                            alt={row.name}
+                            src={`/images/banks/${row.Banco}.png`}
+                            alt={row.Nombre}
                             className='object-contain	'
                             height={40}
                           />
@@ -120,35 +151,74 @@ const ComparisonForm = () => {
                         <TableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
                           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
-                              {row.name}
+                              {row.Nombre}
+                              {index === 0 && (
+                                <Typography variant='caption' style={{ margin: '1em' }}>
+                                  <Chip label='Cuota mas baja' size='small' color='primary' />
+                                </Typography>
+                              )}
                             </Typography>
-                            <Typography variant='caption'>Banco {row.bank}</Typography>
+                            <Typography variant='caption'>Banco {row.Banco}</Typography>
                           </Box>
                         </TableCell>
-                        <TableCell>{row.tna}</TableCell>
                         <TableCell>
-                          {context?.data.budget ? parseMoney((context?.data.budget * row.tna) / 100 / 12) : ''}
+                          {context?.data.user.budget &&
+                            context.data.user.duration &&
+                            parseMoney(
+                              calcularCuotaMensual(context.data.user.budget, row.Tasa, context.data.user.duration)
+                            )}
+
+                          {row['Tasa especial por tiempo definido'] &&
+                            context?.data.user.budget &&
+                            context.data.user.duration && (
+                              <Typography>
+                                {parseMoney(
+                                  calcularCuotaMensual(
+                                    context.data.user.budget,
+                                    row['Tasa especial por tiempo definido'],
+                                    context.data.user.duration
+                                  )
+                                )}{' '}
+                                por {row['Duracion Tasa Especial en Meses']} meses
+                              </Typography>
+                            )}
                         </TableCell>
-                        {/* <TableCell>{row.date}</TableCell>
-                        <TableCell>{row.salary}</TableCell>
-                        <TableCell>{row.age}</TableCell>
                         <TableCell>
-                          <Chip
-                            label={row.status}
-                            color={statusObj[row.status].color}
-                            sx={{
-                              height: 24,
-                              fontSize: '0.75rem',
-                              textTransform: 'capitalize',
-                              '& .MuiChip-label': { fontWeight: 500 }
-                            }}
-                          />
-                        </TableCell> */}
+                          {context?.data.user.budget &&
+                            parseMoney(calcularAdelanto(context.data.user.budget, row['% Maximo de Financiacion']))}
+                        </TableCell>
+
+                        <TableCell>
+                          {row.Link.length > 0 && (
+                            <Link href={row.Link} target='_blank'>
+                              Ir al sitio del banco
+                            </Link>
+                          )}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
               </TableContainer>
+              {compatibleCreditsResults.razonesDeLosRestantes.length > 0 && (
+                <Accordion style={{ width: '100%' }}>
+                  <AccordionSummary expandIcon={<ArrowDown />} aria-controls='panel1-content' id='panel1-header'>
+                    Por que los demas creditos no aparecen?
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <TableRow>
+                      <TableCell colSpan={4}>
+                        {compatibleCreditsResults.razonesDeLosRestantes.map((r, i) => (
+                          <Typography key={i} align='center' variant='caption'>
+                            {r}
+                            <br></br>
+                          </Typography>
+                        ))}
+                      </TableCell>
+                    </TableRow>
+                  </AccordionDetails>
+                </Accordion>
+              )}
             </Grid>
 
             <Grid item xs={12} sm={6}>
