@@ -85,7 +85,7 @@ export const steps = ['Bienvenida', 'Test de riesgo', 'Preferencias', 'Resultado
 export const stepLinks = ['/name', '/risk', '/preferences', '/comparison']
 
 export const getActiveStep = (data: UserData) => {
-  if (data.budget && data.creditType && data.duration) {
+  if ((data.budgetType === "maximo" || data.budget) && data.creditType && data.duration) {
     return 3
   }
 

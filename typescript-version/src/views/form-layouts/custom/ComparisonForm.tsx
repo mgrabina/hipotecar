@@ -27,9 +27,18 @@ import {
   AccordionDetails,
   AccordionSummary,
   Checkbox,
+  FormControl,
   FormControlLabel,
   FormGroup,
-  Link
+  InputLabel,
+  Link,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  ToggleButton,
+  ToggleButtonGroup,
+  useMediaQuery,
+  useTheme
 } from '@mui/material'
 import { useRouter } from 'next/router'
 import {
@@ -47,20 +56,33 @@ import {
   CreditEvaluationResult,
   calcularAdelanto,
   calcularCuotaMensual,
+  getBiggestLoanBasedOnSalary,
   getCompatibleCredits
 } from 'src/@core/utils/misc'
 import { useAsync } from 'react-async'
 import { SubmitUserBody } from 'src/pages/api/users'
 import { set } from 'nprogress'
 
+const sortTypes = [
+  'Monto Total mas alto',
+  'Cuota Mensual mas baja',
+  'Cuota Mensual mas alta',
+  'Adelanto mas bajo',
+  'Adelanto mas alto'
+] as const
+type SortType = typeof sortTypes[number]
+
 type ComparisonTableState = {
   budget: number
   duration: number
+  sortType: SortType
 }
 
 const ComparisonForm = () => {
   const router = useRouter()
   const context = useData()
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   const [saving, setSaving] = useState<boolean>(false)
   const [saved, setSaved] = useState<boolean>(false)
@@ -77,7 +99,7 @@ const ComparisonForm = () => {
 
     const body: SubmitUserBody = {
       data: context?.data.user,
-      compatibleCredits: compatibleCreditsResults.creditosCompatibles
+      compatibleCredits: compatibleCreditsResults.creditosCompatibles.map(c => c.credit)
     }
 
     fetch('/api/users', {
@@ -89,7 +111,7 @@ const ComparisonForm = () => {
     })
       .then(resp => {
         if (resp.ok) {
-          console.log('Saved successfully.')
+          console.info('Saved successfully.')
         } else {
           console.error('Error:', resp.statusText)
         }
@@ -108,18 +130,21 @@ const ComparisonForm = () => {
     razonesDeLosRestantes: []
   })
 
-  useEffect(() => {
-    const compatibleCredits = getCompatibleCredits(context?.data.credits ?? [], context?.data.user ?? {})
-    setCompatibleCreditsResult(compatibleCredits)
-  }, [context?.data.user, context?.data.credits])
-
   const handleChange = (prop: keyof UserData) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
     context?.setData({ ...context.data, user: { ...context.data.user, [prop]: event.target.value } })
   }
 
+  const handleSelectChange = (
+    event: SelectChangeEvent<string> | SelectChangeEvent<string[]>,
+    prop: keyof ComparisonTableState
+  ) => {
+    setValues({ ...values, [prop]: event.target.value })
+  }
+
   const [values, setValues] = useState<ComparisonTableState>({
     budget: 0,
+    sortType: 'Cuota Mensual mas baja',
     duration: 20
   })
 
@@ -128,7 +153,7 @@ const ComparisonForm = () => {
 
     Object.keys(values).forEach(key => {
       const val = values[key as keyof ComparisonTableState]
-      const newVal = context?.data.user[key as keyof ComparisonTableState]
+      const newVal = context?.data.user[key as keyof UserData]
 
       // If it is already set, avoid
       if ((Array.isArray(val) && val.length) || (!Array.isArray(val) && val)) return
@@ -142,7 +167,7 @@ const ComparisonForm = () => {
     setValues(updatedValues)
   }, [context?.data.user])
 
-  const defaultEmail = 'leo@messi.com'
+  const defaultEmail = ''
   const [email, setEmail] = useState<string>(defaultEmail)
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value)
@@ -153,6 +178,77 @@ const ComparisonForm = () => {
     if (!context?.data.user.email) return
     setEmail(context?.data.user.email)
   }, [context?.data.user.email])
+
+  useEffect(() => {
+    if (!context?.data.user || !context?.data.credits) return
+
+    const compatibleCredits =
+      context?.data.user.budgetType === 'personalizado'
+        ? getCompatibleCredits(context?.data.credits, context?.data.user)
+        : getBiggestLoanBasedOnSalary(context?.data.credits, context?.data.user)
+
+    setCompatibleCreditsResult(compatibleCredits)
+
+    if (context?.data.user.budgetType === 'maximo') {
+      setValues({ ...values, sortType: 'Monto Total mas alto' })
+    } else {
+      setValues({ ...values, sortType: 'Cuota Mensual mas baja' })
+    }
+  }, [context?.data.user.budgetType, context?.data.credits])
+
+  const sortCredits = (credits: CreditEvaluationResult['creditosCompatibles'], sortType: SortType) => {
+    credits.sort((a, b) => {
+      if (sortType === 'Monto Total mas alto') {
+        return b.loan - a.loan
+      }
+
+      if (sortType === 'Cuota Mensual mas baja') {
+        return (
+          calcularCuotaMensual(a.loan, a.credit.Tasa, context?.data.user.duration ?? 20) -
+          calcularCuotaMensual(b.loan, b.credit.Tasa, context?.data.user.duration ?? 20)
+        )
+      }
+
+      if (sortType === 'Cuota Mensual mas alta') {
+        return (
+          calcularCuotaMensual(b.loan, b.credit.Tasa, context?.data.user.duration ?? 20) -
+          calcularCuotaMensual(a.loan, a.credit.Tasa, context?.data.user.duration ?? 20)
+        )
+      }
+
+      if (sortType === 'Adelanto mas bajo') {
+        return (
+          calcularAdelanto(a.loan, a.credit['% Maximo de Financiacion']) -
+          calcularAdelanto(b.loan, b.credit['% Maximo de Financiacion'])
+        )
+      }
+
+      if (sortType === 'Adelanto mas alto') {
+        return (
+          calcularAdelanto(b.loan, b.credit['% Maximo de Financiacion']) -
+          calcularAdelanto(a.loan, a.credit['% Maximo de Financiacion'])
+        )
+      }
+
+      return 0
+    })
+  }
+
+  useEffect(() => {
+    if (!context?.data.user) return
+    if (!compatibleCreditsResults.creditosCompatibles.length) return
+
+    // Clone the array to avoid mutating the original state
+    const sortedCredits = [...compatibleCreditsResults.creditosCompatibles]
+
+    sortCredits(sortedCredits, values.sortType)
+
+    // Update the state with the sorted array
+    setCompatibleCreditsResult({
+      ...compatibleCreditsResults,
+      creditosCompatibles: sortedCredits
+    })
+  }, [values.sortType])
 
   return (
     <Card>
@@ -165,45 +261,32 @@ const ComparisonForm = () => {
         <form onSubmit={e => e.preventDefault()}>
           <Grid container spacing={5}>
             <Grid item xs={12}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={4}>
-                  <TextField
+              <Grid container spacing={4}>
+                <Grid item xs={12} md={6}>
+                  <ToggleButtonGroup
+                    value={context?.data.user.budgetType}
+                    exclusive
                     fullWidth
-                    type='number'
-                    value={Number(values.budget).toFixed(0)}
-                    label={`Presupuesto del inmueble`}
-                    onChange={handleChange('budget')}
-                    placeholder='$100000000'
-                    InputProps={{
-                      startAdornment: <InputAdornment position='start'>ARS</InputAdornment>
+                    style={{ height: '100%' }}
+                    defaultValue={'personalizado'}
+                    onChange={(event: React.MouseEvent<HTMLElement>, newAlignment: string | null) => {
+                      if (newAlignment === null) return
+                      context?.setData({
+                        ...context.data,
+                        user: { ...context.data.user, budgetType: newAlignment as 'personalizado' | 'maximo' }
+                      })
                     }}
-                  />
+                    aria-label='text alignment'
+                  >
+                    <ToggleButton style={{ height: '100%' }} value='personalizado' aria-label='left aligned'>
+                      Presupuesto Personalizado
+                    </ToggleButton>
+                    <ToggleButton value='maximo' aria-label='right aligned'>
+                      Presupuesto Máximo
+                    </ToggleButton>
+                  </ToggleButtonGroup>
                 </Grid>
-                <Grid item xs={12} md={4}>
-                  <TextField
-                    fullWidth
-                    type='number'
-                    value={(values.budget / (context?.data.dolar ?? 1)).toFixed(0)}
-                    label={`Presupuesto del inmueble`}
-                    onChange={e => {
-                      const value = e.target.value
-                      if (context?.data.dolar) {
-                        console.log('dolar', context.data.dolar)
-                        console.log('value', value)
-                        setValues({ ...values, budget: Number(value) * context.data.dolar })
-                        context?.setData({
-                          ...context.data,
-                          user: { ...context.data.user, budget: Number(value) * context.data.dolar }
-                        })
-                      }
-                    }}
-                    placeholder='$100000000'
-                    InputProps={{
-                      startAdornment: <InputAdornment position='start'>USD</InputAdornment>
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={6}>
                   <TextField
                     fullWidth
                     type='number'
@@ -212,6 +295,7 @@ const ComparisonForm = () => {
                     onChange={handleChange('duration')}
                     placeholder='30'
                     InputProps={{
+                      inputProps: { min: 1, max: 50 },
                       startAdornment: (
                         <InputAdornment position='start'>
                           <TimerOutline />
@@ -221,6 +305,51 @@ const ComparisonForm = () => {
                   />
                 </Grid>
               </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              {context?.data.user.budgetType === 'personalizado' && (
+                <Grid container spacing={4}>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      type='number'
+                      value={Number(context?.data.user.budget).toFixed(0)}
+                      label={`Presupuesto del inmueble`}
+                      onChange={handleChange('budget')}
+                      placeholder='100.000.000'
+                      InputProps={{
+                        inputProps: { min: 1, max: 999999999999 },
+                        startAdornment: <InputAdornment position='start'>ARS</InputAdornment>
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      type='number'
+                      value={context?.data.user.budget ? (context.data.user.budget / (context?.data.dolar ?? 1)).toFixed(0): 0}
+                      label={`Presupuesto del inmueble`}
+                      onChange={e => {
+                        const value = e.target.value
+                        if (context?.data.dolar) {
+                          setValues({ ...values, budget: Number(value) * context.data.dolar })
+                          context?.setData({
+                            ...context.data,
+                            user: { ...context.data.user, budget: Number(value) * context.data.dolar }
+                          })
+                        }
+                      }}
+                      placeholder='100.000'
+                      InputProps={{
+                        inputProps: { min: 1, max: 999999999 },
+                        startAdornment: <InputAdornment position='start'>USD</InputAdornment>
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              )}
+            </Grid>
+            <Grid item xs={12}>
               <TableContainer>
                 <Table sx={{ minWidth: 800 }} aria-label='table in dashboard'>
                   <TableHead>
@@ -228,25 +357,52 @@ const ComparisonForm = () => {
                       {/* Image */}
                       <TableCell></TableCell>
                       <TableCell>Creditos Recomendados</TableCell>
+                      {context?.data.user.budgetType === 'maximo' && <TableCell>Monto Total</TableCell>}
                       <TableCell>Primera Cuota</TableCell>
                       <TableCell>Adelanto</TableCell>
-                      <TableCell></TableCell>
+                      <TableCell>
+                        {/* Sort */}
+
+                        <FormControl>
+                          <InputLabel
+                            style={{
+                              fontSize: '12px'
+                            }}
+                            id='form-layouts-separator-select-label-sort'
+                          >
+                            Ordenar Por {values.sortType}
+                          </InputLabel>
+                          <Select
+                            label='form-layouts-separator-select-label-sort'
+                            value={values.sortType}
+                            id='form-layouts-separator-select-label-sort'
+                            onChange={e => handleSelectChange(e, 'sortType')}
+                            style={{ fontSize: '12px', padding: '0em' }}
+                          >
+                            {sortTypes.map(creditType => (
+                              <MenuItem key={creditType} style={{ fontSize: '12px' }} value={creditType}>
+                                {creditType}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {compatibleCreditsResults.creditosCompatibles.map((row: Credit, index) => (
+                    {compatibleCreditsResults.creditosCompatibles.map(({ credit: row, loan }, index) => (
                       <TableRow
                         hover={row.Link.length > 0}
                         key={index}
-                        style={{ opacity: index === 0 ? 1 : 0.5 }}
+                        style={{ opacity: index === 0 ? 1 : 0.7 }}
                         sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
                       >
-                        <TableCell width={30}>
+                        <TableCell width={isSmallScreen ? 20 : 30}>
                           <img
                             src={`/images/banks/${row.Banco}.png`}
                             alt={row.Nombre}
                             className='object-contain	'
-                            height={40}
+                            height={isSmallScreen ? 20 : 40}
                           />
                         </TableCell>
                         <TableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
@@ -258,61 +414,86 @@ const ComparisonForm = () => {
                             <div>
                               {index === 0 && (
                                 <Typography variant='caption' margin='0.3em'>
-                                  <Chip label='Cuota mas baja' size='small' color='primary' />
+                                  <Chip
+                                    label={
+                                      values.sortType === 'Monto Total mas alto'
+                                        ? 'Monto mas alto'
+                                        : values.sortType === 'Cuota Mensual mas baja'
+                                        ? 'Cuota mas baja'
+                                        : values.sortType === 'Cuota Mensual mas alta'
+                                        ? 'Cuota mas alta'
+                                        : values.sortType === 'Adelanto mas bajo'
+                                        ? 'Adelanto mas bajo'
+                                        : values.sortType === 'Adelanto mas alto'
+                                        ? 'Adelanto mas alto'
+                                        : ''
+                                    }
+                                    size='small'
+                                    color='primary'
+                                  />
                                 </Typography>
                               )}
                               {row['Sueldo En Banco'] === 'TRUE' && (
                                 <Typography variant='caption' margin='0.3em'>
-                                  <Chip label='Tasa especial' size='small' color='secondary' />
+                                  <Chip label='Tasa especial' size='small' color='info' />
                                 </Typography>
                               )}
                               {/*  */}
                             </div>
                           </Box>
                         </TableCell>
+
+                        {context?.data.user.budgetType === 'maximo' && (
+                          <TableCell>
+                            <Grid container>
+                              <Grid item xs={12} color='blueviolet'>
+                                {loan && parseMoney(loan)}
+                              </Grid>
+                              <Grid item xs={12} color='green'>
+                                {loan && context?.data.dolar && parseMoney(loan / context.data.dolar, 'USD')}
+                              </Grid>
+                            </Grid>
+                          </TableCell>
+                        )}
                         <TableCell>
                           <Grid container>
                             <Grid item xs={12} color='blueviolet'>
-                              {context?.data.user.budget &&
-                                context.data.user.duration &&
-                                parseMoney(
-                                  calcularCuotaMensual(context.data.user.budget, row.Tasa, context.data.user.duration)
-                                )}
+                              {loan &&
+                                context?.data.user.duration &&
+                                parseMoney(calcularCuotaMensual(loan, row.Tasa, context?.data.user.duration))}
 
-                              {row['Tasa especial por tiempo definido'] &&
-                                context?.data.user.budget &&
-                                context.data.user.duration && (
-                                  <Typography>
-                                    {parseMoney(
-                                      calcularCuotaMensual(
-                                        context.data.user.budget,
-                                        row['Tasa especial por tiempo definido'],
-                                        context.data.user.duration
-                                      )
-                                    )}{' '}
-                                    por {row['Duracion Tasa Especial en Meses']} meses
-                                  </Typography>
-                                )}
+                              {row['Tasa especial por tiempo definido'] && loan && context?.data.user.duration && (
+                                <Typography>
+                                  {parseMoney(
+                                    calcularCuotaMensual(
+                                      loan,
+                                      row['Tasa especial por tiempo definido'],
+                                      context?.data.user.duration
+                                    )
+                                  )}{' '}
+                                  por {row['Duracion Tasa Especial en Meses']} meses
+                                </Typography>
+                              )}
                             </Grid>
                             <Grid item xs={12} color='green'>
-                              {context?.data.user.budget &&
-                                context.data.user.duration &&
+                              {loan &&
+                                context?.data.user.duration &&
                                 context.data.dolar &&
                                 parseMoney(
-                                  calcularCuotaMensual(context.data.user.budget, row.Tasa, context.data.user.duration) /
+                                  calcularCuotaMensual(loan, row.Tasa, context?.data.user.duration) /
                                     context.data.dolar,
                                   'USD'
                                 )}{' '}
                               {row['Tasa especial por tiempo definido'] &&
-                                context?.data.user.budget &&
-                                context.data.user.duration &&
+                                loan &&
+                                context?.data.user.duration &&
                                 context.data.dolar && (
                                   <Typography>
                                     {parseMoney(
                                       calcularCuotaMensual(
-                                        context.data.user.budget,
+                                        loan,
                                         row['Tasa especial por tiempo definido'],
-                                        context.data.user.duration
+                                        context?.data.user.duration
                                       ) / context.data.dolar,
                                       'USD'
                                     )}{' '}
@@ -325,15 +506,13 @@ const ComparisonForm = () => {
                         <TableCell>
                           <Grid container>
                             <Grid item xs={12} color='blueviolet'>
-                              {context?.data.user.budget &&
-                                parseMoney(calcularAdelanto(context.data.user.budget, row['% Maximo de Financiacion']))}
+                              {loan && parseMoney(calcularAdelanto(loan, row['% Maximo de Financiacion']))}
                             </Grid>
                             <Grid item xs={12} color='green'>
-                              {context?.data.user.budget &&
-                                context.data.dolar &&
+                              {loan &&
+                                context?.data.dolar &&
                                 parseMoney(
-                                  calcularAdelanto(context.data.user.budget, row['% Maximo de Financiacion']) /
-                                    context.data.dolar,
+                                  calcularAdelanto(loan, row['% Maximo de Financiacion']) / context?.data.dolar,
                                   'USD'
                                 )}{' '}
                             </Grid>
@@ -383,6 +562,7 @@ const ComparisonForm = () => {
               )}
             </Grid>
 
+            <Grid item xs={12}></Grid>
             <Grid container spacing={2} margin={4}>
               <Grid item xs={12} md={6}>
                 <TextField

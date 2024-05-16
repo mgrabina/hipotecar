@@ -2,12 +2,47 @@ import { Credit } from 'src/configs/constants'
 import { UserData } from '../layouts/HipotecarLayout'
 
 export interface CreditEvaluationResult {
-  creditosCompatibles: Credit[]
+  creditosCompatibles: { credit: Credit; loan: number }[]
   razonesDeLosRestantes: string[]
 }
 
+export const getBiggestLoanBasedOnSalary = (credits: Credit[], userData: UserData): CreditEvaluationResult => {
+  const salary = userData.salary
+  if (!salary) return { creditosCompatibles: [], razonesDeLosRestantes: ['No se ha ingresado un salario.'] }
+
+  const compatibles = getCompatibleCredits(credits, userData)
+
+  return {
+    creditosCompatibles: compatibles.creditosCompatibles.map(creditObject => {
+      const credit = creditObject.credit
+      let maxLoan = 0
+
+      if (credit['Ingresos Minimos'] && credit['Ingresos Minimos'] > salary) {
+        maxLoan = 0
+      }
+
+      if (credit['Relacion Cuota Ingreso'] && credit['Relacion Cuota Ingreso'] > 0) {
+        const maxCuotaMensual = (salary * credit['Relacion Cuota Ingreso']) / 100
+        maxLoan = calcularMontoPrestamo(maxCuotaMensual, credit.Tasa, credit.Duracion)
+      }
+
+      // @todo Get UVA value automatically from API
+      if (credit['Monto Maximo en UVAs'] && maxLoan > credit['Monto Maximo en UVAs'] * 922) {
+        maxLoan = credit['Monto Maximo en UVAs'] * 922
+      }
+
+      return {
+        loan: Math.floor(maxLoan),
+        credit
+      }
+    }),
+
+    razonesDeLosRestantes: compatibles.razonesDeLosRestantes
+  }
+}
+
 export const getCompatibleCredits = (credits: Credit[], userData: UserData): CreditEvaluationResult => {
-  const creditosCompatibles: Credit[] = []
+  const creditosCompatibles: CreditEvaluationResult['creditosCompatibles'] = []
   const razonesDeLosRestantes: string[] = []
 
   credits.forEach(credit => {
@@ -29,13 +64,19 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
     }
 
     // @todo Get UVA value automatically from API
-    if (userData?.budget && credit['Monto Maximo en UVAs'] && credit['Monto Maximo en UVAs'] * 922 < userData.budget) {
-      reasons.push(
-        `El monto máximo financiable de ${
-          credit['Monto Maximo en UVAs'] * 922
-        } es menor que el presupuesto necesario de ${userData.budget}.`
-      )
-      isCompatible = false
+    if (userData.budgetType === 'personalizado') {
+      if (
+        userData?.budget &&
+        credit['Monto Maximo en UVAs'] &&
+        credit['Monto Maximo en UVAs'] * 922 < userData.budget
+      ) {
+        reasons.push(
+          `El monto máximo financiable de ${
+            credit['Monto Maximo en UVAs'] * 922
+          } es menor que el presupuesto necesario de ${userData.budget}.`
+        )
+        isCompatible = false
+      }
     }
 
     if (userData?.creditType && credit.Tipo !== userData.creditType) {
@@ -68,6 +109,7 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
     // Check Quota Salary Ratio
     if (
       userData.salary &&
+      userData.budgetType === 'personalizado' &&
       userData.budget &&
       userData.duration &&
       credit['Relacion Cuota Ingreso'] &&
@@ -87,27 +129,29 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
     }
 
     if (isCompatible) {
-      creditosCompatibles.push(credit)
+      creditosCompatibles.push({ credit, loan: userData.budgetType === 'personalizado' ? userData.budget ?? 0 : 0 })
     } else {
       razonesDeLosRestantes.push(`Crédito '${credit.Nombre}' en ${credit.Banco}: ${reasons.join(' ')}\n`)
     }
   })
 
   // Quedarse el credito de tasa mas baja por banco
-  const creditosCompatiblesPorBanco = creditosCompatibles.reduce((acc, credit) => {
+  const creditosCompatiblesPorBanco = creditosCompatibles.reduce((acc, creditObj) => {
+    const { credit: credit } = creditObj
+
     if (!acc[credit.Banco]) {
       acc[credit.Banco] = []
     }
-    acc[credit.Banco].push(credit)
+    acc[credit.Banco].push(creditObj)
 
     return acc
-  }, {} as Record<string, Credit[]>)
+  }, {} as Record<string, CreditEvaluationResult['creditosCompatibles']>)
 
   const compatibles = Object.keys(creditosCompatiblesPorBanco)?.map(banco => {
     const creditos = creditosCompatiblesPorBanco[banco]
-    const minTasa = Math.min(...creditos.map(credit => credit.Tasa))
+    const minTasa = Math.min(...creditos.map(credit => credit.credit.Tasa))
 
-    return creditos.find(credit => credit.Tasa === minTasa) ?? creditos[0]
+    return creditos.find(credit => credit.credit.Tasa === minTasa) ?? creditos[0]
   })
 
   return {
@@ -123,6 +167,16 @@ export function calcularCuotaMensual(montoPrestamo: number, tasaAnual: number, p
     (montoPrestamo * tasaMensual * Math.pow(1 + tasaMensual, plazoMeses)) / (Math.pow(1 + tasaMensual, plazoMeses) - 1)
 
   return cuotaMensual
+}
+
+export function calcularMontoPrestamo(cuotaMensual: number, tasaAnual: number, plazoAnios: number): number {
+  const tasaMensual = tasaAnual / 12 / 100 // Convertir la tasa anual en decimal y dividirla por 12 para obtener la tasa mensual
+  const plazoMeses = plazoAnios * 12 // Convertir el plazo de años a meses
+
+  const montoPrestamo =
+    (cuotaMensual * (Math.pow(1 + tasaMensual, plazoMeses) - 1)) / (tasaMensual * Math.pow(1 + tasaMensual, plazoMeses))
+
+  return montoPrestamo
 }
 
 export function calcularAdelanto(montoPrestamo: number, maximoFinanciacion: number): number {
