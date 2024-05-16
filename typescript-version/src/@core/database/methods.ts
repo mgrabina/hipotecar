@@ -5,7 +5,7 @@ import { Credit } from 'src/configs/constants'
 export const createRow = async (data: UserData, compatibleCredits: Credit[]) => {
   try {
 
-    console.log('Successfully added row for in messages table')
+    console.info('Successfully added row for in messages table')
 
     return
   } catch (error) {

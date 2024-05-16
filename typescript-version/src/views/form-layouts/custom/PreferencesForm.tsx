@@ -21,16 +21,18 @@ import FormHelperText from '@mui/material/FormHelperText'
 // ** Icons Imports
 import EyeOutline from 'mdi-material-ui/EyeOutline'
 import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
-import { Checkbox, FormControlLabel, FormGroup, MenuItem } from '@mui/material'
+import { Checkbox, FormControlLabel, FormGroup, MenuItem, ToggleButton, ToggleButtonGroup } from '@mui/material'
 import { useRouter } from 'next/router'
 import { MessageOutline, TimerOutline, WalletOutline } from 'mdi-material-ui'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { UserData, useData } from 'src/@core/layouts/HipotecarLayout'
 import { CreditType, CreditTypes, Province, Provinces } from 'src/configs/constants'
 import { parseMoney } from 'src/@core/utils/string'
+import { getBiggestLoanBasedOnSalary } from 'src/@core/utils/misc'
 
 export interface PreferencesFormState {
   budget: number
+  budgetType: 'personalizado' | 'maximo'
   salary: number
   duration: number
   banks: string[]
@@ -47,6 +49,7 @@ const PreferencesForm = () => {
     budget: 0,
     salary: 0,
     duration: 20,
+    budgetType: 'personalizado',
     banks: [],
     creditType: 'Adquisicion',
     provinces: []
@@ -66,6 +69,7 @@ const PreferencesForm = () => {
       user: {
         ...context?.data.user,
         budget: values.budget,
+        budgetType: values.budgetType,
         salary: values.salary,
         duration: values.duration,
         banks: values.banks,
@@ -96,30 +100,68 @@ const PreferencesForm = () => {
     setValues(updatedValues)
   }, [context?.data.user])
 
+  const [alignment, setAlignment] = useState<string | null>('left')
+
+  const handleAlignment = (event: React.MouseEvent<HTMLElement>, newAlignment: string | null) => {
+    setAlignment(newAlignment)
+  }
+
   return (
     <Card>
       <CardHeader title='Veamos, cuales son tus preferencias?' titleTypographyProps={{ variant: 'h6' }} />
       <CardContent>
         <form onSubmit={e => e.preventDefault()}>
-          <Grid container spacing={5}>
+          <Grid container spacing={4}>
             <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id='form-layouts-separator-select-label-creditType'>
-                  Tipo de credito que te gustaria obtener?
-                </InputLabel>
-                <Select
-                  label='form-layouts-separator-select-label-creditType'
-                  value={values.creditType ?? 'Adquisicion'}
-                  id='form-layouts-separator-select-label-creditType'
-                  onChange={e => handleSelectChange(e, 'creditType')}
-                >
-                  {CreditTypes.map(creditType => (
-                    <MenuItem key={creditType} value={creditType}>
-                      {creditType}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Grid container spacing={4}>
+                <Grid item xs={12} md={6}>
+                  <FormControl fullWidth>
+                    <InputLabel id='form-layouts-separator-select-label-creditType'>
+                      Tipo de credito que te gustaria obtener?
+                    </InputLabel>
+                    <Select
+                      label='form-layouts-separator-select-label-creditType'
+                      value={values.creditType ?? 'Adquisicion'}
+                      id='form-layouts-separator-select-label-creditType'
+                      onChange={e => handleSelectChange(e, 'creditType')}
+                    >
+                      {CreditTypes.map(creditType => (
+                        <MenuItem key={creditType} value={creditType}>
+                          {creditType}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <ToggleButtonGroup
+                    value={values.budgetType}
+                    exclusive
+                    fullWidth
+                    defaultValue={'personalizado'}
+                    onChange={(event: React.MouseEvent<HTMLElement>, newAlignment: string | null) => {
+                      if (newAlignment === null) return
+                      setValues({ ...values, budgetType: newAlignment as 'personalizado' | 'maximo' })
+                      context?.setData({
+                        ...context.data,
+                        user: { ...context.data.user, budgetType: newAlignment as 'personalizado' | 'maximo' }
+                      })
+                    }}
+                    style={{ height: '100%' }}
+                    aria-label='text alignment'
+                  >
+                    <ToggleButton value='personalizado'
+                                        style={{ height: '100%' }}
+
+aria-label='left aligned'>
+                      Presupuesto Personalizado
+                    </ToggleButton>
+                    <ToggleButton value='maximo' aria-label='right aligned'>
+                      Presupuesto Máximo
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Grid>
+              </Grid>
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
@@ -165,7 +207,7 @@ const PreferencesForm = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <Grid container spacing={2}>
+              <Grid container spacing={4}>
                 <Grid item xs={6} md={3}>
                   <TextField
                     fullWidth
@@ -177,48 +219,8 @@ const PreferencesForm = () => {
                     onChange={handleChange('salary')}
                     placeholder='$700.000'
                     InputProps={{
-                      startAdornment: (
-                        <InputAdornment position='start'>
-                          ARS
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  <TextField
-                    fullWidth
-                    type='number'
-                    value={Number(values.budget).toFixed(0)}
-                    label={`Presupuesto del inmueble`}
-                    onChange={handleChange('budget')}
-                    placeholder='$100000000'
-                    InputProps={{
+                      inputProps: { min: 1, max: 999999999999 },
                       startAdornment: <InputAdornment position='start'>ARS</InputAdornment>
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  <TextField
-                    fullWidth
-                    type='number'
-                    value={(values.budget / (context?.data.dolar ?? 1)).toFixed(0)}
-                    label={`Presupuesto del inmueble`}
-                    onChange={e => {
-                      const value = e.target.value
-                      if (context?.data.dolar) {
-                        console.log('dolar', context.data.dolar)
-                        console.log('value', value)
-                        setValues({ ...values, budget: Number(value) * context.data.dolar })
-                        context?.setData({
-                          ...context.data,
-                          user: { ...context.data.user, budget: Number(value) * context.data.dolar }
-                        })
-                      }
-                    }}
-                    placeholder='$100000000'
-                    InputProps={{
-                      startAdornment: <InputAdornment position='start'>USD</InputAdornment>
                     }}
                   />
                 </Grid>
@@ -231,6 +233,8 @@ const PreferencesForm = () => {
                     onChange={handleChange('duration')}
                     placeholder='30'
                     InputProps={{
+                      inputProps: { min: 1, max: 50 },
+
                       startAdornment: (
                         <InputAdornment position='start'>
                           <TimerOutline />
@@ -239,6 +243,48 @@ const PreferencesForm = () => {
                     }}
                   />
                 </Grid>
+                {values.budgetType === 'personalizado' && (
+                  <>
+                    <Grid style={{ display: values.budgetType == 'personalizado' ? '' : 'hidden' }} item xs={12} md={3}>
+                      <TextField
+                        fullWidth
+                        type='number'
+                        value={Number(values.budget).toFixed(0)}
+                        label={`Presupuesto del inmueble`}
+                        onChange={handleChange('budget')}
+                        placeholder='$100000000'
+                        InputProps={{
+                          inputProps: { min: 1, max: 999999999999 },
+                          startAdornment: <InputAdornment position='start'>ARS</InputAdornment>
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                      <TextField
+                        fullWidth
+                        type='number'
+                        value={(values.budget / (context?.data.dolar ?? 1)).toFixed(0)}
+                        label={<Typography>Presupuesto del inmueble</Typography>}
+                        onChange={e => {
+                          const value = e.target.value
+                          if (context?.data.dolar) {
+                            setValues({ ...values, budget: Number(value) * context.data.dolar })
+                            context?.setData({
+                              ...context.data,
+                              user: { ...context.data.user, budget: Number(value) * context.data.dolar }
+                            })
+                          }
+                        }}
+                        placeholder='$100000000'
+                        InputProps={{
+                          inputProps: { min: 1, max: 999999999999 },
+
+                          startAdornment: <InputAdornment position='start'>USD</InputAdornment>
+                        }}
+                      />
+                    </Grid>
+                  </>
+                )}
               </Grid>
             </Grid>
 
