@@ -52,6 +52,19 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
       }
     }
 
+    // Check each province
+    if (credit['Provincias']) {
+      const provincias = credit['Provincias'].split(',').map(p => p.trim())
+      if (userData?.provinces && !provincias.some(p => userData.provinces?.includes(p))) {
+        reasons.push(
+          `El crédito solo está disponible para las provincias ${provincias.join(
+            ', '
+          )}, que no están en su lista de provincias seleccionadas.`
+        )
+        isCompatible = false
+      }
+    }
+
     // Check Quota Salary Ratio
     if (
       userData.salary &&
