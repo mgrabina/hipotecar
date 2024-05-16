@@ -28,6 +28,9 @@ import ProgressBar from './components/vertical/navigation/ProgressBar'
 import { CreditType, Province } from 'src/configs/constants'
 import { Credit, banksCsvUrl, creditsCsvUrl, loadDataFromCSV, provincesCsvUrl } from 'src/configs/constants'
 import { useAsync } from 'react-async'
+import { set } from 'nprogress'
+import { PreferencesFormState } from 'src/views/form-layouts/custom/PreferencesForm'
+import { getDolarMep } from '../utils/misc'
 
 const VerticalLayoutWrapper = styled('div')({
   height: '100%',
@@ -57,20 +60,16 @@ export type UserData = {
   name?: string
   riskAssesmentPassed?: boolean
   email?: string
-  budget?: number
-  salary?: number
-  provinces?: Province[]
-  duration?: number
-  creditType?: CreditType
-  banks?: string[]
-}
+} & Partial<PreferencesFormState>
 
 export type ContextType = {
   data: {
+    loaded: boolean
     user: UserData
     credits: Credit[]
     provinces: string[]
     banks: string[]
+    dolar?: number
   }
   setData: Dispatch<
     SetStateAction<{
@@ -78,6 +77,8 @@ export type ContextType = {
       credits: any[]
       provinces: any
       banks: any
+      loaded: boolean
+      dolar?: number
     }>
   >
 }
@@ -87,15 +88,19 @@ export const useData = () => useContext(DataContext)
 
 export const DataProvider = ({ children }: { children: any }) => {
   const [data, setData] = useState<{
+    loaded: boolean
     user: UserData
     credits: Credit[]
     provinces: string[]
     banks: string[]
+    dolar?: number
   }>({
+    loaded: false,
     user: {},
     credits: [],
     provinces: [],
-    banks: []
+    banks: [],
+    dolar: undefined
   })
 
   // Effect to load data from localStorage when the component mounts
@@ -107,21 +112,54 @@ export const DataProvider = ({ children }: { children: any }) => {
   }, [])
 
   useEffect(() => {
+    if (!data.loaded) {
+      if (data.user && Object.keys(data.user).length) {
+        // First time
+        setData({ ...data, loaded: true })
+      }
+    }
+  }, [data.user])
+
+  useEffect(() => {
     const fetchData = async () => {
+      const promises: Promise<any>[] = []
+
       if (data.credits.length === 0) {
-        const loadedCredits = await loadDataFromCSV<Credit>(creditsCsvUrl)
-        setData(prevData => ({ ...prevData, credits: loadedCredits }))
+        promises.push(loadDataFromCSV<Credit>(creditsCsvUrl))
+      } else {
+        promises.push(Promise.resolve(data.credits))
       }
+
       if (data.provinces.length === 0) {
-        const loadedProvinces = await loadDataFromCSV<{ Provincia: string }>(provincesCsvUrl)
-        const provinceNames = loadedProvinces.map(p => p.Provincia)
-        setData(prevData => ({ ...prevData, provinces: provinceNames }))
+        promises.push(loadDataFromCSV<{ Provincia: string }>(provincesCsvUrl))
+      } else {
+        promises.push(Promise.resolve(data.provinces))
       }
+
       if (data.banks.length === 0) {
-        const loadedBanks = await loadDataFromCSV<{ Banco: string }>(banksCsvUrl)
-        const bankNames = loadedBanks.map(b => b.Banco)
-        setData(prevData => ({ ...prevData, banks: bankNames }))
+        promises.push(loadDataFromCSV<{ Banco: string }>(banksCsvUrl))
+      } else {
+        promises.push(Promise.resolve(data.banks))
       }
+
+      if (!data.dolar) {
+        promises.push(getDolarMep())
+      } else {
+        promises.push(Promise.resolve(data.dolar))
+      }
+
+      const [loadedCredits, loadedProvinces, loadedBanks, dolar] = await Promise.all(promises)
+
+      const provinceNames = Array.isArray(loadedProvinces) ? loadedProvinces.map(p => p.Provincia) : []
+      const bankNames = Array.isArray(loadedBanks) ? loadedBanks.map(b => b.Banco) : []
+
+      setData(prevData => ({
+        ...prevData,
+        credits: data.credits.length === 0 ? loadedCredits : prevData.credits,
+        provinces: data.provinces.length === 0 ? provinceNames : prevData.provinces,
+        banks: data.banks.length === 0 ? bankNames : prevData.banks,
+        dolar: data.dolar === undefined ? dolar : prevData.dolar
+      }))
     }
 
     fetchData()
@@ -130,6 +168,8 @@ export const DataProvider = ({ children }: { children: any }) => {
   }, [])
 
   useEffect(() => {
+    if (!data.user || !Object.keys(data.user).length) return
+
     // Save the data to localStorage
     localStorage.setItem('userData', JSON.stringify(data.user))
   }, [data.user]) // Only re-run the effect if data changes
@@ -164,16 +204,21 @@ const HypotecarLayout = (props: LayoutProps) => {
               sx={{
                 ...(contentWidth === 'boxed' && {
                   mx: 'auto',
-                  '@media (min-width:1440px)': { maxWidth: 1440, padding: '10em' },
+                  '@media (min-width:1440px)': { maxWidth: 1440, paddingLeft: '8em', paddingRight: '8em' },
                   '@media (min-width:1200px)': { maxWidth: '100%' }
                 })
               }}
             >
-              <Typography variant='h3' width='100%' style={{ textAlign: 'center' }}>
-                <img src='/images/logo.png' width='40px' /> Mi Credito Hipotecario{' '}
-                <img src='/images/logo.png' width='40px' />
+              <Typography variant='h3' width='100%' sx={{ fontSize: '20px' }} style={{ textAlign: 'center' }}>
+                <img src='/images/logo.png' width='20em' /> Mi Credito Hipotecario{' '}
+                <img src='/images/logo.png' width='20em' />
               </Typography>
-              <Typography variant='h6' width='100%' style={{ textAlign: 'center', opacity: 0.5 }}>
+              <Typography
+                variant='h6'
+                width='100%'
+                sx={{ fontSize: '15px' }}
+                style={{ textAlign: 'center', opacity: 0.5 }}
+              >
                 Tu aliado para surfear la ola de creditos
               </Typography>
               <ProgressBar></ProgressBar>

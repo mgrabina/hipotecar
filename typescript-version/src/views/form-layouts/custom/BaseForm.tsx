@@ -1,5 +1,5 @@
 // ** React Imports
-import { ChangeEvent, MouseEvent, useState, SyntheticEvent } from 'react'
+import { ChangeEvent, MouseEvent, useState, SyntheticEvent, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -46,6 +46,12 @@ const BaseForm = () => {
     router.push('/risk')
   }
 
+  useEffect(() => {
+    if (values.name) return
+    if (!context?.data.user.name) return
+    setValues({ name: context?.data.user.name })
+  }, [context?.data.user.name])
+
   return (
     <Card>
       <CardHeader
@@ -59,8 +65,8 @@ const BaseForm = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label='Name'
-                defaultValue={context?.data.user.name}
+                label='Nombre'
+                value={context?.data.user.name}
                 placeholder='Leo Messi'
                 onChange={handleChange('name')}
               />
