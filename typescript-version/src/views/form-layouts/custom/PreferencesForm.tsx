@@ -31,10 +31,12 @@ import { parseMoney } from 'src/@core/utils/string'
 import { getBiggestLoanBasedOnSalary } from 'src/@core/utils/misc'
 
 export interface PreferencesFormState {
-  budget: number
-  budgetType: 'personalizado' | 'maximo'
+  loanAmount: number
+  loanType: 'personalizado' | 'maximo'
   salary: number
   duration: number
+  monotributista: boolean
+  secondHome: boolean
   banks: string[]
   provinces: string[]
   creditType: CreditType
@@ -46,10 +48,12 @@ const PreferencesForm = () => {
 
   // ** States
   const [values, setValues] = useState<PreferencesFormState>({
-    budget: 0,
+    loanAmount: 0,
     salary: 0,
     duration: 20,
-    budgetType: 'personalizado',
+    monotributista: false,
+    secondHome: false,
+    loanType: 'personalizado',
     banks: [],
     creditType: 'Adquisicion',
     provinces: []
@@ -68,17 +72,19 @@ const PreferencesForm = () => {
       ...context?.data,
       user: {
         ...context?.data.user,
-        budget: values.budget,
-        budgetType: values.budgetType,
+        loanAmount: values.loanAmount,
+        loanType: values.loanType,
         salary: values.salary,
         duration: values.duration,
         banks: values.banks,
+        monotributista: values.monotributista,
+        secondHome: values.secondHome,
         provinces: values.provinces,
         creditType: values.creditType
       }
     })
 
-    router.push('/comparison')
+    router.push('/simulation/comparison')
   }
 
   useEffect(() => {
@@ -104,6 +110,10 @@ const PreferencesForm = () => {
 
   const handleAlignment = (event: React.MouseEvent<HTMLElement>, newAlignment: string | null) => {
     setAlignment(newAlignment)
+  }
+
+  const handleCheckboxChange = (prop: keyof PreferencesFormState) => (event: ChangeEvent<HTMLInputElement>) => {
+    setValues({ ...values, [prop]: event.target.checked })
   }
 
   return (
@@ -135,29 +145,26 @@ const PreferencesForm = () => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <ToggleButtonGroup
-                    value={values.budgetType}
+                    value={values.loanType}
                     exclusive
                     fullWidth
                     defaultValue={'personalizado'}
                     onChange={(event: React.MouseEvent<HTMLElement>, newAlignment: string | null) => {
                       if (newAlignment === null) return
-                      setValues({ ...values, budgetType: newAlignment as 'personalizado' | 'maximo' })
+                      setValues({ ...values, loanType: newAlignment as 'personalizado' | 'maximo' })
                       context?.setData({
                         ...context.data,
-                        user: { ...context.data.user, budgetType: newAlignment as 'personalizado' | 'maximo' }
+                        user: { ...context.data.user, loanType: newAlignment as 'personalizado' | 'maximo' }
                       })
                     }}
                     style={{ height: '100%' }}
                     aria-label='text alignment'
                   >
-                    <ToggleButton value='personalizado'
-                                        style={{ height: '100%' }}
-
-aria-label='left aligned'>
-                      Presupuesto Personalizado
+                    <ToggleButton value='personalizado' style={{ height: '100%' }} aria-label='left aligned'>
+                      Monto Personalizado
                     </ToggleButton>
                     <ToggleButton value='maximo' aria-label='right aligned'>
-                      Presupuesto Máximo
+                      Monto Máximo
                     </ToggleButton>
                   </ToggleButtonGroup>
                 </Grid>
@@ -243,15 +250,15 @@ aria-label='left aligned'>
                     }}
                   />
                 </Grid>
-                {values.budgetType === 'personalizado' && (
+                {values.loanType === 'personalizado' && (
                   <>
-                    <Grid style={{ display: values.budgetType == 'personalizado' ? '' : 'hidden' }} item xs={12} md={3}>
+                    <Grid style={{ display: values.loanType == 'personalizado' ? '' : 'hidden' }} item xs={12} md={3}>
                       <TextField
                         fullWidth
                         type='number'
-                        value={Number(values.budget).toFixed(0)}
-                        label={`Presupuesto del inmueble`}
-                        onChange={handleChange('budget')}
+                        value={Number(values.loanAmount).toFixed(0)}
+                        label={`Monto del préstamo`}
+                        onChange={handleChange('loanAmount')}
                         placeholder='$100000000'
                         InputProps={{
                           inputProps: { min: 1, max: 999999999999 },
@@ -263,15 +270,15 @@ aria-label='left aligned'>
                       <TextField
                         fullWidth
                         type='number'
-                        value={(values.budget / (context?.data.dolar ?? 1)).toFixed(0)}
-                        label={<Typography>Presupuesto del inmueble</Typography>}
+                        value={(values.loanAmount / (context?.data.dolar ?? 1)).toFixed(0)}
+                        label={<Typography>Monto del préstamo</Typography>}
                         onChange={e => {
                           const value = e.target.value
                           if (context?.data.dolar) {
-                            setValues({ ...values, budget: Number(value) * context.data.dolar })
+                            setValues({ ...values, loanAmount: Number(value) * context.data.dolar })
                             context?.setData({
                               ...context.data,
-                              user: { ...context.data.user, budget: Number(value) * context.data.dolar }
+                              user: { ...context.data.user, loanAmount: Number(value) * context.data.dolar }
                             })
                           }
                         }}
@@ -286,10 +293,34 @@ aria-label='left aligned'>
                   </>
                 )}
               </Grid>
+
+              {/* is Monotributista */}
+              <Grid container>
+                <Grid item xs={12}>
+                  <FormControl component='fieldset'>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={<Checkbox onChange={handleCheckboxChange('monotributista')} />}
+                        label='Soy monotributista'
+                        labelPlacement='end'
+                      />
+                    </FormGroup>
+                  </FormControl>
+                  <FormControl component='fieldset'>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={<Checkbox onChange={handleCheckboxChange('secondHome')} />}
+                        label='Segunda Vivienda'
+                        labelPlacement='end'
+                      />
+                    </FormGroup>
+                  </FormControl>
+                </Grid>
+              </Grid>
             </Grid>
 
             <Grid item xs={12}>
-              <Button type='submit' variant='contained' size='large' onClick={handleClick}>
+              <Button type='submit' disabled={!values.salary} variant='contained' size='large' onClick={handleClick}>
                 Confirmar
               </Button>
             </Grid>

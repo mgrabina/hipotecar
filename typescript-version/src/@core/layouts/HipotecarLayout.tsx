@@ -74,9 +74,9 @@ export type ContextType = {
   setData: Dispatch<
     SetStateAction<{
       user: UserData
-      credits: any[]
-      provinces: any
-      banks: any
+      credits: Credit[]
+      provinces: string[]
+      banks: string[]
       loaded: boolean
       dolar?: number
     }>
@@ -152,8 +152,8 @@ export const DataProvider = ({ children }: { children: any }) => {
 
       const [loadedCredits, loadedProvinces, loadedBanks, dolar] = await Promise.all(promises)
 
-      const provinceNames = Array.isArray(loadedProvinces) ? loadedProvinces.map(p => p.Provincia) : []
-      const bankNames = Array.isArray(loadedBanks) ? loadedBanks.map(b => b.Banco) : []
+      const provinceNames = Array.isArray(loadedProvinces) ? loadedProvinces.map(p => p.Provincia).filter(p => !!p) : []
+      const bankNames = Array.isArray(loadedBanks) ? loadedBanks.map(b => b.Banco).filter(b => !!b) : []
 
       setData(prevData => ({
         ...prevData,

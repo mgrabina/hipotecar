@@ -64,16 +64,16 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
     }
 
     // @todo Get UVA value automatically from API
-    if (userData.budgetType === 'personalizado') {
+    if (userData.loanType === 'personalizado') {
       if (
-        userData?.budget &&
+        userData?.loanAmount &&
         credit['Monto Maximo en UVAs'] &&
-        credit['Monto Maximo en UVAs'] * 922 < userData.budget
+        credit['Monto Maximo en UVAs'] * 922 > userData.loanAmount
       ) {
         reasons.push(
-          `El monto máximo financiable de ${
-            credit['Monto Maximo en UVAs'] * 922
-          } es menor que el presupuesto necesario de ${userData.budget}.`
+          `El monto máximo financiable de ${credit['Monto Maximo en UVAs'] * 922} es mayor que el monto deseado de ${
+            userData.loanAmount
+          }.`
         )
         isCompatible = false
       }
@@ -106,16 +106,28 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
       }
     }
 
+    // Check monotributista
+    if (credit['Acepta Monotributistas'] == 'FALSE' && userData?.monotributista) {
+      reasons.push(`El crédito no acepta monotributistas.`)
+      isCompatible = false
+    }
+
+    // Check second house
+    if (credit['Apto Segunda Vivienda'] == 'FALSE' && userData?.secondHome) {
+      reasons.push(`El crédito no es apto para segundas viviendas.`)
+      isCompatible = false
+    }
+
     // Check Quota Salary Ratio
     if (
       userData.salary &&
-      userData.budgetType === 'personalizado' &&
-      userData.budget &&
+      userData.loanType === 'personalizado' &&
+      userData.loanAmount &&
       userData.duration &&
       credit['Relacion Cuota Ingreso'] &&
       credit['Relacion Cuota Ingreso'] > 0
     ) {
-      const cuotaMensual = calcularCuotaMensual(userData.budget, credit.Tasa, userData.duration)
+      const cuotaMensual = calcularCuotaMensual(userData.loanAmount, credit.Tasa, userData.duration)
       const rci = (cuotaMensual / userData.salary) * 100
 
       if (rci > credit['Relacion Cuota Ingreso']) {
@@ -129,7 +141,7 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
     }
 
     if (isCompatible) {
-      creditosCompatibles.push({ credit, loan: userData.budgetType === 'personalizado' ? userData.budget ?? 0 : 0 })
+      creditosCompatibles.push({ credit, loan: userData.loanType === 'personalizado' ? userData.loanAmount ?? 0 : 0 })
     } else {
       razonesDeLosRestantes.push(`Crédito '${credit.Nombre}' en ${credit.Banco}: ${reasons.join(' ')}\n`)
     }
@@ -194,4 +206,34 @@ export async function getDolarMep() {
   } = await ret.json()
 
   return data.venta
+}
+
+export function getLoanPlotData(loanAmount: number, tasa: number, duration: number) {
+  if (!loanAmount || !tasa || !duration) return []
+
+
+
+  const tasaMensual = tasa / 12 / 100
+  const plazoMeses = duration * 12
+
+  const cuotaMensual = calcularCuotaMensual(loanAmount, tasa, duration)
+
+  const data = []
+  let saldoPendiente = loanAmount
+  for (let i = 0; i < plazoMeses; i++) {
+    const interes = Math.floor(saldoPendiente * tasaMensual)
+    const amortizacion = Math.floor(cuotaMensual - interes)
+
+    saldoPendiente -= amortizacion
+
+    data.push({
+      mes: i + 1,
+      cuotaMensual,
+      interes,
+      amortizacion,
+      saldoPendiente
+    })
+  }
+
+  return data
 }
