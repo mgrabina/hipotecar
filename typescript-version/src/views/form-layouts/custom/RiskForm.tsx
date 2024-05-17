@@ -30,7 +30,7 @@ interface State {
   notOver50: boolean
   noDebts: boolean
   paymentCapacity: boolean
-  minimumBudget: boolean
+  minimumLoanAmount: boolean
 }
 
 const RiskForm = () => {
@@ -41,7 +41,7 @@ const RiskForm = () => {
   const [values, setValues] = useState<State>({
     stableWork: true,
     notOver50: true,
-    minimumBudget: true,
+    minimumLoanAmount: true,
     noDebts: true,
     paymentCapacity: true
   })
@@ -58,7 +58,7 @@ const RiskForm = () => {
         riskAssesmentPassed: true
       }
     })
-    router.push('/preferences')
+    router.push('/simulation/preferences')
   }
 
   const allowed = !Object.values(values).some(v => v === false)
@@ -93,7 +93,7 @@ const RiskForm = () => {
                   label='No tengo mas de 50 años'
                 />
                 <FormControlLabel
-                  control={<Checkbox onChange={handleChange('minimumBudget')} defaultChecked />}
+                  control={<Checkbox onChange={handleChange('minimumLoanAmount')} defaultChecked />}
                   label='Tengo disponible un monto minimo para cubrir gastos operativos'
                 />
               </FormGroup>

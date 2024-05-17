@@ -15,7 +15,7 @@ const createUsersTable = async () => {
       id SERIAL PRIMARY KEY,
       email VARCHAR(255) UNIQUE NOT NULL,
       name VARCHAR(255) NOT NULL,
-      budget NUMERIC,
+      loanAmount NUMERIC,
       salary NUMERIC,
       duration INTEGER,
       banks TEXT,
@@ -43,16 +43,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).json({ error: 'No email provided' })
     }
 
-
     const data = body.data
     const compatibleCredits = body.compatibleCredits
 
     const insertUser = async () => {
       return await sql`
-        INSERT INTO "users" (email, name, budget, salary, duration, banks, provinces, creditType, compatibleCredits) VALUES (
+        INSERT INTO "users" (email, name, loanAmount, salary, duration, banks, provinces, creditType, compatibleCredits) VALUES (
           ${data.email},
           ${data.name},
-          ${data.budget},
+          ${data.loanAmount},
           ${data.salary},
           ${data.duration},
           ${data.banks?.toString()},
@@ -62,7 +61,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         )
         ON CONFLICT (email) DO UPDATE SET
           name = EXCLUDED.name,
-          budget = EXCLUDED.budget,
+          loanAmount = EXCLUDED.loanAmount,
           salary = EXCLUDED.salary,
           duration = EXCLUDED.duration,
           banks = EXCLUDED.banks,

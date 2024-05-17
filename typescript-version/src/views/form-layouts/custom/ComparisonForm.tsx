@@ -73,7 +73,7 @@ const sortTypes = [
 type SortType = typeof sortTypes[number]
 
 type ComparisonTableState = {
-  budget: number
+  loanAmount: number
   duration: number
   sortType: SortType
 }
@@ -143,7 +143,7 @@ const ComparisonForm = () => {
   }
 
   const [values, setValues] = useState<ComparisonTableState>({
-    budget: 0,
+    loanAmount: 0,
     sortType: 'Cuota Mensual mas baja',
     duration: 20
   })
@@ -183,18 +183,18 @@ const ComparisonForm = () => {
     if (!context?.data.user || !context?.data.credits) return
 
     const compatibleCredits =
-      context?.data.user.budgetType === 'personalizado'
+      context?.data.user.loanType === 'personalizado'
         ? getCompatibleCredits(context?.data.credits, context?.data.user)
         : getBiggestLoanBasedOnSalary(context?.data.credits, context?.data.user)
 
     setCompatibleCreditsResult(compatibleCredits)
 
-    if (context?.data.user.budgetType === 'maximo') {
+    if (context?.data.user.loanType === 'maximo') {
       setValues({ ...values, sortType: 'Monto Total mas alto' })
     } else {
       setValues({ ...values, sortType: 'Cuota Mensual mas baja' })
     }
-  }, [context?.data.user.budgetType, context?.data.credits])
+  }, [context?.data.user.loanType, context?.data.credits])
 
   const sortCredits = (credits: CreditEvaluationResult['creditosCompatibles'], sortType: SortType) => {
     credits.sort((a, b) => {
@@ -264,7 +264,7 @@ const ComparisonForm = () => {
               <Grid container spacing={4}>
                 <Grid item xs={12} md={6}>
                   <ToggleButtonGroup
-                    value={context?.data.user.budgetType}
+                    value={context?.data.user.loanType}
                     exclusive
                     fullWidth
                     style={{ height: '100%' }}
@@ -273,16 +273,16 @@ const ComparisonForm = () => {
                       if (newAlignment === null) return
                       context?.setData({
                         ...context.data,
-                        user: { ...context.data.user, budgetType: newAlignment as 'personalizado' | 'maximo' }
+                        user: { ...context.data.user, loanType: newAlignment as 'personalizado' | 'maximo' }
                       })
                     }}
                     aria-label='text alignment'
                   >
                     <ToggleButton style={{ height: '100%' }} value='personalizado' aria-label='left aligned'>
-                      Presupuesto Personalizado
+                      Monto Personalizado
                     </ToggleButton>
                     <ToggleButton value='maximo' aria-label='right aligned'>
-                      Presupuesto Máximo
+                      Monto Máximo
                     </ToggleButton>
                   </ToggleButtonGroup>
                 </Grid>
@@ -307,15 +307,15 @@ const ComparisonForm = () => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              {context?.data.user.budgetType === 'personalizado' && (
+              {context?.data.user.loanType === 'personalizado' && (
                 <Grid container spacing={4}>
                   <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
                       type='number'
-                      value={Number(context?.data.user.budget).toFixed(0)}
-                      label={`Presupuesto del inmueble`}
-                      onChange={handleChange('budget')}
+                      value={Number(context?.data.user.loanAmount).toFixed(0)}
+                      label={`Monto del préstamo`}
+                      onChange={handleChange('loanAmount')}
                       placeholder='100.000.000'
                       InputProps={{
                         inputProps: { min: 1, max: 999999999999 },
@@ -327,15 +327,19 @@ const ComparisonForm = () => {
                     <TextField
                       fullWidth
                       type='number'
-                      value={context?.data.user.budget ? (context.data.user.budget / (context?.data.dolar ?? 1)).toFixed(0): 0}
-                      label={`Presupuesto del inmueble`}
+                      value={
+                        context?.data.user.loanAmount
+                          ? (context.data.user.loanAmount / (context?.data.dolar ?? 1)).toFixed(0)
+                          : 0
+                      }
+                      label={`Monto del préstamo`}
                       onChange={e => {
                         const value = e.target.value
                         if (context?.data.dolar) {
-                          setValues({ ...values, budget: Number(value) * context.data.dolar })
+                          setValues({ ...values, loanAmount: Number(value) * context.data.dolar })
                           context?.setData({
                             ...context.data,
-                            user: { ...context.data.user, budget: Number(value) * context.data.dolar }
+                            user: { ...context.data.user, loanAmount: Number(value) * context.data.dolar }
                           })
                         }
                       }}
@@ -357,7 +361,7 @@ const ComparisonForm = () => {
                       {/* Image */}
                       <TableCell></TableCell>
                       <TableCell>Creditos Recomendados</TableCell>
-                      {context?.data.user.budgetType === 'maximo' && <TableCell>Monto Total</TableCell>}
+                      {context?.data.user.loanType === 'maximo' && <TableCell>Monto Total</TableCell>}
                       <TableCell>Primera Cuota</TableCell>
                       <TableCell>Adelanto</TableCell>
                       <TableCell>
@@ -443,7 +447,7 @@ const ComparisonForm = () => {
                           </Box>
                         </TableCell>
 
-                        {context?.data.user.budgetType === 'maximo' && (
+                        {context?.data.user.loanType === 'maximo' && (
                           <TableCell>
                             <Grid container>
                               <Grid item xs={12} color='blueviolet'>
@@ -462,18 +466,16 @@ const ComparisonForm = () => {
                                 context?.data.user.duration &&
                                 parseMoney(calcularCuotaMensual(loan, row.Tasa, context?.data.user.duration))}
 
-                              {row['Tasa especial por tiempo definido'] && loan && context?.data.user.duration && (
-                                <Typography>
-                                  {parseMoney(
-                                    calcularCuotaMensual(
-                                      loan,
-                                      row['Tasa especial por tiempo definido'],
-                                      context?.data.user.duration
-                                    )
-                                  )}{' '}
-                                  por {row['Duracion Tasa Especial en Meses']} meses
-                                </Typography>
-                              )}
+                              {row['Tasa especial por tiempo definido'] &&
+                                loan &&
+                                context?.data.user.duration &&
+                                ` (${parseMoney(
+                                  calcularCuotaMensual(
+                                    loan,
+                                    row['Tasa especial por tiempo definido'],
+                                    context?.data.user.duration
+                                  )
+                                )} por ${row['Duracion Tasa Especial en Meses']} meses)`}
                             </Grid>
                             <Grid item xs={12} color='green'>
                               {loan &&
@@ -487,19 +489,15 @@ const ComparisonForm = () => {
                               {row['Tasa especial por tiempo definido'] &&
                                 loan &&
                                 context?.data.user.duration &&
-                                context.data.dolar && (
-                                  <Typography>
-                                    {parseMoney(
-                                      calcularCuotaMensual(
-                                        loan,
-                                        row['Tasa especial por tiempo definido'],
-                                        context?.data.user.duration
-                                      ) / context.data.dolar,
-                                      'USD'
-                                    )}{' '}
-                                    por {row['Duracion Tasa Especial en Meses']} meses
-                                  </Typography>
-                                )}
+                                context.data.dolar &&
+                                ` (${parseMoney(
+                                  calcularCuotaMensual(
+                                    loan,
+                                    row['Tasa especial por tiempo definido'],
+                                    context?.data.user.duration
+                                  ) / context.data.dolar,
+                                  'USD'
+                                )} por ${row['Duracion Tasa Especial en Meses']} meses)`}
                             </Grid>
                           </Grid>
                         </TableCell>
@@ -521,8 +519,11 @@ const ComparisonForm = () => {
 
                         <TableCell>
                           {row.Link.length > 0 && (
-                            <Link href={row.Link} target='_blank'>
-                              Ir al sitio del banco
+                            <Link
+                              href={`/credit/${row.Id}?loan=${loan}&duration=${context?.data.user.duration}`}
+                              target='_blank'
+                            >
+                              Ver detalles
                             </Link>
                           )}
                         </TableCell>
@@ -532,7 +533,7 @@ const ComparisonForm = () => {
                       <TableRow>
                         <TableCell colSpan={4}>
                           <Typography align='center' variant='caption'>
-                            No hay creditos compatibles con tus preferencias. Intenta reducir el valor del inmueble o
+                            No hay creditos compatibles con tus preferencias. Intenta reducir el valor del préstamo o
                             extender la duracion.
                           </Typography>
                         </TableCell>

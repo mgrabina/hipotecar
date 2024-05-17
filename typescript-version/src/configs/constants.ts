@@ -55,12 +55,14 @@ export const Provinces = [
 ] as const
 export type Province = typeof Provinces[number]
 
-export interface Credit {
+export type Credit = {
+  Id: number
   Banco: string
-  Tipo: CreditType
-  Link: string
   Nombre: string
   'Sueldo En Banco': 'TRUE' | 'FALSE'
+  Tipo: CreditType
+  'Acepta Monotributistas': 'TRUE' | 'FALSE'
+  'Apto Segunda Vivienda': 'TRUE' | 'FALSE'
   Duracion: number
   'Monto Maximo en UVAs': number
   '% Maximo de Financiacion': number
@@ -69,9 +71,11 @@ export interface Credit {
   'Tasa especial por tiempo definido': number
   'Duracion Tasa Especial en Meses': number
   'Ingresos Minimos': number
-  'Pre-Cancelacion': string
-  'Prima de seguro': number
+  '% Pre-Cancelacion': number
+  '% Prima de seguro': number
   Provincias: string
+  Link: string
+  'Logo Banco': string
 }
 
 export async function loadDataFromCSV<T>(url: string): Promise<T[]> {

@@ -82,10 +82,10 @@ function QontoStepIcon(props: StepIconProps) {
 }
 
 export const steps = ['Bienvenida', 'Test de riesgo', 'Preferencias', 'Resultados'] as const
-export const stepLinks = ['/name', '/risk', '/preferences', '/comparison']
+export const stepLinks = ['/simulation/name', '/simulation/risk', '/simulation/preferences', '/simulation/comparison']
 
 export const getActiveStep = (data: UserData) => {
-  if ((data.budgetType === "maximo" || data.budget) && data.creditType && data.duration) {
+  if ((data.loanType === 'maximo' || data.loanAmount) && data.creditType && data.duration) {
     return 3
   }
 
@@ -103,13 +103,17 @@ export const getActiveStep = (data: UserData) => {
 export default function ProgressBar() {
   const context = useData()
   const theme = useTheme()
+  const router = useRouter()
+
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   const activeStep = context?.data ? getActiveStep(context?.data.user) : 0
 
+  if (!router.pathname.includes('simulation')) return null
+
   return (
-    <div style={{ padding: isSmallScreen ? '1em' : '3em', width: "100%", overflow: "scroll" }}>
+    <div style={{ padding: isSmallScreen ? '1em' : '3em', width: '100%', overflow: 'scroll' }}>
       <Stack sx={{ width: '100%' }} spacing={4}>
         <Stepper alternativeLabel={!isSmallScreen} activeStep={activeStep} connector={<QontoConnector />}>
           {steps.map((label, index) => (
