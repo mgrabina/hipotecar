@@ -38,8 +38,7 @@ const CreditComparisonPage = () => {
       : []
 
   return (
-    <Card>
-      <CardHeader title='Comparación de Créditos' titleTypographyProps={{ variant: 'h6' }} />
+    <Card style={{marginTop: "4em"}}>
       <CardContent>
         <TableContainer>
           <Table sx={{ minWidth: 800 }} aria-label='comparison table'>
