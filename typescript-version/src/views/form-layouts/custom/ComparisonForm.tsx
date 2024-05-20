@@ -413,7 +413,7 @@ const ComparisonForm = () => {
                             height={isSmallScreen ? 20 : 40}
                           />
                         </TableCell>
-                        <TableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
+                        <TableCell sx={{ py: `0.5em !important` }}>
                           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                               {row.Nombre}
@@ -423,6 +423,7 @@ const ComparisonForm = () => {
                               {index === 0 && (
                                 <Typography variant='caption' margin='0.3em'>
                                   <Chip
+                                    style={{ margin: '0.2em 0 0.2em 0' }}
                                     label={
                                       values.sortType === 'Monto Total mas alto'
                                         ? 'Monto mas alto'
@@ -443,9 +444,35 @@ const ComparisonForm = () => {
                               )}
                               {row['Sueldo En Banco'] === 'TRUE' && (
                                 <Typography variant='caption' margin='0.3em'>
-                                  <Chip label='Tasa especial' size='small' color='info' />
+                                  <Chip
+                                    style={{ margin: '0.2em 0 0.2em 0' }}
+                                    label='Tasa especial'
+                                    size='small'
+                                    color='info'
+                                  />
                                 </Typography>
                               )}
+                              {row['% Prima de seguro'] > 0 && (
+                                <Typography variant='caption' margin='0.3em'>
+                                  <Chip
+                                    style={{ margin: '0.2em 0 0.2em 0' }}
+                                    label='Seguro contra inflación'
+                                    size='small'
+                                    color='warning'
+                                  />
+                                </Typography>
+                              )}
+                              {row['Sueldo En Banco'] === 'TRUE' && (
+                                <Typography variant='caption' margin='0.3em'>
+                                  <Chip
+                                    style={{ margin: '0.2em 0 0.2em 0' }}
+                                    label='Sueldo en Banco'
+                                    size='small'
+                                    color='success'
+                                  />
+                                </Typography>
+                              )}
+
                               {/*  */}
                             </div>
                           </Box>
@@ -469,17 +496,18 @@ const ComparisonForm = () => {
                               {loan &&
                                 context?.data.user.duration &&
                                 parseMoney(calcularCuotaMensual(loan, row.Tasa, context?.data.user.duration))}
-
+                            </Grid>
+                            <Grid item xs={12} color='blueviolet' style={{ opacity: 0.7 }}>
                               {row['Tasa especial por tiempo definido'] &&
                                 loan &&
                                 context?.data.user.duration &&
-                                ` (${parseMoney(
+                                ` ${parseMoney(
                                   calcularCuotaMensual(
                                     loan,
                                     row['Tasa especial por tiempo definido'],
                                     context?.data.user.duration
                                   )
-                                )} por ${row['Duracion Tasa Especial en Meses']} meses)`}
+                                )} por ${row['Duracion Tasa Especial en Meses']} meses`}
                             </Grid>
                             <Grid item xs={12} color='green'>
                               {loan &&
@@ -490,18 +518,20 @@ const ComparisonForm = () => {
                                     context.data.dolar,
                                   'USD'
                                 )}{' '}
+                            </Grid>
+                            <Grid item xs={12} color='green' style={{ opacity: 0.7 }}>
                               {row['Tasa especial por tiempo definido'] &&
                                 loan &&
                                 context?.data.user.duration &&
                                 context.data.dolar &&
-                                ` (${parseMoney(
+                                ` ${parseMoney(
                                   calcularCuotaMensual(
                                     loan,
                                     row['Tasa especial por tiempo definido'],
                                     context?.data.user.duration
                                   ) / context.data.dolar,
                                   'USD'
-                                )} por ${row['Duracion Tasa Especial en Meses']} meses)`}
+                                )} por ${row['Duracion Tasa Especial en Meses']} meses`}
                             </Grid>
                           </Grid>
                         </TableCell>

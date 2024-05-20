@@ -257,7 +257,9 @@ const PreferencesForm = () => {
                         fullWidth
                         type='number'
                         value={Number(values.loanAmount).toFixed(0)}
-                        label={`Monto del préstamo`}
+                        label={`Monto del préstamo (${
+                          context?.data.UVA ? Math.floor(values.loanAmount / context.data.UVA).toLocaleString() + ' UVAs' : ''
+                        })`}
                         onChange={handleChange('loanAmount')}
                         placeholder='$100000000'
                         InputProps={{
@@ -271,7 +273,10 @@ const PreferencesForm = () => {
                         fullWidth
                         type='number'
                         value={(values.loanAmount / (context?.data.dolar ?? 1)).toFixed(0)}
-                        label={<Typography>Monto del préstamo</Typography>}
+                        label={`Monto del préstamo (${
+
+                          context?.data.UVA ? Math.floor(values.loanAmount / context.data.UVA).toLocaleString() + ' UVAs' : ''
+                        })`}
                         onChange={e => {
                           const value = e.target.value
                           if (context?.data.dolar) {

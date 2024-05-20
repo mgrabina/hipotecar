@@ -147,23 +147,27 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
     }
   })
 
-  // Quedarse el credito de tasa mas baja por banco
-  const creditosCompatiblesPorBanco = creditosCompatibles.reduce((acc, creditObj) => {
+  // Por cada par de creditos con mismo (nombre y banco), quedarse con el que tenga Sueldo en Banco
+  const creditosCompatiblesPorNombre = creditosCompatibles.reduce((acc, creditObj) => {
     const { credit: credit } = creditObj
 
-    if (!acc[credit.Banco]) {
-      acc[credit.Banco] = []
-    }
-    acc[credit.Banco].push(creditObj)
+    const id = credit.Nombre + '-' + credit.Banco
 
-    return acc
+    if (!acc[id]) {
+      acc[id] = []
+    }
+    acc[id].push(creditObj)
+
+    return acc // Add this line to return the updated accumulator object
   }, {} as Record<string, CreditEvaluationResult['creditosCompatibles']>)
 
-  const compatibles = Object.keys(creditosCompatiblesPorBanco)?.map(banco => {
-    const creditos = creditosCompatiblesPorBanco[banco]
-    const minTasa = Math.min(...creditos.map(credit => credit.credit.Tasa))
+  console.log(creditosCompatiblesPorNombre)
 
-    return creditos.find(credit => credit.credit.Tasa === minTasa) ?? creditos[0]
+  const compatibles = Object.keys(creditosCompatiblesPorNombre).map(key => {
+    const creditos = creditosCompatiblesPorNombre[key]
+    const credit = creditos.find((credit: any) => credit.credit['Sueldo En Banco'] == 'TRUE') ?? creditos[0]
+
+    return credit
   })
 
   return {
@@ -208,10 +212,30 @@ export async function getDolarMep() {
   return data.venta
 }
 
+export interface BCRAResponse {
+  status: number
+  results: BCRAResponseItem[]
+}
+
+export interface BCRAResponseItem {
+  idVariable: number
+  cdSerie: number
+  descripcion: string
+  fecha: string
+  valor: number
+}
+
+const UVABCRAVariableId = 31
+
+export async function getUVA() {
+  const ret = await fetch('https://api.bcra.gob.ar/estadisticas/v2.0/principalesvariables')
+  const html = (await ret.json()) as BCRAResponse
+
+  return html.results.find(r => r.idVariable === UVABCRAVariableId)?.valor
+}
+
 export function getLoanPlotData(loanAmount: number, tasa: number, duration: number) {
   if (!loanAmount || !tasa || !duration) return []
-
-
 
   const tasaMensual = tasa / 12 / 100
   const plazoMeses = duration * 12

@@ -16,18 +16,24 @@ const FooterContent = () => {
         display: 'flex',
         flexWrap: 'wrap',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         marginRight: '7em',
         marginLeft: '7em'
       }}
     >
       <Typography sx={{ display: { xs: 'none', md: 'block' } }} color='text.secondary'>
-        {`Sitio con fines informativos, no representa consejo de inversion.`}
-      </Typography>
+        {`Sitio con fines informativos. Debates, Comentarios y Sugerencias en `}
+        <Link
+          href='https://t.me/micreditohipotecario'
+          style={{
+            textDecoration: 'underline',
+            color: 'blue',
 
-      <Typography sx={{ display: { xs: 'none', md: 'block' } }} color='text.secondary'>
-        {`Comunidad, Comentarios y Sugerencias en `}
-        <Link href='https://t.me/micreditohipotecario' target='_blank' rel='noreferrer' color='inherit'>
+          }}
+          target='_blank'
+          rel='noreferrer'
+          color='inherit'
+        >
           Telegram
         </Link>
       </Typography>
