@@ -30,7 +30,7 @@ import { Credit, banksCsvUrl, creditsCsvUrl, loadDataFromCSV, provincesCsvUrl } 
 import { useAsync } from 'react-async'
 import { set } from 'nprogress'
 import { PreferencesFormState } from 'src/views/form-layouts/custom/PreferencesForm'
-import { getDolarMep } from '../utils/misc'
+import { getDolarMep, getUVA } from '../utils/misc'
 
 const VerticalLayoutWrapper = styled('div')({
   height: '100%',
@@ -70,6 +70,7 @@ export type ContextType = {
     provinces: string[]
     banks: string[]
     dolar?: number
+    UVA?: number
   }
   setData: Dispatch<
     SetStateAction<{
@@ -79,6 +80,7 @@ export type ContextType = {
       banks: string[]
       loaded: boolean
       dolar?: number
+      UVA?: number
     }>
   >
 }
@@ -94,13 +96,15 @@ export const DataProvider = ({ children }: { children: any }) => {
     provinces: string[]
     banks: string[]
     dolar?: number
+    UVA?: number
   }>({
     loaded: false,
     user: {},
     credits: [],
     provinces: [],
     banks: [],
-    dolar: undefined
+    dolar: undefined,
+    UVA: undefined
   })
 
   // Effect to load data from localStorage when the component mounts
@@ -150,7 +154,13 @@ export const DataProvider = ({ children }: { children: any }) => {
         promises.push(Promise.resolve(data.dolar))
       }
 
-      const [loadedCredits, loadedProvinces, loadedBanks, dolar] = await Promise.all(promises)
+      if (!data.UVA) {
+        promises.push(getUVA())
+      } else {
+        promises.push(Promise.resolve(data.UVA))
+      }
+
+      const [loadedCredits, loadedProvinces, loadedBanks, dolar, UVA] = await Promise.all(promises)
 
       const provinceNames = Array.isArray(loadedProvinces) ? loadedProvinces.map(p => p.Provincia).filter(p => !!p) : []
       const bankNames = Array.isArray(loadedBanks) ? loadedBanks.map(b => b.Banco).filter(b => !!b) : []
@@ -160,7 +170,8 @@ export const DataProvider = ({ children }: { children: any }) => {
         credits: data.credits.length === 0 ? loadedCredits : prevData.credits,
         provinces: data.provinces.length === 0 ? provinceNames : prevData.provinces,
         banks: data.banks.length === 0 ? bankNames : prevData.banks,
-        dolar: data.dolar === undefined ? dolar : prevData.dolar
+        dolar: data.dolar === undefined ? dolar : prevData.dolar,
+        UVA: data.UVA === undefined ? UVA : prevData.UVA
       }))
     }
 

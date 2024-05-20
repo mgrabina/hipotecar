@@ -190,8 +190,10 @@ const ComparisonForm = () => {
     setCompatibleCreditsResult(compatibleCredits)
 
     if (context?.data.user.loanType === 'maximo') {
+      sortCredits(compatibleCredits.creditosCompatibles, 'Monto Total mas alto')
       setValues({ ...values, sortType: 'Monto Total mas alto' })
     } else {
+      sortCredits(compatibleCredits.creditosCompatibles, 'Cuota Mensual mas baja')
       setValues({ ...values, sortType: 'Cuota Mensual mas baja' })
     }
   }, [context?.data.user.loanType, context?.data.credits])
@@ -314,7 +316,11 @@ const ComparisonForm = () => {
                       fullWidth
                       type='number'
                       value={Number(context?.data.user.loanAmount).toFixed(0)}
-                      label={`Monto del préstamo`}
+                      label={`Monto del préstamo (${
+                        context?.data.UVA && context?.data.user.loanAmount
+                          ? Math.floor(context?.data.user.loanAmount / context.data.UVA).toLocaleString() + ' UVAs'
+                          : ''
+                      })`}
                       onChange={handleChange('loanAmount')}
                       placeholder='100.000.000'
                       InputProps={{
@@ -332,7 +338,11 @@ const ComparisonForm = () => {
                           ? (context.data.user.loanAmount / (context?.data.dolar ?? 1)).toFixed(0)
                           : 0
                       }
-                      label={`Monto del préstamo`}
+                      label={`Monto del préstamo (${
+                        context?.data.UVA && context?.data.user.loanAmount
+                          ? Math.floor(context?.data.user.loanAmount / context.data.UVA).toLocaleString() + ' UVAs'
+                          : ''
+                      })`}
                       onChange={e => {
                         const value = e.target.value
                         if (context?.data.dolar) {
@@ -413,7 +423,7 @@ const ComparisonForm = () => {
                             height={isSmallScreen ? 20 : 40}
                           />
                         </TableCell>
-                        <TableCell sx={{ py: theme => `${theme.spacing(0.5)} !important` }}>
+                        <TableCell sx={{ py: `0.5em !important` }}>
                           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                             <Typography sx={{ fontWeight: 500, fontSize: '0.875rem !important' }}>
                               {row.Nombre}
@@ -423,6 +433,7 @@ const ComparisonForm = () => {
                               {index === 0 && (
                                 <Typography variant='caption' margin='0.3em'>
                                   <Chip
+                                    style={{ margin: '0.2em 0 0.2em 0' }}
                                     label={
                                       values.sortType === 'Monto Total mas alto'
                                         ? 'Monto mas alto'
@@ -443,9 +454,35 @@ const ComparisonForm = () => {
                               )}
                               {row['Sueldo En Banco'] === 'TRUE' && (
                                 <Typography variant='caption' margin='0.3em'>
-                                  <Chip label='Tasa especial' size='small' color='info' />
+                                  <Chip
+                                    style={{ margin: '0.2em 0 0.2em 0' }}
+                                    label='Tasa especial'
+                                    size='small'
+                                    color='info'
+                                  />
                                 </Typography>
                               )}
+                              {row['% Prima de seguro'] > 0 && (
+                                <Typography variant='caption' margin='0.3em'>
+                                  <Chip
+                                    style={{ margin: '0.2em 0 0.2em 0' }}
+                                    label='Seguro contra inflación'
+                                    size='small'
+                                    color='warning'
+                                  />
+                                </Typography>
+                              )}
+                              {row['Sueldo En Banco'] === 'TRUE' && (
+                                <Typography variant='caption' margin='0.3em'>
+                                  <Chip
+                                    style={{ margin: '0.2em 0 0.2em 0' }}
+                                    label='Sueldo en Banco'
+                                    size='small'
+                                    color='success'
+                                  />
+                                </Typography>
+                              )}
+
                               {/*  */}
                             </div>
                           </Box>
@@ -469,17 +506,18 @@ const ComparisonForm = () => {
                               {loan &&
                                 context?.data.user.duration &&
                                 parseMoney(calcularCuotaMensual(loan, row.Tasa, context?.data.user.duration))}
-
+                            </Grid>
+                            <Grid item xs={12} color='blueviolet' style={{ opacity: 0.7 }}>
                               {row['Tasa especial por tiempo definido'] &&
                                 loan &&
                                 context?.data.user.duration &&
-                                ` (${parseMoney(
+                                ` ${parseMoney(
                                   calcularCuotaMensual(
                                     loan,
                                     row['Tasa especial por tiempo definido'],
                                     context?.data.user.duration
                                   )
-                                )} por ${row['Duracion Tasa Especial en Meses']} meses)`}
+                                )} por ${row['Duracion Tasa Especial en Meses']} meses`}
                             </Grid>
                             <Grid item xs={12} color='green'>
                               {loan &&
@@ -490,18 +528,20 @@ const ComparisonForm = () => {
                                     context.data.dolar,
                                   'USD'
                                 )}{' '}
+                            </Grid>
+                            <Grid item xs={12} color='green' style={{ opacity: 0.7 }}>
                               {row['Tasa especial por tiempo definido'] &&
                                 loan &&
                                 context?.data.user.duration &&
                                 context.data.dolar &&
-                                ` (${parseMoney(
+                                ` ${parseMoney(
                                   calcularCuotaMensual(
                                     loan,
                                     row['Tasa especial por tiempo definido'],
                                     context?.data.user.duration
                                   ) / context.data.dolar,
                                   'USD'
-                                )} por ${row['Duracion Tasa Especial en Meses']} meses)`}
+                                )} por ${row['Duracion Tasa Especial en Meses']} meses`}
                             </Grid>
                           </Grid>
                         </TableCell>
@@ -523,10 +563,7 @@ const ComparisonForm = () => {
 
                         <TableCell>
                           {row.Link.length > 0 && (
-                            <Link
-                              href={`/credit/${row.Id}?loan=${loan}&duration=${context?.data.user.duration}`}
-                              target='_blank'
-                            >
+                            <Link href={`/credit/${row.Id}?loan=${loan}&duration=${context?.data.user.duration}`}>
                               Ver detalles
                             </Link>
                           )}
@@ -601,6 +638,12 @@ const ComparisonForm = () => {
                     ? 'Guardado!'
                     : 'Encender alertas y recibir informacion de creditos alineados con mis intereses'}
                 </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant='caption' style={{}}>
+                  Nota: Las variables macroeconomicas para hacer los calculos son importadas automaticamente del BCRA y
+                  otras fuentes oficiales.{' '}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
