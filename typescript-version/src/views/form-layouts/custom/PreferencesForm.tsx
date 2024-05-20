@@ -258,7 +258,9 @@ const PreferencesForm = () => {
                         type='number'
                         value={Number(values.loanAmount).toFixed(0)}
                         label={`Monto del préstamo (${
-                          context?.data.UVA ? Math.floor(values.loanAmount / context.data.UVA).toLocaleString() + ' UVAs' : ''
+                          context?.data.UVA
+                            ? Math.floor(values.loanAmount / context.data.UVA).toLocaleString() + ' UVAs'
+                            : ''
                         })`}
                         onChange={handleChange('loanAmount')}
                         placeholder='$100000000'
@@ -274,8 +276,9 @@ const PreferencesForm = () => {
                         type='number'
                         value={(values.loanAmount / (context?.data.dolar ?? 1)).toFixed(0)}
                         label={`Monto del préstamo (${
-
-                          context?.data.UVA ? Math.floor(values.loanAmount / context.data.UVA).toLocaleString() + ' UVAs' : ''
+                          context?.data.UVA
+                            ? Math.floor(values.loanAmount / context.data.UVA).toLocaleString() + ' UVAs'
+                            : ''
                         })`}
                         onChange={e => {
                           const value = e.target.value
@@ -328,6 +331,12 @@ const PreferencesForm = () => {
               <Button type='submit' disabled={!values.salary} variant='contained' size='large' onClick={handleClick}>
                 Confirmar
               </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant='caption' style={{}}>
+                Nota: Las variables macroeconomicas para hacer los calculos son importadas automaticamente del BCRA y otras
+                fuentes oficiales.{' '}
+              </Typography>
             </Grid>
           </Grid>
         </form>

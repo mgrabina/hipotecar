@@ -190,8 +190,10 @@ const ComparisonForm = () => {
     setCompatibleCreditsResult(compatibleCredits)
 
     if (context?.data.user.loanType === 'maximo') {
+      sortCredits(compatibleCredits.creditosCompatibles, 'Monto Total mas alto')
       setValues({ ...values, sortType: 'Monto Total mas alto' })
     } else {
+      sortCredits(compatibleCredits.creditosCompatibles, 'Cuota Mensual mas baja')
       setValues({ ...values, sortType: 'Cuota Mensual mas baja' })
     }
   }, [context?.data.user.loanType, context?.data.credits])
@@ -314,7 +316,11 @@ const ComparisonForm = () => {
                       fullWidth
                       type='number'
                       value={Number(context?.data.user.loanAmount).toFixed(0)}
-                      label={`Monto del préstamo`}
+                      label={`Monto del préstamo (${
+                        context?.data.UVA && context?.data.user.loanAmount
+                          ? Math.floor(context?.data.user.loanAmount / context.data.UVA).toLocaleString() + ' UVAs'
+                          : ''
+                      })`}
                       onChange={handleChange('loanAmount')}
                       placeholder='100.000.000'
                       InputProps={{
@@ -332,7 +338,11 @@ const ComparisonForm = () => {
                           ? (context.data.user.loanAmount / (context?.data.dolar ?? 1)).toFixed(0)
                           : 0
                       }
-                      label={`Monto del préstamo`}
+                      label={`Monto del préstamo (${
+                        context?.data.UVA && context?.data.user.loanAmount
+                          ? Math.floor(context?.data.user.loanAmount / context.data.UVA).toLocaleString() + ' UVAs'
+                          : ''
+                      })`}
                       onChange={e => {
                         const value = e.target.value
                         if (context?.data.dolar) {
@@ -553,10 +563,7 @@ const ComparisonForm = () => {
 
                         <TableCell>
                           {row.Link.length > 0 && (
-                            <Link
-                              href={`/credit/${row.Id}?loan=${loan}&duration=${context?.data.user.duration}`}
-                              target='_blank'
-                            >
+                            <Link href={`/credit/${row.Id}?loan=${loan}&duration=${context?.data.user.duration}`}>
                               Ver detalles
                             </Link>
                           )}
@@ -631,6 +638,12 @@ const ComparisonForm = () => {
                     ? 'Guardado!'
                     : 'Encender alertas y recibir informacion de creditos alineados con mis intereses'}
                 </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant='caption' style={{}}>
+                  Nota: Las variables macroeconomicas para hacer los calculos son importadas automaticamente del BCRA y
+                  otras fuentes oficiales.{' '}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
