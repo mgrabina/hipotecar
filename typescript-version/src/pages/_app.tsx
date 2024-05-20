@@ -80,24 +80,24 @@ const App = (props: ExtendedAppProps) => {
     <CacheProvider value={emotionCache}>
       <Head>
         <title>{`Mi credito hipotecario - Tu aliado para surfear la ola de creditos`}</title>
-        <meta name='description' content={`Mi credito hipotecario - Tu aliado para surfear la ola de creditos`} />
+        <meta
+          name='description'
+          content={`Mi credito hipotecario - Tu aliado para surfear la ola de creditos | Buscador y Simulador de creditos hipotecarios UVA.`}
+        />
         <meta name='keywords' content='Hipotecas, Creditos Hipotecarios, Argentina' />
         <meta name='viewport' content='initial-scale=1, width=device-width' />
-
-        {GACODE && (
-          <>
-            <Script async src={`https://www.googletagmanager.com/gtag/js?id=${GACODE}`} />
-            <Script id='google-analytics'>
-              {`
+        {/* Add favicon */}
+        <link rel='shortcut icon' href='/images/logo.png' />
+      </Head>
+      <Script async src={`https://www.googletagmanager.com/gtag/js?id=${GACODE}`} />
+      <Script id='google-analytics'>
+        {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
                 gtag('config', '${GACODE}');
               `}
-            </Script>
-          </>
-        )}
-      </Head>
+      </Script>
 
       <SettingsProvider>
         <SettingsConsumer>
