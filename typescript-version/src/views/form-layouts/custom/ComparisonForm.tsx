@@ -196,7 +196,7 @@ const ComparisonForm = () => {
       sortCredits(compatibleCredits.creditosCompatibles, 'Cuota Mensual mas baja')
       setValues({ ...values, sortType: 'Cuota Mensual mas baja' })
     }
-  }, [context?.data.user.loanType, context?.data.credits])
+  }, [context?.data.user, context?.data.credits])
 
   const sortCredits = (credits: CreditEvaluationResult['creditosCompatibles'], sortType: SortType) => {
     credits.sort((a, b) => {

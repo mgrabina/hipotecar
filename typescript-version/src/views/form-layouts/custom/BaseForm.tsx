@@ -39,6 +39,7 @@ const BaseForm = () => {
 
   const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
+    context?.setData({ ...context?.data, user: { ...context?.data.user, name: event.target.value } })
   }
 
   const handleClick = () => {

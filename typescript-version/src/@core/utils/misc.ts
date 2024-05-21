@@ -58,7 +58,7 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
 
     if (userData?.duration && credit['Duracion'] < userData.duration) {
       reasons.push(
-        `El plazo máximo ofrecido de ${credit['Duracion']} meses es menor que el plazo deseado de ${userData.duration} meses.`
+        `El plazo máximo ofrecido de ${credit['Duracion']} años es menor que el plazo deseado de ${userData.duration} años.`
       )
       isCompatible = false
     }
