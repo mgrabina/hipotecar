@@ -15,7 +15,7 @@ const createUsersTable = async () => {
       id SERIAL PRIMARY KEY,
       email VARCHAR(255) UNIQUE NOT NULL,
       name VARCHAR(255) NOT NULL,
-      loanAmount NUMERIC,
+      loanamount NUMERIC,
       salary NUMERIC,
       duration INTEGER,
       banks TEXT,
@@ -48,7 +48,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     const insertUser = async () => {
       return await sql`
-        INSERT INTO "users" (email, name, loanAmount, salary, duration, banks, provinces, creditType, compatibleCredits) VALUES (
+        INSERT INTO "users" (email, name, loanamount, salary, duration, banks, provinces, creditType, compatibleCredits) VALUES (
           ${data.email},
           ${data.name},
           ${data.loanAmount},
@@ -61,7 +61,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         )
         ON CONFLICT (email) DO UPDATE SET
           name = EXCLUDED.name,
-          loanAmount = EXCLUDED.loanAmount,
+          loanamount = EXCLUDED.loanamount,
           salary = EXCLUDED.salary,
           duration = EXCLUDED.duration,
           banks = EXCLUDED.banks,
