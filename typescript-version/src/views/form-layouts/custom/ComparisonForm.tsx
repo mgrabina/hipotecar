@@ -91,7 +91,10 @@ const ComparisonForm = () => {
   const handleChange = (prop: keyof UserData) => (event: ChangeEvent<HTMLInputElement>) => {
     console.log('event.target.value', event.target.value, Number(event.target.value.replace(/,/g, '')))
     setValues({ ...values, [prop]: Number(event.target.value) })
-    context?.setData({ ...context.data, user: { ...context.data.user, [prop]: Number(event.target.value.replace(/,/g, '')) } })
+    context?.setData({
+      ...context.data,
+      user: { ...context.data.user, [prop]: Number(event.target.value.replace(/,/g, '')) }
+    })
   }
 
   const handleSelectChange = (
@@ -125,7 +128,6 @@ const ComparisonForm = () => {
 
     setValues(updatedValues)
   }, [context?.data.user])
-
 
   useEffect(() => {
     if (!context?.data.user || !context?.data.credits) return
@@ -199,6 +201,8 @@ const ComparisonForm = () => {
       creditosCompatibles: sortedCredits
     })
   }, [values.sortType])
+
+  console.log(compatibleCreditsResults.creditosCompatibles)
 
   return (
     <Card>
@@ -426,6 +430,16 @@ const ComparisonForm = () => {
                                     style={{ margin: '0.2em 0 0.2em 0' }}
                                     label='Sueldo en Banco'
                                     size='small'
+                                    color="secondary"
+                                  />
+                                </Typography>
+                              )}
+                              {row['Meses de Gracia'] && Number(row['Meses de Gracia']) > 0 && (
+                                <Typography variant='caption' margin='0.3em'>
+                                  <Chip
+                                    style={{ margin: '0.2em 0 0.2em 0' }}
+                                    label={`${row['Meses de Gracia']} Meses de Gracia`}
+                                    size='small'
                                     color='success'
                                   />
                                 </Typography>
@@ -533,11 +547,13 @@ const ComparisonForm = () => {
               </TableContainer>
               <br></br>
               {compatibleCreditsResults.razonesDeLosRestantes.length > 0 && (
-                <Accordion style={{ width: '100%' }} TransitionProps={{
-                  // faster exit
-                  timeout: 200
-
-                }}>
+                <Accordion
+                  style={{ width: '100%' }}
+                  TransitionProps={{
+                    // faster exit
+                    timeout: 200
+                  }}
+                >
                   <AccordionSummary expandIcon={<ArrowDown />} aria-controls='panel1-content' id='panel1-header'>
                     Por que los demas creditos no aparecen?
                   </AccordionSummary>
@@ -556,8 +572,6 @@ const ComparisonForm = () => {
                 </Accordion>
               )}
             </Grid>
-
-
           </Grid>
         </form>
       </CardContent>

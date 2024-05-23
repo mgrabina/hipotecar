@@ -67,7 +67,7 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData, UVA 
       if (
         userData?.loanAmount &&
         credit['Monto Maximo en UVAs'] &&
-        credit['Monto Maximo en UVAs'] * UVA > userData.loanAmount
+        credit['Monto Maximo en UVAs'] * UVA < userData.loanAmount
       ) {
         reasons.push(
           `El monto máximo financiable de ${parseMoney(credit['Monto Maximo en UVAs'] * UVA)} es mayor que el monto deseado de ${
@@ -79,7 +79,7 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData, UVA 
     }
 
     if (userData?.creditType && credit.Tipo !== userData.creditType) {
-      reasons.push(`El tipo de crédito requerido es '${userData.creditType}', pero el disponible es '${credit.Tipo}'.`)
+      // reasons.push(`El tipo de crédito requerido es '${userData.creditType}', pero el disponible es '${credit.Tipo}'.`)
       isCompatible = false
     }
 
@@ -155,7 +155,9 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData, UVA 
     if (isCompatible) {
       creditosCompatibles.push({ credit, loan: userData.loanType === 'personalizado' ? userData.loanAmount ?? 0 : 0 })
     } else {
-      razonesDeLosRestantes.push(`Crédito '${credit.Nombre}' en ${credit.Banco}: ${reasons.join(' ')}\n`)
+      if (reasons.length > 0) {
+        razonesDeLosRestantes.push(`Crédito '${credit.Nombre}' en ${credit.Banco}: ${reasons.join(' ')}\n`)
+      }
     }
   })
 
