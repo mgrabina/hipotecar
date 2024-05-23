@@ -184,8 +184,8 @@ const ComparisonForm = () => {
 
     const compatibleCredits =
       context?.data.user.loanType === 'personalizado'
-        ? getCompatibleCredits(context?.data.credits, context?.data.user)
-        : getBiggestLoanBasedOnSalary(context?.data.credits, context?.data.user)
+        ? getCompatibleCredits(context?.data.credits, context?.data.user, context?.data.UVA)
+        : getBiggestLoanBasedOnSalary(context?.data.credits, context?.data.user, context?.data.UVA)
 
     setCompatibleCreditsResult(compatibleCredits)
 
@@ -583,8 +583,13 @@ const ComparisonForm = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
+              <br></br>
               {compatibleCreditsResults.razonesDeLosRestantes.length > 0 && (
-                <Accordion style={{ width: '100%' }}>
+                <Accordion style={{ width: '100%' }} TransitionProps={{
+                  // faster exit
+                  timeout: 200
+
+                }}>
                   <AccordionSummary expandIcon={<ArrowDown />} aria-controls='panel1-content' id='panel1-header'>
                     Por que los demas creditos no aparecen?
                   </AccordionSummary>

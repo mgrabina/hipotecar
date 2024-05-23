@@ -7,7 +7,8 @@ import {
   Typography,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
+  Chip
 } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useData } from 'src/@core/layouts/HipotecarLayout'
@@ -41,7 +42,9 @@ const DetailPage = () => {
     <>
       {!isInformative && (
         <Link href='/simulation/comparison'>
-          <Typography style={{ marginTop: '2em', cursor: 'pointer', textDecoration: "underline" }}>Volver a la tabla</Typography>
+          <Typography style={{ marginTop: '2em', cursor: 'pointer', textDecoration: 'underline' }}>
+            Volver a la tabla
+          </Typography>
         </Link>
       )}
       <Card style={{ marginTop: '2em' }}>
@@ -92,7 +95,7 @@ const DetailPage = () => {
               ) : (
                 <Grid item xs={6}>
                   <Typography variant='body1'>
-                    <strong>Monto Maximo</strong>: {parseMoney(credit['Monto Maximo en UVAs'] * 922)} (
+                    <strong>Monto Maximo</strong>: {context?.data.UVA && parseMoney(credit['Monto Maximo en UVAs'] * context?.data.UVA)} (
                     {parseMoney(credit['Monto Maximo en UVAs'], 'USD')})
                   </Typography>
                 </Grid>
@@ -271,18 +274,65 @@ const DetailPage = () => {
               <AccordionSummary expandIcon={<ArrowDown />}>
                 <Typography variant='body1'>
                   <strong>Análisis de Riesgos</strong>
+                  <strong>
+                    <Typography variant='body2' color='red'>
+                      Muy Importante!
+                    </Typography>
+                  </strong>
+                  {/* Chip muy importante */}
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Typography variant='body2'>
                   <strong>Riesgo de inflación:</strong> La inflación afecta directamente el valor de las cuotas
                   mensuales (medidas en UVAs). En caso de que los salarios de los deudores no se ajusten a la inflación,
-                  puede ser dificil afrontar el pago de las cuotas.
+                  puede ser dificil afrontar el pago de las cuotas. Tener en cuenta que los creditos se sacan a largo
+                  plazo y Argentina tiene historial de altos niveles de inestabilidad politica y economica que pueden
+                  afectar la inflación.
                   <br />
                   <strong>Riesgo de devaluacion del precio de m2:</strong> En caso de que el precio del metro cuadrado
                   de la propiedad se devalúe, el deudor puede quedar en una situación de deuda mayor al valor de la
                   propiedad, por lo que no podrá vender la propiedad en caso de necesitar cancelar la deuda, o a fin del
                   credito, habra sido una mala inversión en términos monetarios.
+                </Typography>
+
+                <Typography
+                  variant='body2'
+                  color='red'
+                  style={{ marginTop: '1em', border: '1px solid red', padding: '1em' }}
+                >
+                  Nadie puede predecir el futuro, y cada persona tiene su propia situación financiera y personal. Es muy
+                  importante que antes de tomar un crédito hipotecario, te asesores con un profesional financiero y
+                  legal para entender los riesgos y beneficios de tomar un crédito hipotecario.
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary expandIcon={<ArrowDown />}>
+                <Typography variant='body1'>
+                  <strong>Documentos a presentar</strong>
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  Si estás en relación de dependencia:
+                  {/* List */}
+
+
+                  -
+                  - Últimos 3 recibos de sueldo. Si trabajaste en distintos lugares
+                  el último año, envía también el úlitmo recibo de tu trabajo anterior para que podamos verificar tu
+                  antigüedad  Si sos Monotributista:- Constancia de inscripción, de categoría B en adelante. Deberás
+                  contar con al menos 1 año de antigüedad.- Comprobante de los últimos 3 pagos  Si sos Autónomo o
+                  Responsable Inscripto:- Última Declaración Jurada de Ganancias o Certificación de ingresos.Si
+                  presentás la Declaración Jurada, enviá también el ticket de presentación y una nota voluntaria con tu
+                  firma Si vas a combinar ingresos, tenés que envíar la misma documentación de tu o tus codeudores. En
+                  este paso podés agregar codeudores que no hayas podido sumar en tu solicitud
+                </Typography>
+
+                <Typography variant='body2'>
+                  Confirmar con el banco los documentos requeridos para solicitar este crédito ya que tienden a cambiar
+                  constantemente.
                 </Typography>
               </AccordionDetails>
             </Accordion>

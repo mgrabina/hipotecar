@@ -17,6 +17,8 @@ import FormControl from '@mui/material/FormControl'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import InputAdornment from '@mui/material/InputAdornment'
 import FormHelperText from '@mui/material/FormHelperText'
+import { useTheme } from '@mui/material/styles'
+import { useMediaQuery } from '@mui/material'
 
 // ** Icons Imports
 import EyeOutline from 'mdi-material-ui/EyeOutline'
@@ -30,12 +32,15 @@ import { CreditType, CreditTypes, Province, Provinces } from 'src/configs/consta
 import { parseMoney } from 'src/@core/utils/string'
 import { getBiggestLoanBasedOnSalary } from 'src/@core/utils/misc'
 
+const taxTypes = ['Monotributo', 'Autonomo', 'Relacion de Dependencia'] as const
+type TaxType = typeof taxTypes[number]
+
 export interface PreferencesFormState {
   loanAmount: number
   loanType: 'personalizado' | 'maximo'
   salary: number
   duration: number
-  monotributista: boolean
+  taxType: TaxType[]
   secondHome: boolean
   banks: string[]
   provinces: string[]
@@ -46,12 +51,15 @@ const PreferencesForm = () => {
   const router = useRouter()
   const context = useData()
 
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+
   // ** States
   const [values, setValues] = useState<PreferencesFormState>({
     loanAmount: 0,
     salary: 0,
     duration: 20,
-    monotributista: false,
+    taxType: ['Relacion de Dependencia'],
     secondHome: false,
     loanType: 'personalizado',
     banks: [],
@@ -77,7 +85,7 @@ const PreferencesForm = () => {
         salary: values.salary,
         duration: values.duration,
         banks: values.banks,
-        monotributista: values.monotributista,
+        taxType: values.taxType,
         secondHome: values.secondHome,
         provinces: values.provinces,
         creditType: values.creditType
@@ -180,6 +188,11 @@ const PreferencesForm = () => {
                   multiple
                   disabled={!context?.data.banks.length}
                   value={values.banks ?? []}
+                  MenuProps={{
+                    style: {
+                      height: isSmallScreen ? '50%' : '400px'
+                    }
+                  }}
                   id='form-layouts-separator-select-label-banks'
                   onChange={e => handleSelectChange(e, 'banks')}
                 >
@@ -200,6 +213,12 @@ const PreferencesForm = () => {
                   disabled={!context?.data.provinces.length}
                   label='form-layouts-separator-select-label-provinces'
                   multiple
+                  fullWidth
+                  MenuProps={{
+                    style: {
+                      height: isSmallScreen ? '50%' : '400px'
+                    }
+                  }}
                   value={values.provinces ?? []}
                   id='form-layouts-separator-select-label-provinces'
                   onChange={e => handleSelectChange(e, 'provinces')}
@@ -212,7 +231,6 @@ const PreferencesForm = () => {
                 </Select>
               </FormControl>
             </Grid>
-
             <Grid item xs={12}>
               <Grid container spacing={4}>
                 <Grid item xs={6} md={3}>
@@ -301,22 +319,41 @@ const PreferencesForm = () => {
                   </>
                 )}
               </Grid>
+            </Grid>
 
+            <Grid item xs={12}>
               {/* is Monotributista */}
-              <Grid container>
-                <Grid item xs={12}>
-                  <FormControl component='fieldset'>
-                    <FormGroup>
-                      <FormControlLabel
-                        control={<Checkbox onChange={handleCheckboxChange('monotributista')} />}
-                        label='Soy monotributista'
-                        labelPlacement='end'
-                      />
-                    </FormGroup>
+              <Grid container spacing={4}>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel id='form-layouts-separator-select-label-taxType'>Estado frente a AFIP</InputLabel>
+                    <Select
+                      label='form-layouts-separator-select-label-taxType'
+                      multiple
+                      fullWidth
+                      MenuProps={{
+                        style: {
+                          height: isSmallScreen ? '50%' : '400px'
+                        }
+                      }}
+                      value={values.taxType ?? []}
+                      id='form-layouts-separator-select-label-taxType'
+                      onChange={e => handleSelectChange(e, 'taxType')}
+                    >
+                      {taxTypes?.map(type => (
+                        <MenuItem key={type} value={type}>
+                          {type}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </FormControl>
-                  <FormControl component='fieldset'>
-                    <FormGroup>
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <FormControl component='fieldset' style={{ height: '100%' }}>
+                    <FormGroup style={{ height: '100% ', alignItems: 'center', alignContent: 'center' }}>
                       <FormControlLabel
+                        style={{ height: '100%', paddingLeft: '1em' }}
                         control={<Checkbox onChange={handleCheckboxChange('secondHome')} />}
                         label='Segunda Vivienda'
                         labelPlacement='end'
@@ -326,7 +363,6 @@ const PreferencesForm = () => {
                 </Grid>
               </Grid>
             </Grid>
-
             <Grid item xs={12}>
               <Button type='submit' disabled={!values.salary} variant='contained' size='large' onClick={handleClick}>
                 Confirmar
@@ -334,8 +370,8 @@ const PreferencesForm = () => {
             </Grid>
             <Grid item xs={12}>
               <Typography variant='caption' style={{}}>
-                Nota: Las variables macroeconomicas para hacer los calculos son importadas automaticamente del BCRA y otras
-                fuentes oficiales.{' '}
+                Nota: Las variables macroeconomicas para hacer los calculos son importadas automaticamente del BCRA y
+                otras fuentes oficiales.{' '}
               </Typography>
             </Grid>
           </Grid>
