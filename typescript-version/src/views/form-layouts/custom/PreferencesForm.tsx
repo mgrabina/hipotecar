@@ -31,6 +31,7 @@ import { UserData, useData } from 'src/@core/layouts/HipotecarLayout'
 import { CreditType, CreditTypes, Province, Provinces } from 'src/configs/constants'
 import { parseMoney } from 'src/@core/utils/string'
 import { getBiggestLoanBasedOnSalary } from 'src/@core/utils/misc'
+import { SubmitUserBody } from 'src/pages/api/users'
 
 const taxTypes = ['Monotributo', 'Autonomo', 'Relacion de Dependencia'] as const
 type TaxType = typeof taxTypes[number]
@@ -45,6 +46,7 @@ export interface PreferencesFormState {
   banks: string[]
   provinces: string[]
   creditType: CreditType
+  turnOnAlerts: boolean
 }
 
 const PreferencesForm = () => {
@@ -64,7 +66,8 @@ const PreferencesForm = () => {
     loanType: 'personalizado',
     banks: [],
     creditType: 'Adquisicion',
-    provinces: []
+    provinces: [],
+    turnOnAlerts: false
   })
 
   const handleSelectChange = (event: SelectChangeEvent<string> | SelectChangeEvent<string[]>, prop: keyof UserData) => {
@@ -74,6 +77,24 @@ const PreferencesForm = () => {
   const handleChange = (prop: keyof PreferencesFormState) => (event: ChangeEvent<HTMLInputElement>) => {
     if (Number(event.target.value) < 0) return
     setValues({ ...values, [prop]: event.target.value.replace(/,/g, '') })
+  }
+
+  const sendEmail = () => {
+    if (!context?.data.user) {
+      return Promise.resolve()
+    }
+
+    const body: SubmitUserBody = {
+      data: context?.data.user
+    }
+
+    return fetch('/api/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
   }
 
   const handleClick = () => {
@@ -93,7 +114,18 @@ const PreferencesForm = () => {
       }
     })
 
-    router.push('/simulation/comparison')
+    sendEmail()
+      .then(resp => {
+        if (resp?.ok) {
+          console.info('Saved successfully.')
+        } else {
+          console.error('Error:', resp?.statusText)
+        }
+        router.push('/simulation/comparison')
+      })
+      .catch(e => {
+        console.error('Error:', e)
+      })
   }
 
   useEffect(() => {
@@ -363,6 +395,18 @@ const PreferencesForm = () => {
                   </FormControl>
                 </Grid>
               </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl component='fieldset' style={{ height: '100%' }}>
+                <FormGroup style={{ height: '100% ', alignItems: 'center', alignContent: 'center' }}>
+                  <FormControlLabel
+                    style={{ height: '100%', paddingLeft: '0.1em' }}
+                    control={<Checkbox defaultChecked onChange={handleCheckboxChange('turnOnAlerts')} />}
+                    label='Encender alertas y recibir informacion de creditos alineados con mis intereses'
+                    labelPlacement='end'
+                  />
+                </FormGroup>
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
               <Button type='submit' disabled={!values.salary} variant='contained' size='large' onClick={handleClick}>

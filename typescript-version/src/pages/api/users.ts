@@ -6,7 +6,6 @@ import { Credit } from 'src/configs/constants'
 
 export type SubmitUserBody = {
   data: UserData
-  compatibleCredits: Credit[]
 }
 
 const createUsersTable = async () => {
@@ -36,19 +35,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (!body.data) {
       return res.status(400).json({ error: 'No data provided' })
     }
-    if (!body.compatibleCredits) {
-      return res.status(400).json({ error: 'No compatibleCredits provided' })
-    }
     if (!body.data.email) {
       return res.status(400).json({ error: 'No email provided' })
     }
 
     const data = body.data
-    const compatibleCredits = body.compatibleCredits
 
     const insertUser = async () => {
       return await sql`
-        INSERT INTO "users" (email, name, loanamount, salary, duration, banks, provinces, creditType, compatibleCredits) VALUES (
+        INSERT INTO "users" (email, name, loanamount, salary, duration, banks, provinces, creditType) VALUES (
           ${data.email},
           ${data.name},
           ${data.loanAmount},
@@ -56,8 +51,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           ${data.duration},
           ${data.banks?.toString()},
           ${data.provinces?.toString()},
-          ${data.creditType},
-          ${JSON.stringify(compatibleCredits)}
+          ${data.creditType}
         )
         ON CONFLICT (email) DO UPDATE SET
           name = EXCLUDED.name,
