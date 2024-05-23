@@ -377,8 +377,8 @@ const ComparisonForm = () => {
                       >
                         <TableCell width={isSmallScreen ? 20 : 30}>
                           <img
-                            src={`/images/banks/${row.Banco}.png`}
-                            alt={row.Nombre}
+                            src={row['Logo Banco'].length ? row['Logo Banco'] : `/images/banks/${row.Banco}.png`}
+                            alt={row.Banco}
                             className='object-contain	'
                             height={isSmallScreen ? 20 : 40}
                           />
