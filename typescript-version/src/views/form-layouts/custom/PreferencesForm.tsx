@@ -77,8 +77,7 @@ const PreferencesForm = () => {
   }
 
   const handleChange = (prop: keyof PreferencesFormState) => (event: ChangeEvent<HTMLInputElement>) => {
-    if (Number(event.target.value) < 0) return
-    setValues({ ...values, [prop]: event.target.value.replace(/,/g, '') })
+    setValues({ ...values, [prop]: event.target.value })
   }
 
   const sendEmail = () => {
@@ -276,7 +275,19 @@ const PreferencesForm = () => {
                     label={`Sueldo ${
                       context?.data.dolar ? `(${parseMoney(values.salary / context?.data.dolar, 'USD')})` : ''
                     }`}
-                    onChange={handleChange('salary')}
+                    onChange={e => {
+                      const value = Number(e.target.value.replace(/,/g, ''))
+                      if (Number.isNaN(value) || value < 0) return
+
+
+                      if (context?.data.dolar) {
+                        setValues({ ...values, salary: Number(value) })
+                        context?.setData({
+                          ...context.data,
+                          user: { ...context.data.user, salary: Number(value) }
+                        })
+                      }
+                    }}
                     placeholder='$700.000'
                     InputProps={{
                       inputProps: { min: 1, max: 999999999999 },
@@ -315,7 +326,18 @@ const PreferencesForm = () => {
                             ? Math.floor(values.loanAmount / context.data.UVA).toLocaleString() + ' UVAs'
                             : ''
                         })`}
-                        onChange={handleChange('loanAmount')}
+                        onChange={e => {
+                          const value = Number(e.target.value.replace(/,/g, ''))
+                          if (Number.isNaN(value) || value < 0) return
+
+                          if (context?.data.dolar) {
+                            setValues({ ...values, loanAmount: Number(value) })
+                            context?.setData({
+                              ...context.data,
+                              user: { ...context.data.user, loanAmount: Number(value) }
+                            })
+                          }
+                        }}
                         placeholder='$100000000'
                         InputProps={{
                           inputProps: { min: 1, max: 999999999999 },
@@ -334,7 +356,9 @@ const PreferencesForm = () => {
                             : ''
                         })`}
                         onChange={e => {
-                          const value = e.target.value.replace(/,/g, '')
+                          const value = Number(e.target.value.replace(/,/g, ''))
+                          if (Number.isNaN(value) || value < 0) return
+
                           if (context?.data.dolar) {
                             setValues({ ...values, loanAmount: Number(value) * context.data.dolar })
                             context?.setData({
