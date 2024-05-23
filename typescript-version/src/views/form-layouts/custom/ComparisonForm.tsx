@@ -89,11 +89,10 @@ const ComparisonForm = () => {
   })
 
   const handleChange = (prop: keyof UserData) => (event: ChangeEvent<HTMLInputElement>) => {
-    console.log('event.target.value', event.target.value, Number(event.target.value.replace(/,/g, '')))
     setValues({ ...values, [prop]: Number(event.target.value) })
     context?.setData({
       ...context.data,
-      user: { ...context.data.user, [prop]: Number(event.target.value.replace(/,/g, '')) }
+      user: { ...context.data.user, [prop]: Number(event.target.value) }
     })
   }
 
@@ -202,8 +201,6 @@ const ComparisonForm = () => {
     })
   }, [values.sortType])
 
-  console.log(compatibleCreditsResults.creditosCompatibles)
-
   return (
     <Card>
       <CardHeader
@@ -273,7 +270,16 @@ const ComparisonForm = () => {
                           ? Math.floor(context?.data.user.loanAmount / context.data.UVA).toLocaleString() + ' UVAs'
                           : ''
                       })`}
-                      onChange={handleChange('loanAmount')}
+                      onChange={e => {
+                        const value = Number(e.target.value.replace(/,/g, ''))
+                        if (Number.isNaN(value) || value < 0) return
+
+                        setValues({ ...values, loanAmount: Number(value) })
+                        context?.setData({
+                          ...context.data,
+                          user: { ...context.data.user, loanAmount: Number(value) }
+                        })
+                      }}
                       placeholder='100.000.000'
                       InputProps={{
                         inputProps: { min: 1, max: 999999999999 },
@@ -296,7 +302,9 @@ const ComparisonForm = () => {
                           : ''
                       })`}
                       onChange={e => {
-                        const value = e.target.value.replace(/,/g, '')
+                        const value = Number(e.target.value.replace(/,/g, ''))
+                        if (Number.isNaN(value) || value < 0) return
+
                         if (context?.data.dolar) {
                           setValues({ ...values, loanAmount: Number(value) * context.data.dolar })
                           context?.setData({
@@ -430,7 +438,7 @@ const ComparisonForm = () => {
                                     style={{ margin: '0.2em 0 0.2em 0' }}
                                     label='Sueldo en Banco'
                                     size='small'
-                                    color="secondary"
+                                    color='secondary'
                                   />
                                 </Typography>
                               )}
