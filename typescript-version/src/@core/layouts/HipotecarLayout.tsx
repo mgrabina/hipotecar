@@ -223,8 +223,8 @@ const HypotecarLayout = (props: LayoutProps) => {
               }}
             >
               <Typography variant='h3' width='100%' sx={{ fontSize: '20px' }} style={{ textAlign: 'center' }}>
-                <img src='/images/logo.png' width='20em' /> Mi Credito Hipotecario{' '}
-                <img src='/images/logo.png' width='20em' />
+                <img alt="Bandera Argentina" src='/images/logo.png' width='20em' /> Mi Credito Hipotecario{' '}
+                <img alt="Bandera Argentina" src='/images/logo.png' width='20em' />
               </Typography>
               <Typography
                 variant='h6'
