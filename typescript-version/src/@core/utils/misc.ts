@@ -173,8 +173,6 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData, UVA 
     return acc // Add this line to return the updated accumulator object
   }, {} as Record<string, CreditEvaluationResult['creditosCompatibles']>)
 
-  console.log(creditosCompatiblesPorNombre)
-
   const compatibles = Object.keys(creditosCompatiblesPorNombre).map(key => {
     const creditos = creditosCompatiblesPorNombre[key]
     const credit = creditos.find((credit: any) => credit.credit['Sueldo En Banco'] == 'TRUE') ?? creditos[0]

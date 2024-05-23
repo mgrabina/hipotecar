@@ -23,14 +23,14 @@ const firstColumns = ['Logo Banco', 'Tipo', 'Nombre']
 const lastColumns = ['Link']
 const noFilterColumns = ['Link']
 
-const isNumericColumn = key =>
+const isNumericColumn = (key: string | string[]) =>
   key.includes('Tasa') ||
   key.includes('%') ||
   key.includes('Monto') ||
   key.includes('Plazo') ||
   key.includes('Cuota') ||
   key.includes('Duracion')
-const isBooleanColumn = key =>
+const isBooleanColumn = (key: string | string[]) =>
   key.includes('Acepta') || key.includes('Requiere') || key.includes('Apto') || key.includes('Ingresos')
 
 const CreditComparisonPage = () => {
@@ -41,9 +41,19 @@ const CreditComparisonPage = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' })
-  const [filters, setFilters] = useState({})
+  const [filters, setFilters] = useState<
+    Partial<
+      Record<
+        keyof Credit,
+        {
+          value: string
+          operator: string | null
+        }
+      >
+    >
+  >({})
 
-  const handleSort = key => {
+  const handleSort = (key: string) => {
     let direction = 'asc'
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
       direction = 'desc'
@@ -51,7 +61,7 @@ const CreditComparisonPage = () => {
     setSortConfig({ key, direction })
   }
 
-  const handleFilterChange = (key, value, operator = null) => {
+  const handleFilterChange = (key: string, value: string, operator: string | null = null) => {
     setFilters(prevFilters => ({
       ...prevFilters,
       [key]: { value, operator }
@@ -67,10 +77,10 @@ const CreditComparisonPage = () => {
       Object.entries(filters).every(([key, { value, operator }]) => {
         if (!value || value === 'Todos') return true
 
-        const cellValue = credit[key]?.toString().toLowerCase()
+        const cellValue = credit[key as keyof Credit ]?.toString().toLowerCase()
         if (isNumericColumn(key)) {
           const numericValue = parseFloat(value)
-          const creditValue = parseFloat(credit[key])
+          const creditValue = parseFloat(credit[key as keyof Credit].toString())
           switch (operator) {
             case '>':
               return creditValue > numericValue
@@ -81,7 +91,7 @@ const CreditComparisonPage = () => {
             default:
               return true
           }
-        } else if (isBooleanColumn(credit[key])) {
+        } else if (isBooleanColumn(credit[key as keyof Credit].toString())) {
           return cellValue === value.toLowerCase()
         } else {
           // If the cell is 'Logo Banco' check Banco name
@@ -99,10 +109,10 @@ const CreditComparisonPage = () => {
     const sortableCredits = [...filteredCredits]
     if (sortConfig.key) {
       sortableCredits.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
+        if (a[sortConfig.key as keyof Credit] < b[sortConfig.key as keyof Credit]) {
           return sortConfig.direction === 'asc' ? -1 : 1
         }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
+        if (a[sortConfig.key as keyof Credit] > b[sortConfig.key as keyof Credit]) {
           return sortConfig.direction === 'asc' ? 1 : -1
         }
 
@@ -115,7 +125,7 @@ const CreditComparisonPage = () => {
 
   const keys =
     credits.length > 0
-      ? Object.keys(credits[0])
+      ? (Object.keys(credits[0])
           .filter(key => !columnsNotToShow.includes(key))
           .sort((a, b) => {
             if (firstColumns.includes(a) && firstColumns.includes(b))
@@ -129,7 +139,7 @@ const CreditComparisonPage = () => {
             if (lastColumns.includes(b)) return -1
 
             return a.localeCompare(b)
-          })
+          }) as (keyof Credit)[])
       : []
 
   return (
@@ -156,7 +166,7 @@ const CreditComparisonPage = () => {
                   >
                     <TableSortLabel
                       active={sortConfig.key === key}
-                      direction={sortConfig.key === key ? sortConfig.direction : 'asc'}
+                      direction={sortConfig.key === key ? (sortConfig.direction as 'asc' | 'desc') : 'asc'}
                       onClick={() => handleSort(key)}
                     >
                       {key == 'Logo Banco' ? 'Banco' : key}

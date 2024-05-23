@@ -72,7 +72,8 @@ const PreferencesForm = () => {
   }
 
   const handleChange = (prop: keyof PreferencesFormState) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
+    if (Number(event.target.value) < 0) return
+    setValues({ ...values, [prop]: event.target.value.replace(/,/g, '') })
   }
 
   const handleClick = () => {
@@ -236,8 +237,8 @@ const PreferencesForm = () => {
                 <Grid item xs={6} md={3}>
                   <TextField
                     fullWidth
-                    type='number'
-                    value={values.salary}
+                    type='string'
+                    value={Number(values.salary).toLocaleString()}
                     label={`Sueldo ${
                       context?.data.dolar ? `(${parseMoney(values.salary / context?.data.dolar, 'USD')})` : ''
                     }`}
@@ -273,8 +274,8 @@ const PreferencesForm = () => {
                     <Grid style={{ display: values.loanType == 'personalizado' ? '' : 'hidden' }} item xs={12} md={3}>
                       <TextField
                         fullWidth
-                        type='number'
-                        value={Number(values.loanAmount).toFixed(0)}
+                        type='string'
+                        value={Number(values.loanAmount).toLocaleString()}
                         label={`Monto del préstamo (${
                           context?.data.UVA
                             ? Math.floor(values.loanAmount / context.data.UVA).toLocaleString() + ' UVAs'
@@ -291,15 +292,15 @@ const PreferencesForm = () => {
                     <Grid item xs={12} md={3}>
                       <TextField
                         fullWidth
-                        type='number'
-                        value={(values.loanAmount / (context?.data.dolar ?? 1)).toFixed(0)}
+                        type='string'
+                        value={(values.loanAmount / (context?.data.dolar ?? 1)).toLocaleString()}
                         label={`Monto del préstamo (${
                           context?.data.UVA
                             ? Math.floor(values.loanAmount / context.data.UVA).toLocaleString() + ' UVAs'
                             : ''
                         })`}
                         onChange={e => {
-                          const value = e.target.value
+                          const value = e.target.value.replace(/,/g, '')
                           if (context?.data.dolar) {
                             setValues({ ...values, loanAmount: Number(value) * context.data.dolar })
                             context?.setData({

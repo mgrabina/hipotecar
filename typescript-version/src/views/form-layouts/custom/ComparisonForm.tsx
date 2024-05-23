@@ -131,8 +131,9 @@ const ComparisonForm = () => {
   })
 
   const handleChange = (prop: keyof UserData) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-    context?.setData({ ...context.data, user: { ...context.data.user, [prop]: event.target.value } })
+    console.log('event.target.value', event.target.value, Number(event.target.value.replace(/,/g, '')))
+    setValues({ ...values, [prop]: Number(event.target.value) })
+    context?.setData({ ...context.data, user: { ...context.data.user, [prop]: Number(event.target.value.replace(/,/g, '')) } })
   }
 
   const handleSelectChange = (
@@ -314,8 +315,8 @@ const ComparisonForm = () => {
                   <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
-                      type='number'
-                      value={Number(context?.data.user.loanAmount).toFixed(0)}
+                      type='string'
+                      value={Number(context?.data.user.loanAmount).toLocaleString()}
                       label={`Monto del préstamo (${
                         context?.data.UVA && context?.data.user.loanAmount
                           ? Math.floor(context?.data.user.loanAmount / context.data.UVA).toLocaleString() + ' UVAs'
@@ -332,10 +333,10 @@ const ComparisonForm = () => {
                   <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
-                      type='number'
+                      type='string'
                       value={
                         context?.data.user.loanAmount
-                          ? (context.data.user.loanAmount / (context?.data.dolar ?? 1)).toFixed(0)
+                          ? (context.data.user.loanAmount / (context?.data.dolar ?? 1)).toLocaleString()
                           : 0
                       }
                       label={`Monto del préstamo (${
@@ -344,7 +345,7 @@ const ComparisonForm = () => {
                           : ''
                       })`}
                       onChange={e => {
-                        const value = e.target.value
+                        const value = e.target.value.replace(/,/g, '')
                         if (context?.data.dolar) {
                           setValues({ ...values, loanAmount: Number(value) * context.data.dolar })
                           context?.setData({
