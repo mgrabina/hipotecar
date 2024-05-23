@@ -42,6 +42,7 @@ export interface PreferencesFormState {
   salary: number
   duration: number
   taxType: TaxType[]
+  monotributista: boolean
   secondHome: boolean
   banks: string[]
   provinces: string[]
@@ -64,6 +65,7 @@ const PreferencesForm = () => {
     taxType: ['Relacion de Dependencia'],
     secondHome: false,
     loanType: 'personalizado',
+    monotributista: true,
     banks: [],
     creditType: 'Adquisicion',
     provinces: [],

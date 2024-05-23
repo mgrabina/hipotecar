@@ -1,13 +1,17 @@
 import { Credit } from 'src/configs/constants'
 import { UserData } from '../layouts/HipotecarLayout'
-import { parseMoney } from './string';
+import { parseMoney } from './string'
 
 export interface CreditEvaluationResult {
   creditosCompatibles: { credit: Credit; loan: number }[]
   razonesDeLosRestantes: string[]
 }
 
-export const getBiggestLoanBasedOnSalary = (credits: Credit[], userData: UserData, UVA = 922): CreditEvaluationResult => {
+export const getBiggestLoanBasedOnSalary = (
+  credits: Credit[],
+  userData: UserData,
+  UVA = 922
+): CreditEvaluationResult => {
   const salary = userData.salary
   if (!salary) return { creditosCompatibles: [], razonesDeLosRestantes: ['No se ha ingresado un salario.'] }
 
@@ -70,9 +74,9 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData, UVA 
         credit['Monto Maximo en UVAs'] * UVA < userData.loanAmount
       ) {
         reasons.push(
-          `El monto máximo financiable de ${parseMoney(credit['Monto Maximo en UVAs'] * UVA)} es mayor que el monto deseado de ${
-            parseMoney(userData.loanAmount)
-          }.`
+          `El monto máximo financiable de ${parseMoney(
+            credit['Monto Maximo en UVAs'] * UVA
+          )} es mayor que el monto deseado de ${parseMoney(userData.loanAmount)}.`
         )
         isCompatible = false
       }
@@ -107,7 +111,10 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData, UVA 
 
     // Check monotributista
     const taxTypeAccepted: boolean[] = []
-    if (credit['Acepta Monotributistas'] == 'TRUE' && userData.taxType?.includes('Monotributo')) {
+    if (
+      credit['Acepta Monotributistas'] == 'TRUE' &&
+      (userData.taxType?.includes('Monotributo') || userData.monotributista == true)
+    ) {
       taxTypeAccepted.push(true)
     }
 
@@ -115,7 +122,10 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData, UVA 
       taxTypeAccepted.push(true)
     }
 
-    if (credit['Acepta Relacion de Dependencia'] == 'TRUE' && userData.taxType?.includes('Relacion de Dependencia')) {
+    if (
+      credit['Acepta Relacion de Dependencia'] == 'TRUE' &&
+      (userData.taxType?.includes('Relacion de Dependencia') || userData.monotributista == false)
+    ) {
       taxTypeAccepted.push(true)
     }
 
