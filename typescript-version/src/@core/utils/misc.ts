@@ -53,7 +53,7 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData, UVA 
     const reasons = []
     let isCompatible = true
 
-    if (userData?.salary && credit['Ingresos Minimos'] && credit['Ingresos Minimos'] <= userData.salary) {
+    if (userData?.salary && credit['Ingresos Minimos'] && credit['Ingresos Minimos'] >= userData.salary) {
       reasons.push(
         `El ingreso mínimo requerido de ${credit['Ingresos Minimos']} es mayor que su salario actual de ${userData.salary}.`
       )
