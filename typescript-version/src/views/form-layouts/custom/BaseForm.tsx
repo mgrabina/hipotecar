@@ -53,11 +53,23 @@ const BaseForm = () => {
     setValues({ name: context?.data.user.name })
   }, [context?.data.user.name])
 
+  const defaultEmail = ''
+  const [email, setEmail] = useState<string>(defaultEmail)
+  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value)
+    context?.setData({ ...context.data, user: { ...context.data.user, email: event.target.value } })
+  }
+  useEffect(() => {
+    if (email != defaultEmail) return
+    if (!context?.data.user.email) return
+    setEmail(context?.data.user.email)
+  }, [context?.data.user.email])
+
   return (
     <Card>
       <CardHeader
-        title='Hola! Cual es tu nombre?'
-        subheader='En menos de 3 minutos tendras tus resultados!'
+        title='Bienvenido!'
+        subheader='En menos de 3 minutos tendras tus resultados.'
         titleTypographyProps={{ variant: 'h6' }}
       />
       <CardContent>
@@ -70,6 +82,17 @@ const BaseForm = () => {
                 value={context?.data.user.name}
                 placeholder='Leo Messi'
                 onChange={handleChange('name')}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                style={{ width: '100%', height: '100%' }}
+                type='email'
+                label='Email (opcional)'
+                placeholder='leomessi@gmail.com'
+                value={email}
+                onChange={handleEmailChange}
               />
             </Grid>
 

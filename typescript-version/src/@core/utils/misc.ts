@@ -1,12 +1,13 @@
 import { Credit } from 'src/configs/constants'
 import { UserData } from '../layouts/HipotecarLayout'
+import { parseMoney } from './string';
 
 export interface CreditEvaluationResult {
   creditosCompatibles: { credit: Credit; loan: number }[]
   razonesDeLosRestantes: string[]
 }
 
-export const getBiggestLoanBasedOnSalary = (credits: Credit[], userData: UserData): CreditEvaluationResult => {
+export const getBiggestLoanBasedOnSalary = (credits: Credit[], userData: UserData, UVA = 922): CreditEvaluationResult => {
   const salary = userData.salary
   if (!salary) return { creditosCompatibles: [], razonesDeLosRestantes: ['No se ha ingresado un salario.'] }
 
@@ -26,9 +27,8 @@ export const getBiggestLoanBasedOnSalary = (credits: Credit[], userData: UserDat
         maxLoan = calcularMontoPrestamo(maxCuotaMensual, credit.Tasa, credit.Duracion)
       }
 
-      // @todo Get UVA value automatically from API
-      if (credit['Monto Maximo en UVAs'] && maxLoan > credit['Monto Maximo en UVAs'] * 922) {
-        maxLoan = credit['Monto Maximo en UVAs'] * 922
+      if (credit['Monto Maximo en UVAs'] && maxLoan > credit['Monto Maximo en UVAs'] * UVA) {
+        maxLoan = credit['Monto Maximo en UVAs'] * UVA
       }
 
       return {
@@ -41,7 +41,7 @@ export const getBiggestLoanBasedOnSalary = (credits: Credit[], userData: UserDat
   }
 }
 
-export const getCompatibleCredits = (credits: Credit[], userData: UserData): CreditEvaluationResult => {
+export const getCompatibleCredits = (credits: Credit[], userData: UserData, UVA = 922): CreditEvaluationResult => {
   const creditosCompatibles: CreditEvaluationResult['creditosCompatibles'] = []
   const razonesDeLosRestantes: string[] = []
 
@@ -63,16 +63,15 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
       isCompatible = false
     }
 
-    // @todo Get UVA value automatically from API
     if (userData.loanType === 'personalizado') {
       if (
         userData?.loanAmount &&
         credit['Monto Maximo en UVAs'] &&
-        credit['Monto Maximo en UVAs'] * 922 > userData.loanAmount
+        credit['Monto Maximo en UVAs'] * UVA < userData.loanAmount
       ) {
         reasons.push(
-          `El monto máximo financiable de ${credit['Monto Maximo en UVAs'] * 922} es mayor que el monto deseado de ${
-            userData.loanAmount
+          `El monto máximo financiable de ${parseMoney(credit['Monto Maximo en UVAs'] * UVA)} es mayor que el monto deseado de ${
+            parseMoney(userData.loanAmount)
           }.`
         )
         isCompatible = false
@@ -80,7 +79,7 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
     }
 
     if (userData?.creditType && credit.Tipo !== userData.creditType) {
-      reasons.push(`El tipo de crédito requerido es '${userData.creditType}', pero el disponible es '${credit.Tipo}'.`)
+      // reasons.push(`El tipo de crédito requerido es '${userData.creditType}', pero el disponible es '${credit.Tipo}'.`)
       isCompatible = false
     }
 
@@ -107,8 +106,21 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
     }
 
     // Check monotributista
-    if (credit['Acepta Monotributistas'] == 'FALSE' && userData?.monotributista) {
-      reasons.push(`El crédito no acepta monotributistas.`)
+    const taxTypeAccepted: boolean[] = []
+    if (credit['Acepta Monotributistas'] == 'TRUE' && userData.taxType?.includes('Monotributo')) {
+      taxTypeAccepted.push(true)
+    }
+
+    if (credit['Acepta Autonomos'] == 'TRUE' && userData.taxType?.includes('Autonomo')) {
+      taxTypeAccepted.push(true)
+    }
+
+    if (credit['Acepta Relacion de Dependencia'] == 'TRUE' && userData.taxType?.includes('Relacion de Dependencia')) {
+      taxTypeAccepted.push(true)
+    }
+
+    if (!taxTypeAccepted.some(t => t === true)) {
+      reasons.push(`El crédito no acepta su condicion frente a AFIP.`)
       isCompatible = false
     }
 
@@ -143,7 +155,9 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
     if (isCompatible) {
       creditosCompatibles.push({ credit, loan: userData.loanType === 'personalizado' ? userData.loanAmount ?? 0 : 0 })
     } else {
-      razonesDeLosRestantes.push(`Crédito '${credit.Nombre}' en ${credit.Banco}: ${reasons.join(' ')}\n`)
+      if (reasons.length > 0) {
+        razonesDeLosRestantes.push(`Crédito '${credit.Nombre}' en ${credit.Banco}: ${reasons.join(' ')}\n`)
+      }
     }
   })
 
@@ -161,8 +175,6 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
     return acc // Add this line to return the updated accumulator object
   }, {} as Record<string, CreditEvaluationResult['creditosCompatibles']>)
 
-  console.log(creditosCompatiblesPorNombre)
-
   const compatibles = Object.keys(creditosCompatiblesPorNombre).map(key => {
     const creditos = creditosCompatiblesPorNombre[key]
     const credit = creditos.find((credit: any) => credit.credit['Sueldo En Banco'] == 'TRUE') ?? creditos[0]
@@ -170,9 +182,11 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData): Cre
     return credit
   })
 
+  const razonesDeLosRestantesUnicas = Array.from(new Set(razonesDeLosRestantes))
+
   return {
     creditosCompatibles: compatibles,
-    razonesDeLosRestantes
+    razonesDeLosRestantes: razonesDeLosRestantesUnicas
   }
 }
 

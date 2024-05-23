@@ -24,6 +24,7 @@ import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useData } from 'src/@core/layouts/HipotecarLayout'
+import { Island } from 'mdi-material-ui'
 
 interface State {
   stableWork: boolean
@@ -99,7 +100,13 @@ const RiskForm = () => {
               </FormGroup>
             </Grid>
             <Grid item xs={12} className='flex '>
-              <Button type='submit' disabled={!allowed} variant='contained' size='large' onClick={handleClick}>
+              <Button
+                type='submit'
+                color={allowed ? 'primary' : 'warning'}
+                variant='contained'
+                size='large'
+                onClick={handleClick}
+              >
                 Confirmar
               </Button>
               {!allowed && (

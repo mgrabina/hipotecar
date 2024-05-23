@@ -79,51 +79,9 @@ type ComparisonTableState = {
 }
 
 const ComparisonForm = () => {
-  const router = useRouter()
   const context = useData()
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
-
-  const [saving, setSaving] = useState<boolean>(false)
-  const [saved, setSaved] = useState<boolean>(false)
-
-  const handleClick = () => {
-    setSaving(true)
-
-    // Set Email
-    context?.setData({ ...context.data, user: { ...context.data.user, email } })
-
-    if (!context?.data.user) {
-      return
-    }
-
-    const body: SubmitUserBody = {
-      data: context?.data.user,
-      compatibleCredits: compatibleCreditsResults.creditosCompatibles.map(c => c.credit)
-    }
-
-    fetch('/api/users', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    })
-      .then(resp => {
-        if (resp.ok) {
-          console.info('Saved successfully.')
-        } else {
-          console.error('Error:', resp.statusText)
-        }
-        setSaving(false)
-        setSaved(true)
-      })
-      .catch(e => {
-        console.error('Error:', e)
-        setSaving(false)
-        setSaved(false)
-      })
-  }
 
   const [compatibleCreditsResults, setCompatibleCreditsResult] = useState<CreditEvaluationResult>({
     creditosCompatibles: [],
@@ -131,8 +89,12 @@ const ComparisonForm = () => {
   })
 
   const handleChange = (prop: keyof UserData) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-    context?.setData({ ...context.data, user: { ...context.data.user, [prop]: event.target.value } })
+    console.log('event.target.value', event.target.value, Number(event.target.value.replace(/,/g, '')))
+    setValues({ ...values, [prop]: Number(event.target.value) })
+    context?.setData({
+      ...context.data,
+      user: { ...context.data.user, [prop]: Number(event.target.value.replace(/,/g, '')) }
+    })
   }
 
   const handleSelectChange = (
@@ -167,25 +129,13 @@ const ComparisonForm = () => {
     setValues(updatedValues)
   }, [context?.data.user])
 
-  const defaultEmail = ''
-  const [email, setEmail] = useState<string>(defaultEmail)
-  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value)
-    context?.setData({ ...context.data, user: { ...context.data.user, email: event.target.value } })
-  }
-  useEffect(() => {
-    if (email != defaultEmail) return
-    if (!context?.data.user.email) return
-    setEmail(context?.data.user.email)
-  }, [context?.data.user.email])
-
   useEffect(() => {
     if (!context?.data.user || !context?.data.credits) return
 
     const compatibleCredits =
       context?.data.user.loanType === 'personalizado'
-        ? getCompatibleCredits(context?.data.credits, context?.data.user)
-        : getBiggestLoanBasedOnSalary(context?.data.credits, context?.data.user)
+        ? getCompatibleCredits(context?.data.credits, context?.data.user, context?.data.UVA)
+        : getBiggestLoanBasedOnSalary(context?.data.credits, context?.data.user, context?.data.UVA)
 
     setCompatibleCreditsResult(compatibleCredits)
 
@@ -252,6 +202,8 @@ const ComparisonForm = () => {
     })
   }, [values.sortType])
 
+  console.log(compatibleCreditsResults.creditosCompatibles)
+
   return (
     <Card>
       <CardHeader
@@ -314,8 +266,8 @@ const ComparisonForm = () => {
                   <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
-                      type='number'
-                      value={Number(context?.data.user.loanAmount).toFixed(0)}
+                      type='string'
+                      value={Number(context?.data.user.loanAmount).toLocaleString()}
                       label={`Monto del préstamo (${
                         context?.data.UVA && context?.data.user.loanAmount
                           ? Math.floor(context?.data.user.loanAmount / context.data.UVA).toLocaleString() + ' UVAs'
@@ -332,10 +284,10 @@ const ComparisonForm = () => {
                   <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
-                      type='number'
+                      type='string'
                       value={
                         context?.data.user.loanAmount
-                          ? (context.data.user.loanAmount / (context?.data.dolar ?? 1)).toFixed(0)
+                          ? (context.data.user.loanAmount / (context?.data.dolar ?? 1)).toLocaleString()
                           : 0
                       }
                       label={`Monto del préstamo (${
@@ -344,7 +296,7 @@ const ComparisonForm = () => {
                           : ''
                       })`}
                       onChange={e => {
-                        const value = e.target.value
+                        const value = e.target.value.replace(/,/g, '')
                         if (context?.data.dolar) {
                           setValues({ ...values, loanAmount: Number(value) * context.data.dolar })
                           context?.setData({
@@ -478,6 +430,16 @@ const ComparisonForm = () => {
                                     style={{ margin: '0.2em 0 0.2em 0' }}
                                     label='Sueldo en Banco'
                                     size='small'
+                                    color="secondary"
+                                  />
+                                </Typography>
+                              )}
+                              {row['Meses de Gracia'] && Number(row['Meses de Gracia']) > 0 && (
+                                <Typography variant='caption' margin='0.3em'>
+                                  <Chip
+                                    style={{ margin: '0.2em 0 0.2em 0' }}
+                                    label={`${row['Meses de Gracia']} Meses de Gracia`}
+                                    size='small'
                                     color='success'
                                   />
                                 </Typography>
@@ -583,8 +545,15 @@ const ComparisonForm = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
+              <br></br>
               {compatibleCreditsResults.razonesDeLosRestantes.length > 0 && (
-                <Accordion style={{ width: '100%' }}>
+                <Accordion
+                  style={{ width: '100%' }}
+                  TransitionProps={{
+                    // faster exit
+                    timeout: 200
+                  }}
+                >
                   <AccordionSummary expandIcon={<ArrowDown />} aria-controls='panel1-content' id='panel1-header'>
                     Por que los demas creditos no aparecen?
                   </AccordionSummary>
@@ -602,49 +571,6 @@ const ComparisonForm = () => {
                   </AccordionDetails>
                 </Accordion>
               )}
-            </Grid>
-
-            <Grid item xs={12}></Grid>
-            <Grid container spacing={2} margin={4}>
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  style={{ width: '100%', height: '100%' }}
-                  type='email'
-                  label='Email'
-                  placeholder='leomessi@gmail.com'
-                  value={email}
-                  onChange={handleEmailChange}
-                />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Button
-                  type='submit'
-                  variant='outlined'
-                  onClick={handleClick}
-                  disabled={saving || saved}
-                  style={{
-                    opacity: saving ? 0.5 : 1,
-                    width: '100%',
-                    height: '100%',
-                    fontSize: '.7em',
-                    maxHeight: '100%',
-                    overflow: 'hidden'
-                  }}
-                >
-                  {saving
-                    ? 'Guardando...'
-                    : saved
-                    ? 'Guardado!'
-                    : 'Encender alertas y recibir informacion de creditos alineados con mis intereses'}
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant='caption' style={{}}>
-                  Nota: Las variables macroeconomicas para hacer los calculos son importadas automaticamente del BCRA y
-                  otras fuentes oficiales.{' '}
-                </Typography>
-              </Grid>
             </Grid>
           </Grid>
         </form>

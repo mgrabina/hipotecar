@@ -105,7 +105,6 @@ export default function ProgressBar() {
   const theme = useTheme()
   const router = useRouter()
 
-
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   const activeStep = context?.data ? getActiveStep(context?.data.user) : 0
@@ -120,7 +119,12 @@ export default function ProgressBar() {
             <Step key={label}>
               {activeStep >= index ? (
                 <Link href={stepLinks[index]} key={label}>
-                  <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>
+                  <StepLabel
+                    StepIconComponent={QontoStepIcon}
+                    style={{  minWidth: 'fit-content', width: 'auto', whiteSpace: 'nowrap' }}
+                  >
+                    {label}
+                  </StepLabel>
                 </Link>
               ) : (
                 <StepLabel StepIconComponent={QontoStepIcon}>{label}</StepLabel>

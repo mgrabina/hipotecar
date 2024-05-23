@@ -17,6 +17,8 @@ import FormControl from '@mui/material/FormControl'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import InputAdornment from '@mui/material/InputAdornment'
 import FormHelperText from '@mui/material/FormHelperText'
+import { useTheme } from '@mui/material/styles'
+import { useMediaQuery } from '@mui/material'
 
 // ** Icons Imports
 import EyeOutline from 'mdi-material-ui/EyeOutline'
@@ -29,34 +31,43 @@ import { UserData, useData } from 'src/@core/layouts/HipotecarLayout'
 import { CreditType, CreditTypes, Province, Provinces } from 'src/configs/constants'
 import { parseMoney } from 'src/@core/utils/string'
 import { getBiggestLoanBasedOnSalary } from 'src/@core/utils/misc'
+import { SubmitUserBody } from 'src/pages/api/users'
+
+const taxTypes = ['Monotributo', 'Autonomo', 'Relacion de Dependencia'] as const
+type TaxType = typeof taxTypes[number]
 
 export interface PreferencesFormState {
   loanAmount: number
   loanType: 'personalizado' | 'maximo'
   salary: number
   duration: number
-  monotributista: boolean
+  taxType: TaxType[]
   secondHome: boolean
   banks: string[]
   provinces: string[]
   creditType: CreditType
+  turnOnAlerts: boolean
 }
 
 const PreferencesForm = () => {
   const router = useRouter()
   const context = useData()
 
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+
   // ** States
   const [values, setValues] = useState<PreferencesFormState>({
     loanAmount: 0,
     salary: 0,
     duration: 20,
-    monotributista: false,
+    taxType: ['Relacion de Dependencia'],
     secondHome: false,
     loanType: 'personalizado',
     banks: [],
     creditType: 'Adquisicion',
-    provinces: []
+    provinces: [],
+    turnOnAlerts: false
   })
 
   const handleSelectChange = (event: SelectChangeEvent<string> | SelectChangeEvent<string[]>, prop: keyof UserData) => {
@@ -64,7 +75,26 @@ const PreferencesForm = () => {
   }
 
   const handleChange = (prop: keyof PreferencesFormState) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
+    if (Number(event.target.value) < 0) return
+    setValues({ ...values, [prop]: event.target.value.replace(/,/g, '') })
+  }
+
+  const sendEmail = () => {
+    if (!context?.data.user) {
+      return Promise.resolve()
+    }
+
+    const body: SubmitUserBody = {
+      data: context?.data.user
+    }
+
+    return fetch('/api/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    })
   }
 
   const handleClick = () => {
@@ -77,14 +107,25 @@ const PreferencesForm = () => {
         salary: values.salary,
         duration: values.duration,
         banks: values.banks,
-        monotributista: values.monotributista,
+        taxType: values.taxType,
         secondHome: values.secondHome,
         provinces: values.provinces,
         creditType: values.creditType
       }
     })
 
-    router.push('/simulation/comparison')
+    sendEmail()
+      .then(resp => {
+        if (resp?.ok) {
+          console.info('Saved successfully.')
+        } else {
+          console.error('Error:', resp?.statusText)
+        }
+        router.push('/simulation/comparison')
+      })
+      .catch(e => {
+        console.error('Error:', e)
+      })
   }
 
   useEffect(() => {
@@ -180,6 +221,11 @@ const PreferencesForm = () => {
                   multiple
                   disabled={!context?.data.banks.length}
                   value={values.banks ?? []}
+                  MenuProps={{
+                    style: {
+                      height: isSmallScreen ? '50%' : '400px'
+                    }
+                  }}
                   id='form-layouts-separator-select-label-banks'
                   onChange={e => handleSelectChange(e, 'banks')}
                 >
@@ -200,6 +246,12 @@ const PreferencesForm = () => {
                   disabled={!context?.data.provinces.length}
                   label='form-layouts-separator-select-label-provinces'
                   multiple
+                  fullWidth
+                  MenuProps={{
+                    style: {
+                      height: isSmallScreen ? '50%' : '400px'
+                    }
+                  }}
                   value={values.provinces ?? []}
                   id='form-layouts-separator-select-label-provinces'
                   onChange={e => handleSelectChange(e, 'provinces')}
@@ -212,14 +264,13 @@ const PreferencesForm = () => {
                 </Select>
               </FormControl>
             </Grid>
-
             <Grid item xs={12}>
               <Grid container spacing={4}>
                 <Grid item xs={6} md={3}>
                   <TextField
                     fullWidth
-                    type='number'
-                    value={values.salary}
+                    type='string'
+                    value={Number(values.salary).toLocaleString()}
                     label={`Sueldo ${
                       context?.data.dolar ? `(${parseMoney(values.salary / context?.data.dolar, 'USD')})` : ''
                     }`}
@@ -255,8 +306,8 @@ const PreferencesForm = () => {
                     <Grid style={{ display: values.loanType == 'personalizado' ? '' : 'hidden' }} item xs={12} md={3}>
                       <TextField
                         fullWidth
-                        type='number'
-                        value={Number(values.loanAmount).toFixed(0)}
+                        type='string'
+                        value={Number(values.loanAmount).toLocaleString()}
                         label={`Monto del préstamo (${
                           context?.data.UVA
                             ? Math.floor(values.loanAmount / context.data.UVA).toLocaleString() + ' UVAs'
@@ -273,15 +324,15 @@ const PreferencesForm = () => {
                     <Grid item xs={12} md={3}>
                       <TextField
                         fullWidth
-                        type='number'
-                        value={(values.loanAmount / (context?.data.dolar ?? 1)).toFixed(0)}
+                        type='string'
+                        value={(values.loanAmount / (context?.data.dolar ?? 1)).toLocaleString()}
                         label={`Monto del préstamo (${
                           context?.data.UVA
                             ? Math.floor(values.loanAmount / context.data.UVA).toLocaleString() + ' UVAs'
                             : ''
                         })`}
                         onChange={e => {
-                          const value = e.target.value
+                          const value = e.target.value.replace(/,/g, '')
                           if (context?.data.dolar) {
                             setValues({ ...values, loanAmount: Number(value) * context.data.dolar })
                             context?.setData({
@@ -301,22 +352,41 @@ const PreferencesForm = () => {
                   </>
                 )}
               </Grid>
+            </Grid>
 
+            <Grid item xs={12}>
               {/* is Monotributista */}
-              <Grid container>
-                <Grid item xs={12}>
-                  <FormControl component='fieldset'>
-                    <FormGroup>
-                      <FormControlLabel
-                        control={<Checkbox onChange={handleCheckboxChange('monotributista')} />}
-                        label='Soy monotributista'
-                        labelPlacement='end'
-                      />
-                    </FormGroup>
+              <Grid container spacing={4}>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel id='form-layouts-separator-select-label-taxType'>Estado frente a AFIP</InputLabel>
+                    <Select
+                      label='form-layouts-separator-select-label-taxType'
+                      multiple
+                      fullWidth
+                      MenuProps={{
+                        style: {
+                          height: isSmallScreen ? '50%' : '400px'
+                        }
+                      }}
+                      value={values.taxType ?? []}
+                      id='form-layouts-separator-select-label-taxType'
+                      onChange={e => handleSelectChange(e, 'taxType')}
+                    >
+                      {taxTypes?.map(type => (
+                        <MenuItem key={type} value={type}>
+                          {type}
+                        </MenuItem>
+                      ))}
+                    </Select>
                   </FormControl>
-                  <FormControl component='fieldset'>
-                    <FormGroup>
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <FormControl component='fieldset' style={{ height: '100%' }}>
+                    <FormGroup style={{ height: '100% ', alignItems: 'center', alignContent: 'center' }}>
                       <FormControlLabel
+                        style={{ height: '100%', paddingLeft: '1em' }}
                         control={<Checkbox onChange={handleCheckboxChange('secondHome')} />}
                         label='Segunda Vivienda'
                         labelPlacement='end'
@@ -326,7 +396,18 @@ const PreferencesForm = () => {
                 </Grid>
               </Grid>
             </Grid>
-
+            <Grid item xs={12}>
+              <FormControl component='fieldset' style={{ height: '100%' }}>
+                <FormGroup style={{ height: '100% ', alignItems: 'center', alignContent: 'center' }}>
+                  <FormControlLabel
+                    style={{ height: '100%', paddingLeft: '0.1em' }}
+                    control={<Checkbox defaultChecked onChange={handleCheckboxChange('turnOnAlerts')} />}
+                    label='Encender alertas y recibir informacion de creditos alineados con mis intereses'
+                    labelPlacement='end'
+                  />
+                </FormGroup>
+              </FormControl>
+            </Grid>
             <Grid item xs={12}>
               <Button type='submit' disabled={!values.salary} variant='contained' size='large' onClick={handleClick}>
                 Confirmar
@@ -334,8 +415,8 @@ const PreferencesForm = () => {
             </Grid>
             <Grid item xs={12}>
               <Typography variant='caption' style={{}}>
-                Nota: Las variables macroeconomicas para hacer los calculos son importadas automaticamente del BCRA y otras
-                fuentes oficiales.{' '}
+                Nota: Las variables macroeconomicas para hacer los calculos son importadas automaticamente del BCRA y
+                otras fuentes oficiales.{' '}
               </Typography>
             </Grid>
           </Grid>

@@ -62,6 +62,9 @@ export type Credit = {
   'Sueldo En Banco': 'TRUE' | 'FALSE'
   Tipo: CreditType
   'Acepta Monotributistas': 'TRUE' | 'FALSE'
+  'Acepta Autonomos': 'TRUE' | 'FALSE'
+  'Acepta Relacion de Dependencia': 'TRUE' | 'FALSE'
+  'Meses de Gracia': number
   'Apto Segunda Vivienda': 'TRUE' | 'FALSE'
   Duracion: number
   'Monto Maximo en UVAs': number
