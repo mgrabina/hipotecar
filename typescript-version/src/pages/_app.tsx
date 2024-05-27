@@ -76,18 +76,49 @@ const App = (props: ExtendedAppProps) => {
 
   const GACODE = 'G-3ZB17SX46P'
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Mi Crédito Hipotecario',
+    url: 'https://micreditohipotecario.com.ar',
+    logo: 'https://micreditohipotecario.com.ar/images/logo.png',
+    sameAs: [],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: "martin@targecy.xyz",
+      contactType: 'Martin Grabina',
+      areaServed: 'AR',
+      availableLanguage: ['Spanish', 'English']
+    }
+  }
+
   return (
     <CacheProvider value={emotionCache}>
       <Head>
         <title>{`Mi credito hipotecario - Tu aliado para surfear la ola de creditos`}</title>
         <meta
           name='description'
-          content={`Mi credito hipotecario - Tu aliado para surfear la ola de creditos | Buscador y Simulador de creditos hipotecarios UVA.`}
+          content='Encuentra y compara los mejores créditos hipotecarios en Argentina con Mi Crédito Hipotecario. Nuestro buscador y simulador de créditos hipotecarios UVA te ayuda a tomar decisiones informadas. Descubre tasas, cuotas y requisitos para obtener tu crédito hipotecario ideal en los bancos mas importantes del país: Banco Hipotecario, Banco Ciudad, Banco Supervielle, Banco ICBC, Banco de Córdoba, Banco de Corrientes, Banco Nación, Banco Santander, Banco Macro, Banco BBVA, Banco Galicia, Banco de Neuquén, Banco del Sol, Brubank, entre otros!'
         />
-        <meta name='keywords' content='Hipotecas, Creditos Hipotecarios, Argentina' />
+        <meta
+          name='keywords'
+          content='Hipotecas, Créditos Hipotecarios, Argentina, Préstamos Inmobiliarios, Financiamiento de Viviendas, Crédito UVA, Banco Galicia, Banco Nación, Banco Provincia, Banco Santander, Banco BBVA, Banco Macro, Crédito Hipotecario Banco Galicia, Crédito Hipotecario Banco Nación, Crédito Hipotecario Banco Provincia, Crédito Hipotecario Banco Santander, Crédito Hipotecario Banco BBVA, Crédito Hipotecario Banco Macro, Tasas de Interés Hipotecarias, Simulador de Créditos Hipotecarios, Comparador de Hipotecas, Préstamos Hipotecarios UVA, Requisitos para Créditos Hipotecarios, Cuotas Hipotecarias, Calculadora de Créditos Hipotecarios, Financiación de Viviendas, Préstamos Hipotecarios en Pesos, Préstamos Hipotecarios en UVAs, Préstamos Hipotecarios en Dólares, Ingresos Mínimos para Créditos Hipotecarios, Monotributistas, Segunda Vivienda, Sueldo en Banco, Relación Cuota Ingreso, Monto Máximo de Financiación, Tasa de Interés Especial, Prima de Seguro, Precancelación, Evolución de Pago, Amortización de Préstamos, Análisis de Riesgos, Documentos para Créditos Hipotecarios, Información sobre Créditos Hipotecarios, Grupo de Telegram Créditos Hipotecarios, Comparación de Créditos Hipotecarios, Mejores Hipotecas en Argentina'
+        />{' '}
         <meta name='viewport' content='initial-scale=1, width=device-width' />
         {/* Add favicon */}
         <link rel='shortcut icon' href='/images/logo.png' />
+        {/* Canonical */}
+        <link rel='canonical' href='https://micreditohipotecario.com' />
+        <meta property='og:title' content='Mi Crédito Hipotecario' />
+        <meta
+          property='og:description'
+          content='Encuentra y compara los mejores créditos hipotecarios en Argentina con Mi Crédito Hipotecario. Nuestro buscador y simulador de créditos hipotecarios UVA te ayuda a tomar decisiones informadas. Descubre tasas, cuotas y requisitos para obtener tu crédito hipotecario ideal en los bancos mas importantes del país: Banco Hipotecario, Banco Ciudad, Banco Supervielle, Banco ICBC, Banco de Córdoba, Banco de Corrientes, Banco Nación, Banco Santander, Banco Macro, Banco BBVA, Banco Galicia, Banco de Neuquén, Banco del Sol, Brubank, entre otros!'
+        />
+        <meta property='og:image' content='/images/logo.png' />
+        <meta property='og:url' content={`https://micreditohipotecario.com.ar`} />
+        <meta property='og:type' content='website' />
+        <meta property='og:site_name' content='Mi Crédito Hipotecario' />
+        <script type='application/ld+json' dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </Head>
       <Script async src={`https://www.googletagmanager.com/gtag/js?id=${GACODE}`} />
       <Script id='google-analytics'>
