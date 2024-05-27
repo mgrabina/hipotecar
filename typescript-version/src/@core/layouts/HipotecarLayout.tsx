@@ -222,16 +222,11 @@ const HypotecarLayout = (props: LayoutProps) => {
                 })
               }}
             >
-              <Typography variant='h3' width='100%' sx={{ fontSize: '20px' }} style={{ textAlign: 'center' }}>
-                <img alt="Bandera Argentina" src='/images/logo.png' width='20em' /> Mi Credito Hipotecario{' '}
-                <img alt="Bandera Argentina" src='/images/logo.png' width='20em' />
+              <Typography variant='h1' style={{ fontSize: '4em', textAlign: 'center' }}>
+                <img alt='Bandera Argentina' src='/images/logo.png' height='30em' /> Mi Credito Hipotecario{' '}
+                <img alt='Bandera Argentina' src='/images/logo.png' width='30em' />
               </Typography>
-              <Typography
-                variant='h6'
-                width='100%'
-                sx={{ fontSize: '15px' }}
-                style={{ textAlign: 'center', opacity: 0.5 }}
-              >
+              <Typography variant='h2' style={{ textAlign: 'center', opacity: 0.5, fontSize: '2em' }}>
                 Tu aliado para surfear la ola de creditos
               </Typography>
               <ProgressBar></ProgressBar>
