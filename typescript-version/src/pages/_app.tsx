@@ -85,7 +85,7 @@ const App = (props: ExtendedAppProps) => {
     sameAs: [],
     contactPoint: {
       '@type': 'ContactPoint',
-      email: "martin@targecy.xyz",
+      email: 'martin@targecy.xyz',
       contactType: 'Martin Grabina',
       areaServed: 'AR',
       availableLanguage: ['Spanish', 'English']
@@ -98,7 +98,7 @@ const App = (props: ExtendedAppProps) => {
         <title>{`Mi credito hipotecario - Tu aliado para surfear la ola de creditos`}</title>
         <meta
           name='description'
-          content='Encuentra y compara los mejores créditos hipotecarios en Argentina con Mi Crédito Hipotecario. Nuestro buscador y simulador de créditos hipotecarios UVA te ayuda a tomar decisiones informadas. Descubre tasas, cuotas y requisitos para obtener tu crédito hipotecario ideal en los bancos mas importantes del país: Banco Hipotecario, Banco Ciudad, Banco Supervielle, Banco ICBC, Banco de Córdoba, Banco de Corrientes, Banco Nación, Banco Santander, Banco Macro, Banco BBVA, Banco Galicia, Banco de Neuquén, Banco del Sol, Brubank, entre otros!'
+          content='Compara y simula créditos hipotecarios en Argentina con Mi Crédito Hipotecario. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos.'
         />
         <meta
           name='keywords'
@@ -112,7 +112,7 @@ const App = (props: ExtendedAppProps) => {
         <meta property='og:title' content='Mi Crédito Hipotecario' />
         <meta
           property='og:description'
-          content='Encuentra y compara los mejores créditos hipotecarios en Argentina con Mi Crédito Hipotecario. Nuestro buscador y simulador de créditos hipotecarios UVA te ayuda a tomar decisiones informadas. Descubre tasas, cuotas y requisitos para obtener tu crédito hipotecario ideal en los bancos mas importantes del país: Banco Hipotecario, Banco Ciudad, Banco Supervielle, Banco ICBC, Banco de Córdoba, Banco de Corrientes, Banco Nación, Banco Santander, Banco Macro, Banco BBVA, Banco Galicia, Banco de Neuquén, Banco del Sol, Brubank, entre otros!'
+          content='Compara y simula créditos hipotecarios en Argentina con Mi Crédito Hipotecario. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos.'
         />
         <meta property='og:image' content='/images/logo.png' />
         <meta property='og:url' content={`https://micreditohipotecario.com.ar`} />
