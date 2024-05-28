@@ -17,6 +17,7 @@ import { Credit } from 'src/configs/constants'
 import { useData } from 'src/@core/layouts/HipotecarLayout'
 import { useTheme } from '@mui/material/styles'
 import { useMediaQuery } from '@mui/material'
+import Link from 'next/link'
 
 const columnsNotToShow = ['Id', 'Nombre', 'Banco']
 const firstColumns = ['Logo Banco', 'Tipo', 'Nombre']
@@ -261,7 +262,7 @@ const CreditComparisonPage = () => {
                       ) : credit[key as keyof Credit] === 'FALSE' ? (
                         'No'
                       ) : key === 'Link' ? (
-                        <a href={credit[key as keyof Credit] as string}>Ver</a>
+                        <Link href={credit[key as keyof Credit] as string}>Ver</Link>
                       ) : (
                         credit[key as keyof Credit] +
                         `${!!credit[key as keyof Credit] && (key.includes('Tasa') || key.includes('%')) ? '%' : ''}`

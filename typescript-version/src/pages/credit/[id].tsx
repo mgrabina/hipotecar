@@ -175,7 +175,7 @@ const DetailPage = () => {
                   )}
                   <Grid item xs={6}>
                     <Typography variant='body1'>
-                      <strong>Mas información</strong>: <a href={credit.Link}>Haz click aquí</a>
+                      <strong>Mas información</strong>: <Link href={credit.Link}>Haz click aquí</Link>
                     </Typography>
                   </Grid>
                 </>
@@ -266,7 +266,7 @@ const DetailPage = () => {
                   {/* Otras preguntas */}
                   <strong>Otras preguntas?</strong> Te invitamos a sumarte al Telegram de MiCreditoHipotecario.com.ar
                   donde miles de Argentinos estan debatiendo sobre creditos hipotecarios y respondiendo muchas de las
-                  preguntas mas frecuentes. <a href='https://t.me/micreditohipotecario'>Unite al grupo</a>
+                  preguntas mas frecuentes. <Link href='https://t.me/micreditohipotecario'>Unite al grupo</Link>
                 </Typography>
               </AccordionDetails>
             </Accordion>
@@ -345,7 +345,7 @@ const DetailPage = () => {
               <AccordionDetails>
                 <Typography variant='body2'>
                   Te invitamos a visitar la web del banco para obtener más información sobre este crédito.{' '}
-                  <a href={credit.Link}>Haz click aquí</a>
+                  <Link href={credit.Link}>Haz click aquí</Link>
                 </Typography>
               </AccordionDetails>
             </Accordion>

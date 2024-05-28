@@ -330,9 +330,9 @@ const ComparisonForm = () => {
                     <TableRow>
                       {/* Image */}
                       <TableCell>
-                        <a href='/all' target='_blank'>
+                        <Link href='/all' target='_blank'>
                           Ver todos
-                        </a>
+                        </Link>
                       </TableCell>
                       <TableCell>Creditos Recomendados</TableCell>
                       {context?.data.user.loanType === 'maximo' && <TableCell>Monto Total</TableCell>}

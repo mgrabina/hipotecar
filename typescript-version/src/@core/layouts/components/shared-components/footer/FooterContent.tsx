@@ -36,7 +36,7 @@ const FooterContent = () => {
           Telegram
         </Link>
       </Typography>
-      <a href='/all'>Ver Todos</a>
+      <Link href='/all'>Ver Todos</Link>
     </Box>
   )
 }
