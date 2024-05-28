@@ -109,7 +109,7 @@ const App = (props: ExtendedAppProps) => {
         {/* Add favicon */}
         <link rel='shortcut icon' href='/images/logo.png' />
         {/* Canonical */}
-        <link rel='canonical' href='https://micreditohipotecario.com' />
+        <link rel='canonical' href='https://micreditohipotecario.com.ar' />
         <meta property='og:title' content='Mi Crédito Hipotecario' />
         <meta
           property='og:description'
