@@ -20,43 +20,48 @@ import AccountOutline from 'mdi-material-ui/AccountOutline'
 
 // ** Types
 import { ThemeColor } from 'src/@core/layouts/types'
+import { Bank, HoopHouse, TestTube, Text } from 'mdi-material-ui'
+import { useData } from 'src/@core/layouts/HipotecarLayout'
+import { parseMoney } from 'src/@core/utils/string'
 
 interface DataType {
-  stats: string
+  stats?: string
   title: string
   color: ThemeColor
   icon: ReactElement
 }
 
-const salesData: DataType[] = [
+export type StatisticsData = { banks?: number; variations?: number; uva?: number; dolar?: number }
+
+const salesData = (data: StatisticsData): DataType[] => [
   {
-    stats: '245k',
-    title: 'Sales',
+    stats: data.banks?.toLocaleString(),
+    title: 'Bancos',
     color: 'primary',
-    icon: <TrendingUp sx={{ fontSize: '1.75rem' }} />
+    icon: <Bank sx={{ fontSize: '1.75rem' }} />
   },
   {
-    stats: '12.5k',
-    title: 'Customers',
-    color: 'success',
-    icon: <AccountOutline sx={{ fontSize: '1.75rem' }} />
-  },
-  {
-    stats: '1.54k',
-    color: 'warning',
-    title: 'Products',
-    icon: <CellphoneLink sx={{ fontSize: '1.75rem' }} />
-  },
-  {
-    stats: '$88k',
+    stats: data.variations?.toLocaleString(),
+    title: 'Variaciones',
     color: 'info',
-    title: 'Revenue',
+    icon: <TestTube sx={{ fontSize: '1.75rem' }} />
+  },
+  {
+    stats: data.uva ? parseMoney(data.uva) : undefined,
+    color: 'warning',
+    title: 'UVA',
+    icon: <HoopHouse sx={{ fontSize: '1.75rem' }} />
+  },
+  {
+    stats: data.dolar ? parseMoney(data.dolar) : undefined,
+    color: 'success',
+    title: 'Dólar',
     icon: <CurrencyUsd sx={{ fontSize: '1.75rem' }} />
   }
 ]
 
-const renderStats = () => {
-  return salesData.map((item: DataType, index: number) => (
+const renderStats = (data: StatisticsData) => {
+  return salesData(data).map((item: DataType, index: number) => (
     <Grid item xs={12} sm={3} key={index}>
       <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
         <Avatar
@@ -74,7 +79,7 @@ const renderStats = () => {
         </Avatar>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography variant='caption'>{item.title}</Typography>
-          <Typography variant='h6'>{item.stats}</Typography>
+          <Typography variant='h6'>{item.stats ? item.stats : '-'}</Typography>
         </Box>
       </Box>
     </Grid>
@@ -82,23 +87,20 @@ const renderStats = () => {
 }
 
 const StatisticsCard = () => {
+  const context = useData()
+
+  const data: StatisticsData = {
+    banks: context?.data.banks.length,
+    variations: context?.data.credits.length,
+    uva: context?.data.UVA,
+    dolar: context?.data.dolar
+  }
+
   return (
     <Card>
       <CardHeader
-        title='Statistics Card'
-        action={
-          <IconButton size='small' aria-label='settings' className='card-more-options' sx={{ color: 'text.secondary' }}>
-            <DotsVertical />
-          </IconButton>
-        }
-        subheader={
-          <Typography variant='body2'>
-            <Box component='span' sx={{ fontWeight: 600, color: 'text.primary' }}>
-              Total 48.5% growth
-            </Box>{' '}
-            😎 this month
-          </Typography>
-        }
+        title='Monitor de Mercado'
+        subheader={<Typography variant='body2'>Información actualizada automáticamente en tiempo real</Typography>}
         titleTypographyProps={{
           sx: {
             mb: 2.5,
@@ -109,7 +111,7 @@ const StatisticsCard = () => {
       />
       <CardContent sx={{ pt: theme => `${theme.spacing(3)} !important` }}>
         <Grid container spacing={[5, 0]}>
-          {renderStats()}
+          {renderStats(data)}
         </Grid>
       </CardContent>
     </Card>

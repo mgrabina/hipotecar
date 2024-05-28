@@ -3,7 +3,7 @@ import { Dispatch, ReactChildren, SetStateAction, createContext, useContext, use
 
 // ** MUI Imports
 import Fab from '@mui/material/Fab'
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Box, { BoxProps } from '@mui/material/Box'
 
 // ** Icons Imports
@@ -23,7 +23,7 @@ import ScrollToTop from 'src/@core/components/scroll-to-top'
 
 // ** Styled Component
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
-import { Step, StepConnector, StepIcon, StepLabel, Stepper, Typography } from '@mui/material'
+import { Step, StepConnector, StepIcon, StepLabel, Stepper, Typography, useMediaQuery } from '@mui/material'
 import ProgressBar from './components/vertical/navigation/ProgressBar'
 import { CreditType, Province } from 'src/configs/constants'
 import { Credit, banksCsvUrl, creditsCsvUrl, loadDataFromCSV, provincesCsvUrl } from 'src/configs/constants'
@@ -204,6 +204,11 @@ const HypotecarLayout = (props: LayoutProps) => {
   // ** Toggle Functions
   const toggleNavVisibility = () => setNavVisible(!navVisible)
 
+
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+
+
   return (
     <>
       <VerticalLayoutWrapper className='layout-wrapper'>
@@ -222,11 +227,11 @@ const HypotecarLayout = (props: LayoutProps) => {
                 })
               }}
             >
-              <Typography variant='h1' style={{ fontSize: '4em', textAlign: 'center' }}>
+              <Typography variant='h1' style={{ fontSize:  isSmallScreen?'2em' :'4em', textAlign: 'center' }}>
                 <img alt='Bandera Argentina' src='/images/logo.png' height='30em' /> Mi Credito Hipotecario{' '}
                 <img alt='Bandera Argentina' src='/images/logo.png' width='30em' />
               </Typography>
-              <Typography variant='h2' style={{ textAlign: 'center', opacity: 0.5, fontSize: '2em' }}>
+              <Typography variant='h2' style={{ textAlign: 'center', opacity: 0.5, fontSize: isSmallScreen?'1em' :'2em' }}>
                 Tu aliado para surfear la ola de creditos
               </Typography>
               <ProgressBar></ProgressBar>
