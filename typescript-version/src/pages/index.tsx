@@ -30,21 +30,102 @@ import { useEffect, useState } from 'react'
 import { getActiveStep, stepLinks } from 'src/@core/layouts/components/vertical/navigation/ProgressBar'
 import { useData } from 'src/@core/layouts/HipotecarLayout'
 import { set } from 'nprogress'
+import { Button, Typography, useMediaQuery, useTheme } from '@mui/material'
+import Link from 'next/link'
 
 const Dashboard = () => {
-  const router = useRouter()
-  const context = useData()
+  const theme = useTheme()
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
-  useEffect(() => {
-    if (!context?.data.loaded) return
+  return (
+    <div>
+      {/* Metricas clave */}
+      <div style={{ marginTop: '2em' }}>
+        <StatisticsCard></StatisticsCard>
+      </div>
+      <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'center', marginTop: '1.5em' }}>
+        <Link href='/simulation' passHref={true}>
+          <Button variant='contained' color='primary' style={{ width: '100%' }}>
+            Buscar y simular mi credito
+          </Button>
+        </Link>
+      </div>
 
-    const step = context?.data.user ? getActiveStep(context?.data.user) : 0
-    const link = stepLinks[step]
-
-    router.push(link)
-  }, [context?.data.loaded])
-
-  return null
+      <div style={{ marginTop: '3em' }}>
+        {isSmallScreen ? (
+          <iframe
+            src='https://e.infogram.com/59baed14-b568-4b6e-964d-31bac3937be1?src=embed'
+            style={{
+              width: '100%',
+              height: '80em',
+              border: 'none',
+              padding: '0'
+            }}
+            scrolling='no'
+          ></iframe>
+        ) : (
+          <Grid container spacing={8}>
+            <Grid item xs={12} md={6} style={{ overflow: 'hidden', height: '30em' }}>
+              <iframe
+                src='https://e.infogram.com/59baed14-b568-4b6e-964d-31bac3937be1?src=embed'
+                style={{
+                  width: '100%',
+                  height: '28em',
+                  padding: '0',
+                  overflow: 'hidden',
+                  border: 'none',
+                  transform: 'translateY(-1.5em)'
+                }}
+                scrolling='no'
+              ></iframe>
+            </Grid>
+            <Grid item xs={12} md={6} style={{ overflow: 'hidden', height: '30em' }}>
+              <iframe
+                src='https://e.infogram.com/59baed14-b568-4b6e-964d-31bac3937be1?src=embed'
+                style={{
+                  width: '100%',
+                  height: '57em',
+                  overflow: 'hidden',
+                  border: 'none',
+                  padding: '0',
+                  transform: 'translateY(-30.1em)'
+                }}
+                scrolling='no'
+              ></iframe>
+            </Grid>
+            <Grid item xs={12} md={6} style={{ overflow: 'hidden', height: '30em' }}>
+              <iframe
+                src='https://e.infogram.com/59baed14-b568-4b6e-964d-31bac3937be1?src=embed'
+                style={{
+                  width: '100%',
+                  height: '85em',
+                  overflow: 'hidden',
+                  border: 'none',
+                  padding: '0',
+                  transform: 'translateY(-59em)'
+                }}
+                scrolling='no'
+              ></iframe>
+            </Grid>
+            <Grid item xs={12} md={6} style={{ overflow: 'hidden', height: '30em' }}>
+              <iframe
+                src='https://e.infogram.com/59baed14-b568-4b6e-964d-31bac3937be1?src=embed'
+                style={{
+                  width: '100%',
+                  height: '117em',
+                  overflow: 'hidden',
+                  border: 'none',
+                  padding: '0',
+                  transform: 'translateY(-87.5em)'
+                }}
+                scrolling='no'
+              ></iframe>
+            </Grid>
+          </Grid>
+        )}
+      </div>
+    </div>
+  )
 }
 
 export default Dashboard
