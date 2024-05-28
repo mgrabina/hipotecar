@@ -41,7 +41,8 @@
     "start": "next start",
     "export": "next export",
     "lint": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@emotion/cache": "^11.6.0",
@@ -58,6 +59,7 @@
     "clsx": "^1.1.1",
     "mdi-material-ui": "^7.1.0",
     "next": "12.2.6",
+    "next-sitemap": "^4.2.3",
     "nprogress": "^0.2.0",
     "papaparse": "^5.4.1",
     "react": "17.0.2",
