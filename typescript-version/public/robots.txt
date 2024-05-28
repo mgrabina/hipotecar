@@ -7,3 +7,4 @@ Host: https://micreditohipotecario.com.ar
 
 # Sitemaps
 Sitemap: https://micreditohipotecario.com.ar/sitemap.xml
+Sitemap: https://micreditohipotecario.com.ar/server-sitemap.xml

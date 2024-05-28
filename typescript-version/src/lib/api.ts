@@ -12,12 +12,6 @@ const POST_GRAPHQL_FIELDS = `
 `
 
 async function fetchGraphQL(query: string, preview = false): Promise<any> {
-  console.log(
-    process.env.CONTENTFUL_SPACE_ID,
-    process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN,
-    process.env.CONTENTFUL_ACCESS_TOKEN
-  )
-
   return fetch(`https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`, {
     method: 'POST',
     headers: {
@@ -75,7 +69,7 @@ export async function getPostAndMorePosts(slug: string): Promise<any> {
         items {
           ${POST_GRAPHQL_FIELDS}
 
-          
+
         }
       }
     }`,
