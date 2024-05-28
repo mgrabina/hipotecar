@@ -25,21 +25,11 @@ const FooterContent = () => {
       }}
     >
       <Typography sx={{ display: { xs: 'inline', md: 'block' } }} color='text.secondary'>
-        {` Sitio con fines informativos. Debates, Comentarios y Sugerencias en `}
-        <Link
-          href='https://t.me/micreditohipotecario'
-          style={{
-            textDecoration: 'underline',
-            color: 'blue'
-          }}
-          target='_blank'
-          rel='noreferrer'
-          color='inherit'
-        >
-          Telegram
-        </Link>
+        {` Sitio con fines informativos. No representa recomendación alguna. `}
       </Typography>
-      <Link href='/all'>Ver Todos</Link>
+      <Typography>
+        Made with ❤️ in <img src='/images/logo.png' height='15em' alt='Bandera Argentina' />
+      </Typography>
     </Box>
   )
 }

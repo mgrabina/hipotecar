@@ -86,7 +86,7 @@ const renderStats = (data: StatisticsData) => {
   ))
 }
 
-const StatisticsCard = () => {
+const CreditsOverviewCard = () => {
   const context = useData()
 
   const data: StatisticsData = {
@@ -118,4 +118,4 @@ const StatisticsCard = () => {
   )
 }
 
-export default StatisticsCard
+export default CreditsOverviewCard

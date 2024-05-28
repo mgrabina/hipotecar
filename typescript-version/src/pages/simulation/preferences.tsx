@@ -17,7 +17,7 @@ import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 import Table from 'src/views/dashboard/Table'
 import Trophy from 'src/views/dashboard/Trophy'
 import TotalEarning from 'src/views/dashboard/TotalEarning'
-import StatisticsCard from 'src/views/dashboard/StatisticsCard'
+import CreditsOverviewCard from 'src/views/dashboard/CreditsOverviewCard'
 import WeeklyOverview from 'src/views/dashboard/WeeklyOverview'
 import DepositWithdraw from 'src/views/dashboard/DepositWithdraw'
 import SalesByCountries from 'src/views/dashboard/SalesByCountries'
@@ -27,10 +27,11 @@ import RiskForm from 'src/views/form-layouts/custom/RiskForm'
 import PreferencesForm from 'src/views/form-layouts/custom/PreferencesForm'
 
 const Dashboard = () => {
-  return <div>
-    <PreferencesForm />
-
-  </div>
+  return (
+    <div>
+      <PreferencesForm />
+    </div>
+  )
 }
 
 export default Dashboard

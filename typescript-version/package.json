@@ -41,9 +41,12 @@
     "start": "next start",
     "export": "next export",
     "lint": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
+    "@contentful/rich-text-react-renderer": "^15.21.2",
+    "@contentful/rich-text-types": "^16.5.2",
     "@emotion/cache": "^11.6.0",
     "@emotion/react": "^11.7.0",
     "@emotion/server": "^11.4.0",
@@ -56,8 +59,12 @@
     "@vercel/speed-insights": "^1.0.11",
     "apexcharts-clevision": "3.28.5",
     "clsx": "^1.1.1",
+    "contentful-import": "^9.4.55",
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
     "mdi-material-ui": "^7.1.0",
     "next": "12.2.6",
+    "next-sitemap": "^4.2.3",
     "nprogress": "^0.2.0",
     "papaparse": "^5.4.1",
     "react": "17.0.2",
