@@ -4,6 +4,7 @@ import { Router, useRouter } from 'next/router'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 // ** Loader Import
 import NProgress from 'nprogress'
@@ -138,6 +139,7 @@ const App = (props: ExtendedAppProps) => {
                 <>
                   {getLayout(<Component {...pageProps} />)}
                   <Analytics />
+                  <SpeedInsights route={router.pathname} />
                 </>
               </ThemeComponent>
             )
