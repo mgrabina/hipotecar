@@ -21,6 +21,9 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
+      "@/*": [
+        "./src/*"
+      ],
       "apexcharts": [
         "./node_modules/apexcharts-clevision"
       ],

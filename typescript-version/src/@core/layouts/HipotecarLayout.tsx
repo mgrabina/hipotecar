@@ -31,6 +31,8 @@ import { useAsync } from 'react-async'
 import { set } from 'nprogress'
 import { PreferencesFormState } from 'src/views/form-layouts/custom/PreferencesForm'
 import { getDolarMep, getUVA } from '../utils/misc'
+import VerticalNavHeader from './components/vertical/navigation/VerticalNavHeader'
+import Header from './components/vertical/navigation/Header'
 
 const VerticalLayoutWrapper = styled('div')({
   height: '100%',
@@ -227,13 +229,15 @@ const HypotecarLayout = (props: LayoutProps) => {
                 })
               }}
             >
-              <Typography variant='h1' style={{ fontSize:  isSmallScreen?'2em' :'4em', textAlign: 'center' }}>
+              {/* <Typography variant='h1' style={{ fontSize:  isSmallScreen?'2em' :'4em', textAlign: 'center' }}>
                 <img alt='Bandera Argentina' src='/images/logo.png' height='30em' /> Mi Credito Hipotecario{' '}
                 <img alt='Bandera Argentina' src='/images/logo.png' width='30em' />
               </Typography>
               <Typography variant='h2' style={{ textAlign: 'center', opacity: 0.5, fontSize: isSmallScreen?'1em' :'2em' }}>
                 Tu aliado para surfear la ola de creditos
-              </Typography>
+              </Typography> */}
+
+              <Header></Header>
               <ProgressBar></ProgressBar>
               {children}
             </ContentWrapper>
