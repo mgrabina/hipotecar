@@ -69,92 +69,92 @@ const BankDetailPage = () => {
               </AccordionSummary>
               <AccordionDetails>
                 <Grid container spacing={2} padding={1}>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography variant='body1'>
                       <strong>Credito</strong>: {credit['Nombre']}
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography variant='body1'>
                       <strong>Banco</strong>: {credit['Banco']}
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography variant='body1'>
                       <strong>Tasa</strong>: {credit['Tasa']}% + UVA
                     </Typography>
                   </Grid>
                   {!!credit['Tasa especial por tiempo definido'] && (
-                    <Grid item xs={6}>
+                    <Grid item xs={12} md={6}>
                       <Typography variant='body1'>
                         <strong>Tasa especial</strong>: {credit['Tasa especial por tiempo definido']}% por{' '}
                         {credit['Duracion Tasa Especial en Meses']} meses
                       </Typography>
                     </Grid>
                   )}
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography variant='body1'>
                       <strong>Tipo</strong>: {credit['Tipo']}
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography variant='body1'>
                       <strong>Monto Maximo</strong>: {context?.data.UVA && parseMoney(credit['Monto Maximo en UVAs'] * context?.data.UVA)} (
                       {parseMoney(credit['Monto Maximo en UVAs'], 'USD')})
                     </Typography>
                   </Grid>
                   {credit['% Pre-Cancelacion'] && (
-                    <Grid item xs={6}>
+                    <Grid item xs={12} md={6}>
                       <Typography variant='body1'>
                         <strong>Precancelacion</strong>: {credit['% Pre-Cancelacion']}% + IVA
                       </Typography>
                     </Grid>
                   )}
                   {credit['% Prima de seguro'] && (
-                    <Grid item xs={6}>
+                    <Grid item xs={12} md={6}>
                       <Typography variant='body1'>
                         <strong>Prima de seguro</strong>: {credit['% Prima de seguro']}% + IVA
                       </Typography>
                     </Grid>
                   )}
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography variant='body1'>
                       <strong>% Máximo de financiación</strong>: {credit['% Maximo de Financiacion']}
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography variant='body1'>
                       <strong>Relacion cuota-ingreso</strong>: {credit['Relacion Cuota Ingreso']} %
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography variant='body1'>
                       <strong>Ingresos Mínimos</strong>: {parseMoney(credit['Ingresos Minimos'])}
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography variant='body1'>
                       <strong>Monotributistas</strong>: {credit['Acepta Monotributistas'] === 'TRUE' ? 'Si' : 'No'}
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography variant='body1'>
                       <strong>Segunda Vivienda</strong>: {credit['Apto Segunda Vivienda'] === 'TRUE' ? 'Si' : 'No'}
                     </Typography>
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                     <Typography variant='body1'>
                       <strong>Requiere sueldo en banco</strong>: {credit['Sueldo En Banco'] === 'TRUE' ? 'Si' : 'No'}
                     </Typography>
                   </Grid>
                   {credit['Provincias'].length > 0 && (
-                    <Grid item xs={6}>
+                    <Grid item xs={12} md={6}>
                       <Typography variant='body1'>
                         <strong>Provincias</strong>: {credit.Provincias}
                       </Typography>
                     </Grid>
                   )}
-                  <Grid item xs={6}>
+                  <Grid item xs={12} md={6}>
                       <Typography variant='body1'>
                         <strong>Mas información</strong>: <Link href={`/credito/${createCreditSlug(credit)}`} passHref={true}>Haz click aquí</Link>
                       </Typography>
