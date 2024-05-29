@@ -1,3 +1,5 @@
+import { PostType } from "./constants"
+
 const POST_GRAPHQL_FIELDS = `
   slug
   title
@@ -62,7 +64,10 @@ export async function getAllPosts(): Promise<any[]> {
   return extractPostEntries(entries)
 }
 
-export async function getPostAndMorePosts(slug: string): Promise<any> {
+export async function getPostAndMorePosts(slug: string): Promise<{
+  post: PostType
+  morePosts: PostType[]
+}> {
   const entry = await fetchGraphQL(
     `query {
       blogPageCollection(where: { slug: "${slug}" }, preview: false, limit: 1) {

@@ -45,6 +45,22 @@ export const getBiggestLoanBasedOnSalary = (
   }
 }
 
+export const createCreditSlug = (credit: Credit) => {
+  return `${credit.Nombre}-${credit.Tipo}-${credit.Banco}`.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/g, '').toLowerCase()
+}
+
+export const bankNameToSlug = (bankName: string) => {
+  return bankName.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/g, '').toLowerCase()
+}
+
+export const getCreditBySlug = (credits: Credit[], slug: string) => {
+  return credits.find(credit => createCreditSlug(credit) === slug)
+}
+
+export const getBankBySlug = (banks: string[], slug: string) => {
+  return banks.find(bank => bankNameToSlug(bank).localeCompare(slug) === 0)
+}
+
 export const getCompatibleCredits = (credits: Credit[], userData: UserData, UVA = 922): CreditEvaluationResult => {
   const creditosCompatibles: CreditEvaluationResult['creditosCompatibles'] = []
   const razonesDeLosRestantes: string[] = []

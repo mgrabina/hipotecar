@@ -6,29 +6,39 @@ import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import { useState } from 'react'
-import { List, MenuList, useMediaQuery, useTheme } from '@mui/material'
-import { MenuDownOutline, MenuOpen, ViewList, ViewListOutline } from 'mdi-material-ui'
+import { useState, useContext } from 'react'
+import { useMediaQuery, useTheme } from '@mui/material'
+import { MenuDownOutline } from 'mdi-material-ui'
 import Link from 'next/link'
+import { useData } from '@/@core/layouts/HipotecarLayout'
+import { bankNameToSlug } from '@/@core/utils/misc'
 
 const Header = () => {
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
+  const data = useData()
+  const banks = data?.data.banks || []
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [bankMenuEl, setBankMenuEl] = useState<null | HTMLElement>(null)
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
 
+  const handleBankMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setBankMenuEl(event.currentTarget)
+  }
+
   const handleClose = () => {
     setAnchorEl(null)
+    setBankMenuEl(null)
   }
 
   return (
-    <AppBar position='static' variant='outlined' color='inherit'>
+    <AppBar position='static' elevation={0} variant='outlined' color='inherit'>
       <Toolbar>
-        <Link href='/' passHref={true} style={{ cursor: "pointer"}}>
+        <Link href='/' passHref={true} style={{ cursor: 'pointer' }}>
           <Typography
             variant='h6'
             style={{
@@ -50,12 +60,22 @@ const Header = () => {
           <Button color='inherit' href='/all'>
             Todos
           </Button>
+          <Button color='inherit' aria-controls='bank-menu' aria-haspopup='true' onClick={handleBankMenu}>
+            Por Banco
+          </Button>
           <Button color='inherit' href='/blog'>
             Blog
           </Button>
           <Button color='inherit' href='/monitor'>
             Monitor
           </Button>
+          <Menu id='bank-menu' anchorEl={bankMenuEl} open={Boolean(bankMenuEl)} onClose={handleClose}>
+            {banks.map((bank: string) => (
+              <MenuItem key={bank} onClick={handleClose} component='a' href={`/banco/${bank.toLowerCase()}`}>
+                {bank}
+              </MenuItem>
+            ))}
+          </Menu>
           <Button color='inherit' href='https://t.me/micreditohipotecario' target='_blank'>
             Ayuda
           </Button>
@@ -92,6 +112,16 @@ const Header = () => {
             <MenuItem onClick={handleClose} component='a' href='/all'>
               Todos
             </MenuItem>
+            <MenuItem aria-controls='bank-menu-mobile' aria-haspopup='true' onClick={handleBankMenu}>
+              Por Banco
+            </MenuItem>
+            <Menu id='bank-menu-mobile' anchorEl={bankMenuEl} open={Boolean(bankMenuEl)} onClose={handleClose}>
+              {banks.map((bank: string) => (
+                <MenuItem key={bank} onClick={handleClose} component='a' href={`/banco/${bankNameToSlug(bank.toLowerCase())}`}>
+                  {bank}
+                </MenuItem>
+              ))}
+            </Menu>
             <MenuItem onClick={handleClose} component='a' href='/blog'>
               Blog
             </MenuItem>

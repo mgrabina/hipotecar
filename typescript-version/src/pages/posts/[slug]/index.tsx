@@ -13,6 +13,7 @@ import { PostType } from '@/lib/constants'
 import Error404 from '@/pages/404'
 import { Card, CardContent, CardMedia, Typography } from '@mui/material'
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
+import Head from 'next/head'
 
 export async function generateStaticParams() {
   const allPosts = await getAllPosts()
@@ -20,6 +21,18 @@ export async function generateStaticParams() {
   return allPosts.map(post => ({
     slug: post.slug
   }))
+}
+
+export async function generateMetadata({ params, searchParams }: any, parent: any): Promise<any> {
+  const { post } = await getPostAndMorePosts(params.slug)
+
+  return {
+    title: post.title,
+    description: post.description,
+    openGraph: {
+      images: [post.coverImage.url]
+    }
+  }
 }
 
 const PostPage = () => {
@@ -50,6 +63,16 @@ const PostPage = () => {
 
   return (
     <div style={{ marginTop: '4em' }}>
+      <Head>
+        <title>{post.title}</title>
+        <meta name='description' content={post.description} />
+        <meta property='og:image' content={post.coverImage.url} />
+        <meta property='og:title' content={post.title} />
+        <meta property='og:description' content={post.description} />
+        <meta property='twitter:image' content={post.coverImage.url} />
+        <meta property='twitter:title' content={post.title} />
+        <meta property='twitter:description' content={post.description} />
+      </Head>
       <Card>
         <CardMedia sx={{ height: '14.5625rem' }} image={post.coverImage.url} />
         <CardContent>

@@ -9,6 +9,12 @@ import { getAllPosts } from '@/lib/api'
 import { CMS_NAME, CMS_URL, PostType } from '@/lib/constants'
 import { useEffect, useState } from 'react'
 
+export const metadata = {
+  title: 'Blog | Mi Crédito Hipotecario',
+  description:
+    'La libreria de contenido mas completa sobre creditos hipotecarios en Argentina. Encuentra la información que necesitas para tomar la mejor decisión.'
+}
+
 function Intro() {
   return (
     <section className='flex-col md:flex-row flex items-center md:justify-between mt-16 mb-16 md:mb-12'>

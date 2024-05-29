@@ -14,23 +14,25 @@ import { useRouter } from 'next/router'
 import { useData } from 'src/@core/layouts/HipotecarLayout'
 import { parseMoney } from 'src/@core/utils/string'
 import Error404 from '../404'
-import { calcularCuotaMensual, getLoanPlotData } from 'src/@core/utils/misc'
+import { calcularCuotaMensual, getCreditBySlug, getLoanPlotData } from 'src/@core/utils/misc'
 import LoanChart from 'src/views/pages/detail/LoanChart'
 import LoanPaidChart from 'src/views/pages/detail/LoanPaidChart'
 import PrecancelLoanChart from 'src/views/pages/detail/PrecancelLoanChart'
 import { ArrowDown } from 'mdi-material-ui'
 import Link from 'next/link'
+import Head from 'next/head'
 
 const DetailPage = () => {
   const router = useRouter()
-  const id = Number(router.query.id)
   const loan = Number(router.query.loan ?? 100000000)
   const duration = Number(router.query.duration ?? 20)
   const isInformative = !router.query.loan && !router.query.duration
   const context = useData()
 
-  const credit = context?.data.credits.find(credit => credit.Id == Number(id))
-  if (!id) {
+  const slug = router.query.slug?.toString()
+  const credit = getCreditBySlug(context?.data.credits ?? [], slug ?? "")
+
+  if (!slug || loan === 0 || duration === 0 ) {
     return <Error404 />
   }
 
@@ -40,10 +42,27 @@ const DetailPage = () => {
 
   return (
     <>
+      <Head>
+        <title>Credito {credit['Nombre']} del {credit['Banco']} | Mi Credito Hipotecario</title>
+        <meta name='description' content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
+        con una tasa de ${credit['Tasa']}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
+        `}  />
+        <meta property="og:title" content={`Credito ${credit['Nombre']} del ${credit['Banco']} | Mi Credito Hipotecario`} />
+        <meta property="og:description" content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
+        con una tasa de ${credit['Tasa']}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
+        `} />
+        <meta property="og:image" content={credit['Logo Banco']} />
+        <meta property="twitter:image" content={credit['Logo Banco']} />
+        <meta property="twitter:title" content={`Credito ${credit['Nombre']} del ${credit['Banco']} | Mi Credito Hipotecario`} />
+        <meta property="twitter:description" content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
+        con una tasa de ${credit['Tasa']}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
+        `} />
+      </Head>
+
       {!isInformative && (
         <Link href='/simulation/comparison'>
           <Typography style={{ marginTop: '2em', cursor: 'pointer', textDecoration: 'underline' }}>
-            Volver a la tabla
+            Volver a la comparación
           </Typography>
         </Link>
       )}
@@ -54,7 +73,7 @@ const DetailPage = () => {
           image={credit['Logo Banco']}
         />
         <CardContent>
-          <Typography variant='body2'>
+          <div>
             <Grid container spacing={2} padding={1}>
               <Grid item xs={6}>
                 <Typography variant='body1'>
@@ -349,7 +368,7 @@ const DetailPage = () => {
                 </Typography>
               </AccordionDetails>
             </Accordion>
-          </Typography>
+          </div>
         </CardContent>
       </Card>
     </>

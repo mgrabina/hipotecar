@@ -115,10 +115,14 @@ const App = (props: ExtendedAppProps) => {
           property='og:description'
           content='Compara y simula créditos hipotecarios en Argentina con Mi Crédito Hipotecario. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos.'
         />
-        <meta property='og:image' content='/images/logo.png' />
+        <meta property='og:image' content='/images/generated/happy.png' />
         <meta property='og:url' content={`https://micreditohipotecario.com.ar`} />
         <meta property='og:type' content='website' />
         <meta property='og:site_name' content='Mi Crédito Hipotecario' />
+        <meta property="twitter:image" content="/images/generated/happy.png" />
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:title" content="Mi Crédito Hipotecario" />
+        <meta property="twitter:description" content="Compara y simula créditos hipotecarios en Argentina con Mi Crédito Hipotecario. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos." />
         <script type='application/ld+json' dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </Head>
       <Script async src={`https://www.googletagmanager.com/gtag/js?id=${GACODE}`} />
@@ -147,7 +151,8 @@ const App = (props: ExtendedAppProps) => {
         </SettingsConsumer>
       </SettingsProvider>
     </CacheProvider>
-  )
+
+)
 }
 
 export default App
