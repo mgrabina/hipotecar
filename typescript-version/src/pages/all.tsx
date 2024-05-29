@@ -24,6 +24,11 @@ const firstColumns = ['Logo Banco', 'Tipo', 'Nombre']
 const lastColumns = ['Link']
 const noFilterColumns = ['Link']
 
+export const metadata = {
+  title: 'Tabla completa de Créditos Hipotecarios UVA en Argentina | Mi Crédito Hipotecario',
+  description: 'Compara todos los créditos hipotecarios disponibles en el mercado bancario argentino.',
+}
+
 const isNumericColumn = (key: string | string[]) =>
   key.includes('Tasa') ||
   key.includes('%') ||

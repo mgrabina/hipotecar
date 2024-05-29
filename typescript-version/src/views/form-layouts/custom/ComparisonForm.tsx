@@ -56,6 +56,7 @@ import {
   CreditEvaluationResult,
   calcularAdelanto,
   calcularCuotaMensual,
+  createCreditSlug,
   getBiggestLoanBasedOnSalary,
   getCompatibleCredits
 } from 'src/@core/utils/misc'
@@ -533,7 +534,7 @@ const ComparisonForm = () => {
 
                         <TableCell>
                           {row.Link.length > 0 && (
-                            <Link href={`/credit/${row.Id}?loan=${loan}&duration=${context?.data.user.duration}`}>
+                            <Link href={`/credito/${createCreditSlug(row)}?loan=${loan}&duration=${context?.data.user.duration}`}>
                               Ver detalles
                             </Link>
                           )}

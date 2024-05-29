@@ -7,6 +7,6 @@ export type PostType = {
   coverImage: any;
   date: string;
   slug: string;
-  body: string;
+  body: any;
   description: string;
 };

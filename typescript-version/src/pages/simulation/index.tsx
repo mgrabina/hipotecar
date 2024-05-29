@@ -31,6 +31,12 @@ import { getActiveStep, stepLinks } from 'src/@core/layouts/components/vertical/
 import { useData } from 'src/@core/layouts/HipotecarLayout'
 import { set } from 'nprogress'
 
+export const metadata = {
+  title: 'Búscador y simulador de créditos hipotecarios | Mi Crédito Hipotecario',
+  description:
+    'Busca y simula tu crédito hipotecario en Mi Crédito Hipotecario. Encuentra la mejor opción para tu crédito hipotecario.'
+}
+
 const Simulation = () => {
   const router = useRouter()
   const context = useData()
