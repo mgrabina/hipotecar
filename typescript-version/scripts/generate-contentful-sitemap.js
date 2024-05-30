@@ -78,7 +78,10 @@ const generateSiteMap = async () => {
   )
   const bancoPages = bancos
     .map(banco => {
-      const slug = `${banco.Banco}`.toLowerCase()
+      const slug = `${banco.Banco}`
+        .replace(/ /g, '-')
+        .replace(/[^a-zA-Z0-9-]/g, '')
+        .toLowerCase()
 
       return `<url>
         <loc>https://micreditohipotecario.com.ar/banco/${slug}</loc>

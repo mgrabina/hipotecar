@@ -21,6 +21,7 @@ import PrecancelLoanChart from 'src/views/pages/detail/PrecancelLoanChart'
 import { ArrowDown } from 'mdi-material-ui'
 import Link from 'next/link'
 import Head from 'next/head'
+import ShareComponent from '@/@core/components/shared/Share'
 
 const DetailPage = () => {
   const router = useRouter()

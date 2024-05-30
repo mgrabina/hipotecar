@@ -63,6 +63,7 @@ import {
 import { useAsync } from 'react-async'
 import { SubmitUserBody } from 'src/pages/api/users'
 import { set } from 'nprogress'
+import Image from 'next/image'
 
 const sortTypes = [
   'Monto Total mas alto',
@@ -377,7 +378,7 @@ const ComparisonForm = () => {
                         sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
                       >
                         <TableCell width={isSmallScreen ? 20 : 30}>
-                          <img
+                          <Image
                             src={row['Logo Banco'].length ? row['Logo Banco'] : `/images/banks/${row.Banco}.png`}
                             alt={row.Banco}
                             className='object-contain	'

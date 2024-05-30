@@ -18,6 +18,7 @@ import { useData } from 'src/@core/layouts/HipotecarLayout'
 import { useTheme } from '@mui/material/styles'
 import { useMediaQuery } from '@mui/material'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const columnsNotToShow = ['Id', 'Nombre', 'Banco']
 const firstColumns = ['Logo Banco', 'Tipo', 'Nombre']
@@ -261,7 +262,7 @@ const CreditComparisonPage = () => {
                       }}
                     >
                       {key === 'Logo Banco' ? (
-                        <img src={credit[key]} alt={credit.Banco} height={40} />
+                        <Image src={credit[key]} alt={credit.Banco} height={40} />
                       ) : credit[key as keyof Credit] === 'TRUE' ? (
                         'Si'
                       ) : credit[key as keyof Credit] === 'FALSE' ? (
