@@ -4,7 +4,7 @@ import { Router, useRouter } from 'next/router'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import { Analytics } from '@vercel/analytics/react'
-import { SpeedInsights } from "@vercel/speed-insights/react"
+import { SpeedInsights } from '@vercel/speed-insights/react'
 
 // ** Loader Import
 import NProgress from 'nprogress'
@@ -79,17 +79,35 @@ const App = (props: ExtendedAppProps) => {
 
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Organization',
+    '@type': 'Product',
     name: 'Mi Crédito Hipotecario',
+    image: 'https://micreditohipotecario.com.ar/images/logo.png',
+    description:
+      'Mi Crédito Hipotecario es una plataforma que ayuda a las personas a encontrar y simular opciones de crédito hipotecario en Argentina.',
     url: 'https://micreditohipotecario.com.ar',
-    logo: 'https://micreditohipotecario.com.ar/images/logo.png',
-    sameAs: [],
+    brand: {
+      '@type': 'Brand',
+      name: 'Mi Crédito Hipotecario',
+      logo: 'https://micreditohipotecario.com.ar/images/logo.png'
+    },
+    offers: {
+      '@type': 'Offer',
+      url: 'https://micreditohipotecario.com.ar',
+      priceCurrency: 'ARS',
+      price: '0.00', // Asume que el servicio es gratuito, ajusta si es necesario
+      itemCondition: 'https://schema.org/NewCondition',
+      availability: 'https://schema.org/InStock',
+      seller: {
+        '@type': 'Organization',
+        name: 'Mi Crédito Hipotecario'
+      }
+    },
     contactPoint: {
       '@type': 'ContactPoint',
       email: 'martin@targecy.xyz',
-      contactType: 'Martin Grabina',
+      contactType: 'Customer Service',
       areaServed: 'AR',
-      availableLanguage: ['Spanish', 'English']
+      availableLanguage: 'Spanish'
     }
   }
 
@@ -119,10 +137,13 @@ const App = (props: ExtendedAppProps) => {
         <meta property='og:url' content={`https://micreditohipotecario.com.ar`} />
         <meta property='og:type' content='website' />
         <meta property='og:site_name' content='Mi Crédito Hipotecario' />
-        <meta property="twitter:image" content="/images/generated/happy.png" />
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:title" content="Mi Crédito Hipotecario" />
-        <meta property="twitter:description" content="Compara y simula créditos hipotecarios en Argentina con Mi Crédito Hipotecario. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos." />
+        <meta property='twitter:image' content='/images/generated/happy.png' />
+        <meta property='twitter:card' content='summary_large_image' />
+        <meta property='twitter:title' content='Mi Crédito Hipotecario' />
+        <meta
+          property='twitter:description'
+          content='Compara y simula créditos hipotecarios en Argentina con Mi Crédito Hipotecario. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos.'
+        />
         <script async type='application/ld+json' dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </Head>
       <Script async src={`https://www.googletagmanager.com/gtag/js?id=${GACODE}`} />
@@ -151,8 +172,7 @@ const App = (props: ExtendedAppProps) => {
         </SettingsConsumer>
       </SettingsProvider>
     </CacheProvider>
-
-)
+  )
 }
 
 export default App
