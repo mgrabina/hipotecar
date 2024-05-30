@@ -26,9 +26,13 @@ module.exports = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'upload.wikimedia.org',
-      },
-    ],
+        hostname: 'upload.wikimedia.org'
+      }
+    ]
+  },
+  i18n: {
+    locales: ['es-AR'],
+    defaultLocale: 'es-AR'
   },
   env: {
     CONTENTFUL_SPACE_ID: process.env.CONTENTFUL_SPACE_ID,
