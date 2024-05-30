@@ -60,7 +60,7 @@ const generateSiteMap = async () => {
   )
   const creditPages = credits
     .map(credit => {
-      const slug = `${credit.Nombre}-${credit.Tipo}-${credit.Banco}`
+      const slug = `${credit.Nombre}-${credit.Tipo}-${credit.Banco}-${credit['Sueldo En Banco'] === "TRUE" ? "sueldo-en-banco" : "externo"}`
         .replace(/ /g, '-')
         .replace(/[^a-zA-Z0-9-]/g, '')
         .toLowerCase()
