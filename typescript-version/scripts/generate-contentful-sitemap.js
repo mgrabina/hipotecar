@@ -33,7 +33,7 @@ const loadDataFromCSV = async url => {
 }
 
 const generateSiteMap = async () => {
-  const staticPages = ['', 'all', 'monitor', 'blog', 'simulation']
+  const staticPages = ['', 'creditos/todos', 'monitor', 'blog', 'simulation']
     .map(page => {
       return `<url>
       <loc>https://micreditohipotecario.com.ar/${page}</loc>
@@ -66,7 +66,7 @@ const generateSiteMap = async () => {
         .toLowerCase()
 
       return `<url>
-      <loc>https://micreditohipotecario.com.ar/credito/${slug}</loc>
+      <loc>https://micreditohipotecario.com.ar/creditos/${slug}</loc>
       <changefreq>weekly</changefreq>
       <priority>0.8</priority>
     </url>`
@@ -78,7 +78,10 @@ const generateSiteMap = async () => {
   )
   const bancoPages = bancos
     .map(banco => {
-      const slug = `${banco.Banco}`.toLowerCase()
+      const slug = `${banco.Banco}`
+        .replace(/ /g, '-')
+        .replace(/[^a-zA-Z0-9-]/g, '')
+        .toLowerCase()
 
       return `<url>
         <loc>https://micreditohipotecario.com.ar/banco/${slug}</loc>

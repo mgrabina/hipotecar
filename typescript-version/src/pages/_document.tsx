@@ -23,9 +23,6 @@ class CustomDocument extends Document {
           />
           <link rel='apple-touch-icon' sizes='180x180' href='/images/apple-touch-icon.png' />
           <link rel='shortcut icon' href='/images/logo.png' />
-
-          {/* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> */}
-
         </Head>
         <body>
           <Main />

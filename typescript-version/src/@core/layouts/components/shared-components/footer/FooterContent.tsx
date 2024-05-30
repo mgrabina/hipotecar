@@ -5,6 +5,7 @@ import { Theme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { Button, useMediaQuery, useTheme } from '@mui/material'
 import Grid from '@mui/material/Grid'
+import Image from 'next/image'
 
 const FooterContent = () => {
   // ** Var
@@ -28,7 +29,7 @@ const FooterContent = () => {
         {` Sitio con fines informativos. No representa recomendación alguna. `}
       </Typography>
       <Typography>
-        Made with ❤️ in <img src='/images/logo.png' height='15em' alt='Bandera Argentina' />
+        Made with ❤️ in <Image src='/images/logo.png' height='15em' width="15em" alt='Bandera Argentina' />
       </Typography>
     </Box>
   )

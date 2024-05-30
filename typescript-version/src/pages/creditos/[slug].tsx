@@ -21,6 +21,7 @@ import PrecancelLoanChart from 'src/views/pages/detail/PrecancelLoanChart'
 import { ArrowDown } from 'mdi-material-ui'
 import Link from 'next/link'
 import Head from 'next/head'
+import ShareComponent from '@/@core/components/shared/Share'
 
 const DetailPage = () => {
   const router = useRouter()
@@ -30,33 +31,47 @@ const DetailPage = () => {
   const context = useData()
 
   const slug = router.query.slug?.toString()
-  const credit = getCreditBySlug(context?.data.credits ?? [], slug ?? "")
+  const credit = getCreditBySlug(context?.data.credits ?? [], slug ?? '')
 
-  if (!slug || loan === 0 || duration === 0 ) {
-    return <Error404 />
-  }
-
-  if (!credit) return null
+  if (!slug || loan === 0 || duration === 0 || !context?.data.credits.length) return null
+  if (!credit) return <Error404 />
 
   const loanPlotDataResults = getLoanPlotData(loan, credit['Tasa'], duration)
 
   return (
     <>
       <Head>
-        <title>Credito {credit['Nombre']} del {credit['Banco']} | Mi Credito Hipotecario</title>
-        <meta name='description' content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
+        <title>
+          Credito {credit['Nombre']} del {credit['Banco']} | Mi Credito Hipotecario
+        </title>
+        <meta
+          name='description'
+          content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
         con una tasa de ${credit['Tasa']}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
-        `}  />
-        <meta property="og:title" content={`Credito ${credit['Nombre']} del ${credit['Banco']} | Mi Credito Hipotecario`} />
-        <meta property="og:description" content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
+        `}
+        />
+        <meta
+          property='og:title'
+          content={`Credito ${credit['Nombre']} del ${credit['Banco']} | Mi Credito Hipotecario`}
+        />
+        <meta
+          property='og:description'
+          content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
         con una tasa de ${credit['Tasa']}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
-        `} />
-        <meta property="og:image" content={credit['Logo Banco']} />
-        <meta property="twitter:image" content={credit['Logo Banco']} />
-        <meta property="twitter:title" content={`Credito ${credit['Nombre']} del ${credit['Banco']} | Mi Credito Hipotecario`} />
-        <meta property="twitter:description" content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
+        `}
+        />
+        <meta property='og:image' content={credit['Logo Banco']} />
+        <meta property='twitter:image' content={credit['Logo Banco']} />
+        <meta
+          property='twitter:title'
+          content={`Credito ${credit['Nombre']} del ${credit['Banco']} | Mi Credito Hipotecario`}
+        />
+        <meta
+          property='twitter:description'
+          content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
         con una tasa de ${credit['Tasa']}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
-        `} />
+        `}
+        />
       </Head>
 
       {!isInformative && (
@@ -114,7 +129,8 @@ const DetailPage = () => {
               ) : (
                 <Grid item xs={6}>
                   <Typography variant='body1'>
-                    <strong>Monto Maximo</strong>: {context?.data.UVA && parseMoney(credit['Monto Maximo en UVAs'] * context?.data.UVA)} (
+                    <strong>Monto Maximo</strong>:{' '}
+                    {context?.data.UVA && parseMoney(credit['Monto Maximo en UVAs'] * context?.data.UVA)} (
                     {parseMoney(credit['Monto Maximo en UVAs'], 'USD')})
                   </Typography>
                 </Grid>
@@ -335,18 +351,14 @@ const DetailPage = () => {
               <AccordionDetails>
                 <Typography>
                   Si estás en relación de dependencia:
-                  {/* List */}
-
-
-                  -
-                  - Últimos 3 recibos de sueldo. Si trabajaste en distintos lugares
-                  el último año, envía también el úlitmo recibo de tu trabajo anterior para que podamos verificar tu
-                  antigüedad  Si sos Monotributista:- Constancia de inscripción, de categoría B en adelante. Deberás
-                  contar con al menos 1 año de antigüedad.- Comprobante de los últimos 3 pagos  Si sos Autónomo o
-                  Responsable Inscripto:- Última Declaración Jurada de Ganancias o Certificación de ingresos.Si
-                  presentás la Declaración Jurada, enviá también el ticket de presentación y una nota voluntaria con tu
-                  firma Si vas a combinar ingresos, tenés que envíar la misma documentación de tu o tus codeudores. En
-                  este paso podés agregar codeudores que no hayas podido sumar en tu solicitud
+                  {/* List */}- - Últimos 3 recibos de sueldo. Si trabajaste en distintos lugares el último año, envía
+                  también el úlitmo recibo de tu trabajo anterior para que podamos verificar tu antigüedad  Si sos
+                  Monotributista:- Constancia de inscripción, de categoría B en adelante. Deberás contar con al menos 1
+                  año de antigüedad.- Comprobante de los últimos 3 pagos  Si sos Autónomo o Responsable Inscripto:-
+                  Última Declaración Jurada de Ganancias o Certificación de ingresos.Si presentás la Declaración Jurada,
+                  enviá también el ticket de presentación y una nota voluntaria con tu firma Si vas a combinar ingresos,
+                  tenés que envíar la misma documentación de tu o tus codeudores. En este paso podés agregar codeudores
+                  que no hayas podido sumar en tu solicitud
                 </Typography>
 
                 <Typography variant='body2'>

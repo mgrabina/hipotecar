@@ -29,12 +29,21 @@ import { useEffect, useState } from 'react'
 import { getActiveStep, stepLinks } from 'src/@core/layouts/components/vertical/navigation/ProgressBar'
 import { useData } from 'src/@core/layouts/HipotecarLayout'
 import { set } from 'nprogress'
-import { Button, Card, CardContent, CardHeader, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Button, Card, CardContent, CardHeader, Skeleton, Typography, useMediaQuery, useTheme } from '@mui/material'
 import Link from 'next/link'
 import Statistics from '@/views/dashboard/Statistics'
 import MoreStories from '@/views/contentful/more-stories'
 import { getAllPosts } from '@/lib/api'
 import { PostType } from '@/lib/constants'
+import dynamic from 'next/dynamic'
+
+const DynamicStories = dynamic(() => import('@/views/contentful/more-stories'), {
+  loading: () => <Skeleton variant='rectangular' height={300} width='100%' />
+})
+
+const DynamicStatistics = dynamic(() => import('@/views/dashboard/Statistics'), {
+  loading: () => <Skeleton variant='rectangular' height={300} width='100%' />
+})
 
 const Dashboard = () => {
   const [allPosts, setAllPosts] = useState<PostType[]>([])
@@ -66,9 +75,9 @@ const Dashboard = () => {
         <CreditsOverviewCard></CreditsOverviewCard>
       </div>
 
-      <MoreStories title='' morePosts={allPosts}></MoreStories>
+      <DynamicStories title='' morePosts={allPosts} />
 
-      <Statistics></Statistics>
+      <DynamicStatistics />
     </div>
   )
 }

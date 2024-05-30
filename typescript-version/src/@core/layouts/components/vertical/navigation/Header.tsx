@@ -8,10 +8,12 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { useState, useContext } from 'react'
 import { useMediaQuery, useTheme } from '@mui/material'
-import { MenuDownOutline } from 'mdi-material-ui'
+import { MenuDownOutline, Share, ShareAllOutline, ShareCircle, ShareOff, ShareVariant } from 'mdi-material-ui'
 import Link from 'next/link'
 import { useData } from '@/@core/layouts/HipotecarLayout'
 import { bankNameToSlug } from '@/@core/utils/misc'
+import ShareComponent from '@/@core/components/shared/Share'
+import Image from 'next/image'
 
 const Header = () => {
   const theme = useTheme()
@@ -22,6 +24,8 @@ const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [bankMenuEl, setBankMenuEl] = useState<null | HTMLElement>(null)
 
+  const [shareMenuEl, setShareMenuEl] = useState<null | HTMLElement>(null)
+
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
   }
@@ -30,9 +34,17 @@ const Header = () => {
     setBankMenuEl(event.currentTarget)
   }
 
+  const handleShareMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setShareMenuEl(event.currentTarget)
+  }
+
   const handleClose = () => {
     setAnchorEl(null)
     setBankMenuEl(null)
+  }
+
+  const handleShareClose = () => {
+    setShareMenuEl(null)
   }
 
   return (
@@ -49,15 +61,15 @@ const Header = () => {
               textAlign: isSmallScreen ? 'center' : 'inherit'
             }}
           >
-            <img alt='Bandera Argentina' src='/images/logo.png' height='15em' /> Mi Crédito Hipotecario{' '}
-            <img alt='Bandera Argentina' src='/images/logo.png' height='15em' />
+            <Image alt='Bandera Argentina' src='/images/logo.png' height='15em' width='15em' /> Mi Crédito Hipotecario{' '}
+            <Image alt='Bandera Argentina' src='/images/logo.png' height='15em' width='15em' />
           </Typography>
         </Link>
         <Box sx={{ display: { xs: 'none', md: 'block' } }}>
           <Button color='inherit' href='/simulation'>
             Buscador
           </Button>
-          <Button color='inherit' href='/all'>
+          <Button color='inherit' href='/creditos/todos'>
             Todos
           </Button>
           <Button color='inherit' aria-controls='bank-menu' aria-haspopup='true' onClick={handleBankMenu}>
@@ -79,6 +91,24 @@ const Header = () => {
           <Button color='inherit' href='https://t.me/micreditohipotecario' target='_blank'>
             Ayuda
           </Button>
+
+          <Button color='inherit' aria-controls='share-menu' aria-haspopup='true' onClick={handleShareMenu}>
+            <ShareVariant></ShareVariant>
+          </Button>
+
+          <Menu id='share-menu'
+            style={{
+              left: '-4.5em',
+            }}
+          anchorEl={shareMenuEl} open={Boolean(shareMenuEl)} onClose={handleShareClose}>
+            <div
+              style={{
+                margin: '0.5em 1em'
+              }}
+            >
+              <ShareComponent></ShareComponent>
+            </div>
+          </Menu>
         </Box>
         <Box sx={{ display: { xs: 'block', md: 'none' } }}>
           <IconButton
@@ -109,7 +139,7 @@ const Header = () => {
             <MenuItem onClick={handleClose} component='a' href='/simulation'>
               Buscador
             </MenuItem>
-            <MenuItem onClick={handleClose} component='a' href='/all'>
+            <MenuItem onClick={handleClose} component='a' href='/creditos/todos'>
               Todos
             </MenuItem>
             <MenuItem aria-controls='bank-menu-mobile' aria-haspopup='true' onClick={handleBankMenu}>
@@ -117,7 +147,12 @@ const Header = () => {
             </MenuItem>
             <Menu id='bank-menu-mobile' anchorEl={bankMenuEl} open={Boolean(bankMenuEl)} onClose={handleClose}>
               {banks.map((bank: string) => (
-                <MenuItem key={bank} onClick={handleClose} component='a' href={`/banco/${bankNameToSlug(bank.toLowerCase())}`}>
+                <MenuItem
+                  key={bank}
+                  onClick={handleClose}
+                  component='a'
+                  href={`/banco/${bankNameToSlug(bank.toLowerCase())}`}
+                >
                   {bank}
                 </MenuItem>
               ))}
@@ -131,6 +166,8 @@ const Header = () => {
             <MenuItem onClick={handleClose} component='a' target='_blank' href='https://t.me/micreditohipotecario'>
               Ayuda
             </MenuItem>
+
+            <ShareComponent></ShareComponent>
           </Menu>
         </Box>
       </Toolbar>

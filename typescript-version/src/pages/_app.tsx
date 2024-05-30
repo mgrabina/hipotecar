@@ -123,7 +123,7 @@ const App = (props: ExtendedAppProps) => {
         <meta property="twitter:card" content="summary_large_image" />
         <meta property="twitter:title" content="Mi Crédito Hipotecario" />
         <meta property="twitter:description" content="Compara y simula créditos hipotecarios en Argentina con Mi Crédito Hipotecario. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos." />
-        <script type='application/ld+json' dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <script async type='application/ld+json' dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </Head>
       <Script async src={`https://www.googletagmanager.com/gtag/js?id=${GACODE}`} />
       <Script id='google-analytics'>
