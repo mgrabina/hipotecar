@@ -46,11 +46,17 @@ export const getBiggestLoanBasedOnSalary = (
 }
 
 export const createCreditSlug = (credit: Credit) => {
-  return `${credit.Nombre}-${credit.Tipo}-${credit.Banco}`.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/g, '').toLowerCase()
+  return `${credit.Nombre}-${credit.Tipo}-${credit.Banco}-${credit['Sueldo En Banco'] === 'TRUE' ? 'sueldo-en-banco' : 'externo'}`
+    .replace(/ /g, '-')
+    .replace(/[^a-zA-Z0-9-]/g, '')
+    .toLowerCase()
 }
 
 export const bankNameToSlug = (bankName: string) => {
-  return bankName.replace(/ /g, '-').replace(/[^a-zA-Z0-9-]/g, '').toLowerCase()
+  return bankName
+    .replace(/ /g, '-')
+    .replace(/[^a-zA-Z0-9-]/g, '')
+    .toLowerCase()
 }
 
 export const getCreditBySlug = (credits: Credit[], slug: string) => {
@@ -188,18 +194,21 @@ export const getCompatibleCredits = (credits: Credit[], userData: UserData, UVA 
   })
 
   // Por cada par de creditos con mismo (nombre y banco), quedarse con el que tenga Sueldo en Banco
-  const creditosCompatiblesPorNombre = creditosCompatibles.reduce((acc, creditObj) => {
-    const { credit: credit } = creditObj
+  const creditosCompatiblesPorNombre = creditosCompatibles.reduce(
+    (acc, creditObj) => {
+      const { credit: credit } = creditObj
 
-    const id = credit.Nombre + '-' + credit.Banco
+      const id = credit.Nombre + '-' + credit.Banco
 
-    if (!acc[id]) {
-      acc[id] = []
-    }
-    acc[id].push(creditObj)
+      if (!acc[id]) {
+        acc[id] = []
+      }
+      acc[id].push(creditObj)
 
-    return acc // Add this line to return the updated accumulator object
-  }, {} as Record<string, CreditEvaluationResult['creditosCompatibles']>)
+      return acc // Add this line to return the updated accumulator object
+    },
+    {} as Record<string, CreditEvaluationResult['creditosCompatibles']>
+  )
 
   const compatibles = Object.keys(creditosCompatiblesPorNombre).map(key => {
     const creditos = creditosCompatiblesPorNombre[key]
