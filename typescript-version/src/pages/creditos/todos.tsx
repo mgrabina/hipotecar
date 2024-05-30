@@ -28,7 +28,7 @@ const noFilterColumns = ['Link']
 
 export const metadata = {
   title: 'Tabla completa de Créditos Hipotecarios UVA en Argentina | Mi Crédito Hipotecario',
-  description: 'Compara todos los créditos hipotecarios disponibles en el mercado bancario argentino.',
+  description: 'Compara todos los créditos hipotecarios disponibles en el mercado bancario argentino.'
 }
 
 const isNumericColumn = (key: string | string[]) =>
@@ -85,7 +85,7 @@ const CreditComparisonPage = () => {
       Object.entries(filters).every(([key, { value, operator }]) => {
         if (!value || value === 'Todos') return true
 
-        const cellValue = credit[key as keyof Credit ]?.toString().toLowerCase()
+        const cellValue = credit[key as keyof Credit]?.toString().toLowerCase()
         if (isNumericColumn(key)) {
           const numericValue = parseFloat(value)
           const creditValue = parseFloat(credit[key as keyof Credit].toString())
@@ -154,13 +154,22 @@ const CreditComparisonPage = () => {
     <div>
       <Head>
         <title>Todos los creditos hipotecarios UVA | Mi Credito Hipotecario</title>
-        <meta name='description' content='Descubre todos los creditos hipotecarios UVA disponibles en Argentina. Comparar tasas, cuotas, requisitos y mas.' />
+        <meta
+          name='description'
+          content='Descubre todos los creditos hipotecarios UVA disponibles en Argentina. Comparar tasas, cuotas, requisitos y mas.'
+        />
         <meta property='og:title' content='Todos los creditos hipotecarios UVA | Mi Credito Hipotecario' />
-        <meta property='og:description' content='Descubre todos los creditos hipotecarios UVA disponibles en Argentina. Comparar tasas, cuotas, requisitos y mas.' />
+        <meta
+          property='og:description'
+          content='Descubre todos los creditos hipotecarios UVA disponibles en Argentina. Comparar tasas, cuotas, requisitos y mas.'
+        />
         <meta property='og:url' content='https://www.micredito.com.ar/creditos/todos' />
         <meta property='og:image' content='https://www.micredito.com.ar/generated/happy.png' />
         <meta property='twitter:title' content='Todos los creditos hipotecarios UVA | Mi Credito Hipotecario' />
-        <meta property='twitter:description' content='Descubre todos los creditos hipotecarios UVA disponibles en Argentina. Comparar tasas, cuotas, requisitos y mas.' />
+        <meta
+          property='twitter:description'
+          content='Descubre todos los creditos hipotecarios UVA disponibles en Argentina. Comparar tasas, cuotas, requisitos y mas.'
+        />
         <meta property='twitter:image' content='https://www.micredito.com.ar/generated/happy.png' />
       </Head>
       <Card style={{ marginTop: '4em' }}>
@@ -176,13 +185,10 @@ const CreditComparisonPage = () => {
                         verticalAlign: 'top',
                         minWidth: '100px',
                         backgroundColor: '#f5f5f5',
-                        position:
-                          (index === 0 || key === 'Logo Banco' ) && !isSmallScreen ? 'sticky' : 'static',
-                        left:
-                          key === 'Logo Banco' && !isSmallScreen ? 0 : 'auto',
-                        zIndex: (key === 'Logo Banco') && !isSmallScreen ? 1 : 0
+                        position: (index === 0 || key === 'Logo Banco') && !isSmallScreen ? 'sticky' : 'static',
+                        left: key === 'Logo Banco' && !isSmallScreen ? 0 : 'auto',
+                        zIndex: key === 'Logo Banco' && !isSmallScreen ? 1 : 0
                       }}
-
                     >
                       <TableSortLabel
                         active={sortConfig.key === key}
@@ -259,25 +265,31 @@ const CreditComparisonPage = () => {
                       <TableCell
                         key={key}
                         style={{
-                          position:
-                            (index === 0 || key === 'Logo Banco') && !isSmallScreen
-                              ? 'sticky'
-                              : 'static',
-                          left:
-                            key === 'Logo Banco' && !isSmallScreen
-                              ? 0
-                              : 'auto',
-                          zIndex: (key === 'Logo Banco') && !isSmallScreen ? 1 : 0,
+                          position: (index === 0 || key === 'Logo Banco') && !isSmallScreen ? 'sticky' : 'static',
+                          left: key === 'Logo Banco' && !isSmallScreen ? 0 : 'auto',
+                          zIndex: key === 'Logo Banco' && !isSmallScreen ? 1 : 0,
                           backgroundColor: 'white',
-                          width: key === 'Logo Banco' ? '250px' : '100px',
+                          width: key === 'Logo Banco' ? '250px' : '100px'
                         }}
                         width={key === 'Logo Banco' ? '250px' : '100px'}
                       >
                         {key === 'Logo Banco' ? (
-                          <div style={{ cursor: 'pointer'}}>
-
-                          <Link href={`/banco/${credit.Banco.toLowerCase()}`} passHref={true}>
-                            <Image layout="fill" objectFit="contain"  src={`/images/banks/${credit.Banco}.png`} alt={credit.Banco} width={40}  />
+                          <div
+                            style={{
+                              cursor: 'pointer',
+                              width: '120px',
+                              height: '40px',
+                              position: 'relative'
+                            }}
+                          >
+                            <Link href={`/banco/${credit.Banco.toLowerCase()}`} passHref={true}>
+                              <Image
+                                layout='fill'
+                                objectFit='contain'
+                                src={`/images/banks/${credit.Banco}.png`}
+                                alt={credit.Banco}
+                                width={40}
+                              />
                             </Link>
                           </div>
                         ) : credit[key as keyof Credit] === 'TRUE' ? (
