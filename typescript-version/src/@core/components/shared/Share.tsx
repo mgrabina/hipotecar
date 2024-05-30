@@ -6,7 +6,6 @@ const ShareComponent = () => {
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
-
   if (typeof window === 'undefined') {
     return null
   }
@@ -30,28 +29,45 @@ const ShareComponent = () => {
   }
 
   // Text removing special characters
-  const text = document.title.replace("|", "en").replace(/[^a-zA-Z0-9 ]/g, '')
+  const text = document.title.replace('|', 'en').replace(/[^a-zA-Z0-9 ]/g, '')
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 2 }}>
-      {isSmallScreen && (
-      <Button
-        variant="text"
+    <Box sx={{ display: 'flex', mt: 2, justifyContent: "space-evenly" }}>
+      <IconButton
         color='info'
-        startIcon={<Share />}
-        onClick={handleShare}
+        component='a'
+        href={`https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`}
+        target='_blank'
+        rel='noopener noreferrer'
       >
-      </Button>
-      )}
-      <IconButton color='info' component='a' href={`https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`} target='_blank' rel='noopener noreferrer'>
         <Facebook />
       </IconButton>
-      <IconButton color='info' component='a' href={`https://twitter.com/intent/tweet?url=${currentUrl}&text=${text}`} target='_blank' rel='noopener noreferrer'>
+      <IconButton
+        color='info'
+        component='a'
+        href={`https://twitter.com/intent/tweet?url=${currentUrl}&text=${text}`}
+        target='_blank'
+        rel='noopener noreferrer'
+      >
         <Twitter />
       </IconButton>
-      <IconButton color='info' component='a' href={`https://api.whatsapp.com/send?text=${text} - ${currentUrl.toString()}`} target='_blank' rel='noopener noreferrer'>
+      <IconButton
+        color='info'
+        component='a'
+        href={`https://api.whatsapp.com/send?text=${text} - ${currentUrl.toString()}`}
+        target='_blank'
+        rel='noopener noreferrer'
+      >
         <Whatsapp />
       </IconButton>
+      {isSmallScreen && (
+        <IconButton
+          color='info'
+          onClick={handleShare}
+        >
+          <Share />
+        </IconButton>
+      )}
     </Box>
   )
 }

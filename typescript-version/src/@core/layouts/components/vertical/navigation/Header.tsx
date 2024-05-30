@@ -66,13 +66,19 @@ const Header = () => {
           </Typography>
         </Link>
         <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-          <Button color='inherit' href='/simulation'>
-            Buscador
+          <Button color='primary' href='/simulation'>
+            Buscar y Comparar
           </Button>
           <Button color='inherit' href='/creditos/todos'>
             Todos
           </Button>
-          <Button color='inherit' aria-controls='bank-menu' aria-haspopup='true' onClick={handleBankMenu}>
+          <Button
+            disabled={!banks.length}
+            color='inherit'
+            aria-controls='bank-menu'
+            aria-haspopup='true'
+            onClick={handleBankMenu}
+          >
             Por Banco
           </Button>
           <Button color='inherit' href='/blog'>
@@ -96,11 +102,15 @@ const Header = () => {
             <ShareVariant></ShareVariant>
           </Button>
 
-          <Menu id='share-menu'
+          <Menu
+            id='share-menu'
             style={{
-              left: '-4.5em',
+              left: '-4.5em'
             }}
-          anchorEl={shareMenuEl} open={Boolean(shareMenuEl)} onClose={handleShareClose}>
+            anchorEl={shareMenuEl}
+            open={Boolean(shareMenuEl)}
+            onClose={handleShareClose}
+          >
             <div
               style={{
                 margin: '0.5em 1em'
@@ -137,12 +147,17 @@ const Header = () => {
             onClose={handleClose}
           >
             <MenuItem onClick={handleClose} component='a' href='/simulation'>
-              Buscador
+              <Typography color="primary" >Buscar y Comparar</Typography>
             </MenuItem>
             <MenuItem onClick={handleClose} component='a' href='/creditos/todos'>
               Todos
             </MenuItem>
-            <MenuItem aria-controls='bank-menu-mobile' aria-haspopup='true' onClick={handleBankMenu}>
+            <MenuItem
+              aria-controls='bank-menu-mobile'
+              disabled={!banks.length}
+              aria-haspopup='true'
+              onClick={handleBankMenu}
+            >
               Por Banco
             </MenuItem>
             <Menu id='bank-menu-mobile' anchorEl={bankMenuEl} open={Boolean(bankMenuEl)} onClose={handleClose}>

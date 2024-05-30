@@ -377,18 +377,18 @@ const ComparisonForm = () => {
                         style={{ opacity: index === 0 ? 1 : 0.7 }}
                         sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
                       >
-                        <TableCell width={isSmallScreen ? 20 : 30}>
+                        <TableCell>
                           <div
                             style={{
-                              width: isSmallScreen ? 20 : 80,
-                              height: isSmallScreen ? 20 : 40,
+                              width: 120,
+                              height: 40,
                               position: 'relative'
                             }}
                           >
                             <Image
                               src={`/images/banks/${row.Banco}.png`}
                               alt={row.Banco}
-                              width={isSmallScreen ? 20 : 40}
+                              width={120}
                               layout='fill'
                               objectFit='contain'
                             />
