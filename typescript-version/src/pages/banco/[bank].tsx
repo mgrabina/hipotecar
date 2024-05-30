@@ -156,7 +156,7 @@ const BankDetailPage = () => {
                   )}
                   <Grid item xs={12} md={6}>
                       <Typography variant='body1'>
-                        <strong>Mas información</strong>: <Link href={`/credito/${createCreditSlug(credit)}`} passHref={true}>Haz click aquí</Link>
+                        <strong>Mas información</strong>: <Link href={`/creditos/${createCreditSlug(credit)}`} passHref={true}>Haz click aquí</Link>
                       </Typography>
                   </Grid>
                 </Grid>

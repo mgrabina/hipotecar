@@ -69,7 +69,7 @@ const Header = () => {
           <Button color='inherit' href='/simulation'>
             Buscador
           </Button>
-          <Button color='inherit' href='/all'>
+          <Button color='inherit' href='/creditos/todos'>
             Todos
           </Button>
           <Button color='inherit' aria-controls='bank-menu' aria-haspopup='true' onClick={handleBankMenu}>
@@ -139,7 +139,7 @@ const Header = () => {
             <MenuItem onClick={handleClose} component='a' href='/simulation'>
               Buscador
             </MenuItem>
-            <MenuItem onClick={handleClose} component='a' href='/all'>
+            <MenuItem onClick={handleClose} component='a' href='/creditos/todos'>
               Todos
             </MenuItem>
             <MenuItem aria-controls='bank-menu-mobile' aria-haspopup='true' onClick={handleBankMenu}>

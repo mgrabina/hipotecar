@@ -332,7 +332,7 @@ const ComparisonForm = () => {
                     <TableRow>
                       {/* Image */}
                       <TableCell>
-                        <Link href='/all' target='_blank'>
+                        <Link href='/creditos/todos' target='_blank'>
                           Ver todos
                         </Link>
                       </TableCell>
@@ -379,10 +379,11 @@ const ComparisonForm = () => {
                       >
                         <TableCell width={isSmallScreen ? 20 : 30}>
                           <Image
-                            src={row['Logo Banco'].length ? row['Logo Banco'] : `/images/banks/${row.Banco}.png`}
+                            src={`/images/banks/${row.Banco}.png`}
                             alt={row.Banco}
                             className='object-contain	'
                             height={isSmallScreen ? 20 : 40}
+                            layout='fill'
                           />
                         </TableCell>
                         <TableCell sx={{ py: `0.5em !important` }}>
@@ -535,7 +536,7 @@ const ComparisonForm = () => {
 
                         <TableCell>
                           {row.Link.length > 0 && (
-                            <Link href={`/credito/${createCreditSlug(row)}?loan=${loan}&duration=${context?.data.user.duration}`}>
+                            <Link href={`/creditos/${createCreditSlug(row)}?loan=${loan}&duration=${context?.data.user.duration}`}>
                               Ver detalles
                             </Link>
                           )}
