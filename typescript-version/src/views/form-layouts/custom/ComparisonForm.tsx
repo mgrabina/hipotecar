@@ -72,7 +72,7 @@ const sortTypes = [
   'Adelanto mas bajo',
   'Adelanto mas alto'
 ] as const
-type SortType = typeof sortTypes[number]
+type SortType = (typeof sortTypes)[number]
 
 type ComparisonTableState = {
   loanAmount: number
@@ -333,7 +333,7 @@ const ComparisonForm = () => {
                       {/* Image */}
                       <TableCell>
                         <Link href='/creditos/todos' target='_blank'>
-                          Ver todos
+                          <Button>Ver todos</Button>
                         </Link>
                       </TableCell>
                       <TableCell>Creditos Recomendados</TableCell>
@@ -378,13 +378,21 @@ const ComparisonForm = () => {
                         sx={{ '&:last-of-type td, &:last-of-type th': { border: 0 } }}
                       >
                         <TableCell width={isSmallScreen ? 20 : 30}>
-                          <Image
-                            src={`/images/banks/${row.Banco}.png`}
-                            alt={row.Banco}
-                            className='object-contain	'
-                            height={isSmallScreen ? 20 : 40}
-                            layout='fill'
-                          />
+                          <div
+                            style={{
+                              width: isSmallScreen ? 20 : 80,
+                              height: isSmallScreen ? 20 : 40,
+                              position: 'relative'
+                            }}
+                          >
+                            <Image
+                              src={`/images/banks/${row.Banco}.png`}
+                              alt={row.Banco}
+                              width={isSmallScreen ? 20 : 40}
+                              layout='fill'
+                              objectFit='contain'
+                            />
+                          </div>
                         </TableCell>
                         <TableCell sx={{ py: `0.5em !important` }}>
                           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -401,14 +409,14 @@ const ComparisonForm = () => {
                                       values.sortType === 'Monto Total mas alto'
                                         ? 'Monto mas alto'
                                         : values.sortType === 'Cuota Mensual mas baja'
-                                        ? 'Cuota mas baja'
-                                        : values.sortType === 'Cuota Mensual mas alta'
-                                        ? 'Cuota mas alta'
-                                        : values.sortType === 'Adelanto mas bajo'
-                                        ? 'Adelanto mas bajo'
-                                        : values.sortType === 'Adelanto mas alto'
-                                        ? 'Adelanto mas alto'
-                                        : ''
+                                          ? 'Cuota mas baja'
+                                          : values.sortType === 'Cuota Mensual mas alta'
+                                            ? 'Cuota mas alta'
+                                            : values.sortType === 'Adelanto mas bajo'
+                                              ? 'Adelanto mas bajo'
+                                              : values.sortType === 'Adelanto mas alto'
+                                                ? 'Adelanto mas alto'
+                                                : ''
                                     }
                                     size='small'
                                     color='primary'
@@ -536,7 +544,9 @@ const ComparisonForm = () => {
 
                         <TableCell>
                           {row.Link.length > 0 && (
-                            <Link href={`/creditos/${createCreditSlug(row)}?loan=${loan}&duration=${context?.data.user.duration}`}>
+                            <Link
+                              href={`/creditos/${createCreditSlug(row)}?loan=${loan}&duration=${context?.data.user.duration}`}
+                            >
                               Ver detalles
                             </Link>
                           )}
