@@ -38,6 +38,34 @@ const DetailPage = () => {
 
   const loanPlotDataResults = getLoanPlotData(loan, credit['Tasa'], duration)
 
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: `Credito ${credit['Nombre']} del ${credit['Banco']} | Mi Credito Hipotecario`,
+    image: [credit['Logo Banco']],
+    author: {
+      '@type': 'Organization',
+      name: 'Mi Crédito Hipotecario',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://micreditohipotecario.com.ar/images/generated/happy.png'
+      },
+      sameAs: 'https://micreditohipotecario.com.ar'
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Mi Crédito Hipotecario',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://micreditohipotecario.com.ar/images/generated/happy.png'
+      }
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://micreditohipotecario.com.ar${router.asPath}`
+    }
+  }
+
   return (
     <>
       <Head>
@@ -71,6 +99,13 @@ const DetailPage = () => {
           content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
         con una tasa de ${credit['Tasa']}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
         `}
+        />
+        <script
+          async
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(articleJsonLd)
+          }}
         />
       </Head>
 

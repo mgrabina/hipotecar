@@ -61,6 +61,36 @@ const PostPage = () => {
     return <Error404></Error404>
   }
 
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    image: [post.coverImage.url],
+    author: {
+      '@type': 'Organization',
+      name: 'Mi Crédito Hipotecario',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://micreditohipotecario.com.ar/images/generated/happy.png'
+      },
+      sameAs: 'https://micreditohipotecario.com.ar'
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Mi Crédito Hipotecario',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://micreditohipotecario.com.ar/images/generated/happy.png'
+      }
+    },
+    datePublished: post.date,
+    dateModified: post.date,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://micreditohipotecario.com.ar${router.asPath}`
+    }
+  }
+
   return (
     <div style={{ marginTop: '4em' }}>
       <Head>
@@ -72,6 +102,13 @@ const PostPage = () => {
         <meta property='twitter:image' content={post.coverImage.url} />
         <meta property='twitter:title' content={post.title} />
         <meta property='twitter:description' content={post.description} />
+        <script
+          async
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(articleJsonLd)
+          }}
+        />
       </Head>
       <Card>
         <CardMedia sx={{ height: '14.5625rem' }} image={post.coverImage.url} />
