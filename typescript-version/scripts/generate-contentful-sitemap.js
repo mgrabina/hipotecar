@@ -33,7 +33,17 @@ const loadDataFromCSV = async url => {
 }
 
 const generateSiteMap = async () => {
-  const staticPages = ['', 'creditos/todos', 'monitor', 'blog', 'simulation']
+  const staticPages = [
+    '',
+    'creditos/todos',
+    'monitor',
+    'blog',
+    'buscador',
+    'buscador/bienvenida',
+    'buscador/riesgos',
+    'buscador/preferencias',
+    'buscador/resultado'
+  ]
     .map(page => {
       return `<url>
       <loc>https://micreditohipotecario.com.ar/${page}</loc>
@@ -60,10 +70,11 @@ const generateSiteMap = async () => {
   )
   const creditPages = credits
     .map(credit => {
-      const slug = `${credit.Nombre}-${credit.Tipo}-${credit.Banco}-${credit['Sueldo En Banco'] === "TRUE" ? "sueldo-en-banco" : "externo"}`
-        .replace(/ /g, '-')
-        .replace(/[^a-zA-Z0-9-]/g, '')
-        .toLowerCase()
+      const slug =
+        `${credit.Nombre}-${credit.Tipo}-${credit.Banco}-${credit['Sueldo En Banco'] === 'TRUE' ? 'sueldo-en-banco' : 'externo'}`
+          .replace(/ /g, '-')
+          .replace(/[^a-zA-Z0-9-]/g, '')
+          .toLowerCase()
 
       return `<url>
       <loc>https://micreditohipotecario.com.ar/creditos/${slug}</loc>

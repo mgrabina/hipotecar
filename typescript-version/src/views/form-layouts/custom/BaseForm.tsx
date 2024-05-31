@@ -44,7 +44,7 @@ const BaseForm = () => {
 
   const handleClick = () => {
     context?.setData({ ...context?.data, user: { ...context?.data.user, name: values.name } })
-    router.push('/simulation/risk')
+    router.push('/buscador/riesgos')
   }
 
   useEffect(() => {

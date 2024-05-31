@@ -82,7 +82,7 @@ function QontoStepIcon(props: StepIconProps) {
 }
 
 export const steps = ['Bienvenida', 'Test de riesgo', 'Preferencias', 'Resultados'] as const
-export const stepLinks = ['/simulation/name', '/simulation/risk', '/simulation/preferences', '/simulation/comparison']
+export const stepLinks = ['/buscador/bienvenida', '/buscador/riesgos', '/buscador/preferencias', '/buscador/resultado']
 
 export const getActiveStep = (data: UserData) => {
   if ((data.loanType === 'maximo' || data.loanAmount) && data.creditType && data.duration) {
@@ -109,7 +109,7 @@ export default function ProgressBar() {
 
   const activeStep = context?.data ? getActiveStep(context?.data.user) : 0
 
-  if (!router.pathname.includes('simulation')) return null
+  if (!router.pathname.includes('buscador')) return null
 
   return (
     <div style={{ padding: isSmallScreen ? '1em' : '3em', width: '100%', overflow: 'scroll' }}>
@@ -121,7 +121,7 @@ export default function ProgressBar() {
                 <Link href={stepLinks[index]} key={label}>
                   <StepLabel
                     StepIconComponent={QontoStepIcon}
-                    style={{  minWidth: 'fit-content', width: 'auto', whiteSpace: 'nowrap' }}
+                    style={{ minWidth: 'fit-content', width: 'auto', whiteSpace: 'nowrap' }}
                   >
                     {label}
                   </StepLabel>

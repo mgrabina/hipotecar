@@ -69,7 +69,7 @@ const FooterContent = () => {
         </Typography>
       </Typography>
       <Typography>
-        Para 🇦🇷 por <Link target='_blank' href='https://x.com/mgrabina'>Martin</Link>
+        Para 🇦🇷 por {' '} <Link target='_blank' href='https://x.com/mgrabina'>Martin</Link>
       </Typography>
     </Box>
   )

@@ -34,7 +34,7 @@ import { getBiggestLoanBasedOnSalary } from 'src/@core/utils/misc'
 import { SubmitUserBody } from 'src/pages/api/users'
 
 const taxTypes = ['Monotributo', 'Autonomo', 'Relacion de Dependencia'] as const
-type TaxType = typeof taxTypes[number]
+type TaxType = (typeof taxTypes)[number]
 
 export interface PreferencesFormState {
   loanAmount: number
@@ -122,7 +122,7 @@ const PreferencesForm = () => {
         } else {
           console.error('Error:', resp?.statusText)
         }
-        router.push('/simulation/comparison')
+        router.push('/buscador/resultado')
       })
       .catch(e => {
         console.error('Error:', e)
@@ -278,7 +278,6 @@ const PreferencesForm = () => {
                     onChange={e => {
                       const value = Number(e.target.value.replace(/,/g, ''))
                       if (Number.isNaN(value) || value < 0) return
-
 
                       if (context?.data.dolar) {
                         setValues({ ...values, salary: Number(value) })
