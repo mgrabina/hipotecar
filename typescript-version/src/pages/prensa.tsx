@@ -1,7 +1,6 @@
 // components/PressView.js
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import cheerio from 'cheerio'
 import Link from 'next/link'
 import { Avatar, Box, Card, CardContent, CardMedia, Typography } from '@mui/material'
 import { Heart, ShareVariant } from 'mdi-material-ui'
