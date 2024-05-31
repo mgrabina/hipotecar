@@ -70,11 +70,11 @@ const Header = () => {
             <Image
               alt='Bandera Argentina'
               src='/images/logo.svg'
-              height={isSmallScreen ? '28em' : '30em'}
-              width={isSmallScreen ? '28em' : '30em'}
+              height={isSmallScreen ? '26em' : '30em'}
+              width={isSmallScreen ? '26em' : '30em'}
               style={{ paddingRight: '0.5em' }}
             />
-            <Typography variant='h6' style={{ marginLeft: '0.3em', fontSize: isSmallScreen ? '1.4em' : '1.5em' }}>
+            <Typography variant='h6' style={{ marginLeft: '0.3em', fontSize: isSmallScreen ? '1.2em' : '1.5em' }}>
               Mi Crédito Hipotecario{' '}
             </Typography>
           </div>

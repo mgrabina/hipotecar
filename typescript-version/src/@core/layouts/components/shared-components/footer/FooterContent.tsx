@@ -27,12 +27,49 @@ const FooterContent = () => {
     >
       <Typography sx={{ display: { xs: 'inline', md: 'block' } }} color='text.secondary'>
         {` Sitio con fines informativos. No representa recomendación alguna. `}
+        <Typography
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'left'
+          }}
+          color='text.secondary'
+        >
+          Mas herramientas similares en:{' '}
+          <div
+            style={{
+              cursor: 'pointer',
+              width: '120px',
+              height: '40px',
+              position: 'relative',
+              marginLeft: '0.5em'
+            }}
+          >
+            <Link
+              href='https://www.finanzasarg.com/?utm_source=micreditohipotecario'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              {' '}
+              <Image
+                src='/images/external/finanzasarg.png'
+                alt='Finanzas ARG'
+                title='El sitio definitivo para tus finanzas personales en Argentina'
+                layout='fill'
+                objectFit='contain'
+                style={{
+                  opacity: 0.5,
+                  transition: 'opacity 0.3s ease-in-out'
+                }}
+                onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
+                onMouseLeave={e => (e.currentTarget.style.opacity = '0.5')}
+              />{' '}
+            </Link>
+          </div>
+        </Typography>
       </Typography>
       <Typography>
-        Mas herramientas en{' '}
-        <Link target='_blank' href='https://www.finanzasarg.com/?utm_source=micreditohipotecario'>
-          FinanzasArg
-        </Link>
+        Para 🇦🇷 por <Link target='_blank' href='https://x.com/mgrabina'>Martin</Link>
       </Typography>
     </Box>
   )
