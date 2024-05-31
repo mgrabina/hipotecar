@@ -29,7 +29,10 @@ const FooterContent = () => {
         {` Sitio con fines informativos. No representa recomendación alguna. `}
       </Typography>
       <Typography>
-        Made with ❤️ in <Image src='/images/logo.png' height='15em' width="15em" alt='Bandera Argentina' />
+        Mas herramientas en{' '}
+        <Link target='_blank' href='https://www.finanzasarg.com/?utm_source=micreditohipotecario'>
+          FinanzasArg
+        </Link>
       </Typography>
     </Box>
   )

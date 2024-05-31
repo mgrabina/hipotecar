@@ -79,36 +79,9 @@ const App = (props: ExtendedAppProps) => {
 
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Product',
+    '@type': 'WebSite',
     name: 'Mi Crédito Hipotecario',
-    image: 'https://micreditohipotecario.com.ar/images/logo.png',
-    description:
-      'Mi Crédito Hipotecario es una plataforma que ayuda a las personas a encontrar y simular opciones de crédito hipotecario en Argentina.',
-    url: 'https://micreditohipotecario.com.ar',
-    brand: {
-      '@type': 'Brand',
-      name: 'Mi Crédito Hipotecario',
-      logo: 'https://micreditohipotecario.com.ar/images/logo.png'
-    },
-    offers: {
-      '@type': 'Offer',
-      url: 'https://micreditohipotecario.com.ar',
-      priceCurrency: 'ARS',
-      price: '0.00', // Asume que el servicio es gratuito, ajusta si es necesario
-      itemCondition: 'https://schema.org/NewCondition',
-      availability: 'https://schema.org/InStock',
-      seller: {
-        '@type': 'Organization',
-        name: 'Mi Crédito Hipotecario'
-      }
-    },
-    contactPoint: {
-      '@type': 'ContactPoint',
-      email: 'martin@targecy.xyz',
-      contactType: 'Customer Service',
-      areaServed: 'AR',
-      availableLanguage: 'Spanish'
-    }
+    url: 'https://micreditohipotecario.com.ar'
   }
 
   return (
@@ -127,11 +100,11 @@ const App = (props: ExtendedAppProps) => {
         {/* Add favicon */}
         <link rel='shortcut icon' href='/images/logo.png' />
         {/* Canonical */}
-        <link rel='canonical' href='https://micreditohipotecario.com.ar' />
+        <link rel='canonical' href={`https://micreditohipotecario.com.ar${router.asPath}`} />
         <meta property='og:title' content='Mi Crédito Hipotecario' />
         <meta
           property='og:description'
-          content='Compara y simula créditos hipotecarios en Argentina con Mi Crédito Hipotecario. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos.'
+          content='Buscá, Compará y simulá todos los créditos hipotecarios UVA disponibles en Argentina. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos.'
         />
         <meta property='og:image' content='/images/generated/happy.png' />
         <meta property='og:url' content={`https://micreditohipotecario.com.ar`} />
