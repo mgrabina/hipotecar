@@ -38,6 +38,7 @@ const generateSiteMap = async () => {
     'creditos/todos',
     'monitor',
     'blog',
+    'prensa',
     'buscador',
     'buscador/bienvenida',
     'buscador/riesgos',

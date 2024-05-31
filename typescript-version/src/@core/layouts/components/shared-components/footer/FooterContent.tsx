@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography'
 import { Button, useMediaQuery, useTheme } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import Image from 'next/image'
+import { is } from 'date-fns/locale'
 
 const FooterContent = () => {
   // ** Var
@@ -25,13 +26,27 @@ const FooterContent = () => {
         width: isSmallScreen ? '100%' : 'auto'
       }}
     >
-      <Typography sx={{ display: { xs: 'inline', md: 'block' } }} color='text.secondary'>
-        {` Sitio con fines informativos. No representa recomendación alguna. `}
+      <div
+        style={{
+          width: isSmallScreen ? '100%' : 'auto'
+        }}
+      >
         <Typography
           style={{
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'left'
+            alignItems: isSmallScreen ? 'center' : 'left',
+            textAlign: isSmallScreen ? 'center' : 'left',
+            justifyContent: isSmallScreen ? 'center' : 'left'
+          }}
+          color='text.secondary'
+        >
+          Sitio con fines informativos, no representa recomendación alguna.
+        </Typography>
+        <Typography
+          style={{
+            display: 'flex',
+            alignItems: isSmallScreen ? 'center' : 'left',
+            justifyContent: isSmallScreen ? 'center' : 'left'
           }}
           color='text.secondary'
         >
@@ -67,10 +82,40 @@ const FooterContent = () => {
             </Link>
           </div>
         </Typography>
-      </Typography>
-      <Typography>
-        Para 🇦🇷 por {' '} <Link target='_blank' href='https://x.com/mgrabina'>Martin</Link>
-      </Typography>
+      </div>
+      <div
+        style={{
+          width: isSmallScreen ? '100%' : 'auto'
+        }}
+      >
+        <Link
+          style={{
+            display: 'flex',
+            justifyContent: isSmallScreen ? 'center' : 'right'
+          }}
+          href='/prensa'
+        >
+          Aparcición en Medios
+        </Link>
+
+        <Typography
+          style={{
+            display: 'flex',
+            justifyContent: isSmallScreen ? 'center' : 'right'
+          }}
+        >
+          Para 🇦🇷 por{' '}
+          <Link
+            style={{
+              marginLeft: '0.4em'
+            }}
+            target='_blank'
+            href='https://x.com/mgrabina'
+          >
+            Martin
+          </Link>
+        </Typography>
+      </div>
     </Box>
   )
 }
