@@ -107,11 +107,11 @@ const App = (props: ExtendedAppProps) => {
           property='og:description'
           content='Buscá, Compará y simulá todos los créditos hipotecarios UVA disponibles en Argentina. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos.'
         />
-        <meta property='og:image' content='/images/generated/happy.png' />
+        <meta property='og:image' content='https://micreditohipotecario.com.ar/images/generated/happy.png' />
         <meta property='og:url' content={`https://micreditohipotecario.com.ar`} />
         <meta property='og:type' content='website' />
         <meta property='og:site_name' content='Mi Crédito Hipotecario' />
-        <meta property='twitter:image' content='/images/generated/happy.png' />
+        <meta property='twitter:image' content='https://micreditohipotecario.com.ar/images/generated/happy.png' />
         <meta property='twitter:card' content='summary_large_image' />
         <meta property='twitter:title' content='Mi Crédito Hipotecario' />
         <meta
