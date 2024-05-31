@@ -42,22 +42,33 @@ const FooterContent = () => {
         >
           Sitio con fines informativos, no representa recomendación alguna.
         </Typography>
-        <Typography
-          style={{
-            display: 'flex',
-            alignItems: isSmallScreen ? 'center' : 'left',
-            justifyContent: isSmallScreen ? 'center' : 'left'
-          }}
-          color='text.secondary'
+        <div
+        style={{
+          display: isSmallScreen ? "block" : 'flex',
+          alignItems: isSmallScreen ? 'center' : 'left',
+          justifyContent: isSmallScreen ? 'center' : 'left'
+        }}
         >
-          Mas herramientas similares en:{' '}
+          <Typography
+            style={{
+              display: 'flex',
+              alignItems: isSmallScreen ? 'center' : 'left',
+              justifyContent: isSmallScreen ? 'center' : 'left'
+            }}
+            color='text.secondary'
+          >
+            Mas herramientas similares en:{' '}
+          </Typography>
           <div
             style={{
               cursor: 'pointer',
-              width: '120px',
-              height: '40px',
+              width: isSmallScreen ? '100%' : '120px',
+              height: isSmallScreen ? '30px' : '30px',
               position: 'relative',
-              marginLeft: '0.5em'
+              marginLeft: '0.5em',
+              display: isSmallScreen ? 'flex' : "inherit",
+              justifyContent: isSmallScreen ? 'center' : "inherit",
+              alignItems: isSmallScreen ? 'center' : "inherit"
             }}
           >
             <Link
@@ -81,7 +92,7 @@ const FooterContent = () => {
               />{' '}
             </Link>
           </div>
-        </Typography>
+        </div>
       </div>
       <div
         style={{
@@ -95,7 +106,7 @@ const FooterContent = () => {
           }}
           href='/prensa'
         >
-          Aparcición en Medios
+          Mi Crédito Hipotecario en Medios
         </Link>
 
         <Typography
