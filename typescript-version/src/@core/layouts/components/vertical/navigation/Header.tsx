@@ -14,6 +14,7 @@ import { useData } from '@/@core/layouts/HipotecarLayout'
 import { bankNameToSlug } from '@/@core/utils/misc'
 import ShareComponent from '@/@core/components/shared/Share'
 import Image from 'next/image'
+import { is } from 'date-fns/locale'
 
 const Header = () => {
   const theme = useTheme()
@@ -51,19 +52,32 @@ const Header = () => {
     <AppBar position='static' elevation={0} variant='outlined' color='inherit'>
       <Toolbar>
         <Link href='/' passHref={true} style={{ cursor: 'pointer' }}>
-          <Typography
-            variant='h6'
+          <div
             style={{
               cursor: 'pointer',
               flexGrow: 1,
               paddingLeft: '1em',
               paddingRight: '1em',
-              textAlign: isSmallScreen ? 'center' : 'inherit'
+              height: '100%',
+              display: 'flex',
+              alignItems: 'baseline',
+              width: 'fit-content',
+              verticalAlign: 'bottom',
+              textAlign: isSmallScreen ? 'center' : 'inherit',
+              justifyContent: isSmallScreen ? 'center' : 'inherit'
             }}
           >
-            <Image alt='Bandera Argentina' src='/images/logo.png' height='15em' width='15em' /> Mi Crédito Hipotecario{' '}
-            <Image alt='Bandera Argentina' src='/images/logo.png' height='15em' width='15em' />
-          </Typography>
+            <Image
+              alt='Bandera Argentina'
+              src='/images/logo.svg'
+              height={isSmallScreen ? '28em' : '30em'}
+              width={isSmallScreen ? '28em' : '30em'}
+              style={{ paddingRight: '0.5em' }}
+            />
+            <Typography variant='h6' style={{ marginLeft: '0.3em', fontSize: isSmallScreen ? '1.4em' : '1.5em' }}>
+              Mi Crédito Hipotecario{' '}
+            </Typography>
+          </div>
         </Link>
         <Box sx={{ display: { xs: 'none', md: 'block' } }}>
           <Button color='primary' href='/simulation'>
@@ -147,7 +161,7 @@ const Header = () => {
             onClose={handleClose}
           >
             <MenuItem onClick={handleClose} component='a' href='/simulation'>
-              <Typography color="primary" >Buscar y Comparar</Typography>
+              <Typography color='primary'>Buscar y Comparar</Typography>
             </MenuItem>
             <MenuItem onClick={handleClose} component='a' href='/creditos/todos'>
               Todos
