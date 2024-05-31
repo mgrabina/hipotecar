@@ -90,7 +90,7 @@ const App = (props: ExtendedAppProps) => {
         <title>{`Mi Crédito Hipotecario - Tu aliado para surfear la ola de creditos`}</title>
         <meta
           name='description'
-          content='Compara y simula créditos hipotecarios en Argentina con Mi Crédito Hipotecario. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos.'
+          content='Buscá, compará y simulá tu crédito hipotecario ideal en Argentina. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos.'
         />
         <meta
           name='keywords'
@@ -116,7 +116,7 @@ const App = (props: ExtendedAppProps) => {
         <meta property='twitter:title' content='Mi Crédito Hipotecario' />
         <meta
           property='twitter:description'
-          content='Compara y simula créditos hipotecarios en Argentina con Mi Crédito Hipotecario. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos.'
+          content='Buscá, compará y simulá tu crédito hipotecario ideal en Argentina. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos.'
         />
         <script async type='application/ld+json' dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </Head>
