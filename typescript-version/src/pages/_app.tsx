@@ -98,7 +98,7 @@ const App = (props: ExtendedAppProps) => {
         />{' '}
         <meta name='viewport' content='initial-scale=1, width=device-width' />
         {/* Add favicon */}
-        <link rel='shortcut icon' href='/images/logo.png' />
+        <link rel='shortcut icon' href='/images/logo.svg' />
         {/* Canonical */}
         <link rel='canonical' href={`https://micreditohipotecario.com.ar${router.asPath}`} />
         <meta property='og:title' content='Mi Crédito Hipotecario' />
