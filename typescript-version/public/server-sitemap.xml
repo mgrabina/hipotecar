@@ -17,7 +17,27 @@
     <changefreq>daily</changefreq>
     <priority>0.7</priority> </url
   ><url>
-    <loc>https://micreditohipotecario.com.ar/simulation</loc>
+    <loc>https://micreditohipotecario.com.ar/prensa</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority> </url
+  ><url>
+    <loc>https://micreditohipotecario.com.ar/buscador</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority> </url
+  ><url>
+    <loc>https://micreditohipotecario.com.ar/buscador/bienvenida</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority> </url
+  ><url>
+    <loc>https://micreditohipotecario.com.ar/buscador/riesgos</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority> </url
+  ><url>
+    <loc>https://micreditohipotecario.com.ar/buscador/preferencias</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority> </url
+  ><url>
+    <loc>https://micreditohipotecario.com.ar/buscador/resultado</loc>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>

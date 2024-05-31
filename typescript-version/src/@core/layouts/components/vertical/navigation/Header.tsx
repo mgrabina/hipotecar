@@ -80,7 +80,7 @@ const Header = () => {
           </div>
         </Link>
         <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-          <Button color='primary' href='/simulation'>
+          <Button color='primary' href='/buscador'>
             Buscar y Comparar
           </Button>
           <Button color='inherit' href='/creditos/todos'>
@@ -160,7 +160,7 @@ const Header = () => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose} component='a' href='/simulation'>
+            <MenuItem onClick={handleClose} component='a' href='/buscador'>
               <Typography color='primary'>Buscar y Comparar</Typography>
             </MenuItem>
             <MenuItem onClick={handleClose} component='a' href='/creditos/todos'>

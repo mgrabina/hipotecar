@@ -13,7 +13,7 @@ import { createEmotionCache } from 'src/@core/utils/create-emotion-cache'
 class CustomDocument extends Document {
   render() {
     return (
-      <Html lang="es-AR">
+      <Html lang='es-AR'>
         <Head>
           <link rel='preconnect' href='https://fonts.googleapis.com' />
           <link rel='preconnect' href='https://fonts.gstatic.com' />
@@ -22,7 +22,8 @@ class CustomDocument extends Document {
             href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'
           />
           <link rel='apple-touch-icon' sizes='180x180' href='/images/apple-touch-icon.png' />
-          <link rel='shortcut icon' href='/images/logo.svg' />
+          <link rel='icon' href='/images/favicon.ico' type='image/x-icon' />
+          <link rel='shortcut icon' href='/images/favicon.ico' type='image/x-icon' />
         </Head>
         <body>
           <Main />
@@ -40,13 +41,12 @@ CustomDocument.getInitialProps = async ctx => {
 
   ctx.renderPage = () =>
     originalRenderPage({
-      enhanceApp: App => props =>
-        (
-          <App
-            {...props} // @ts-ignore
-            emotionCache={cache}
-          />
-        )
+      enhanceApp: App => props => (
+        <App
+          {...props} // @ts-ignore
+          emotionCache={cache}
+        />
+      )
     })
 
   const initialProps = await Document.getInitialProps(ctx)

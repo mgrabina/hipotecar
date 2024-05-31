@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography'
 import { Button, useMediaQuery, useTheme } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import Image from 'next/image'
+import { is } from 'date-fns/locale'
 
 const FooterContent = () => {
   // ** Var
@@ -25,24 +26,49 @@ const FooterContent = () => {
         width: isSmallScreen ? '100%' : 'auto'
       }}
     >
-      <Typography sx={{ display: { xs: 'inline', md: 'block' } }} color='text.secondary'>
-        {` Sitio con fines informativos. No representa recomendación alguna. `}
+      <div
+        style={{
+          width: isSmallScreen ? '100%' : 'auto'
+        }}
+      >
         <Typography
           style={{
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'left'
+            alignItems: isSmallScreen ? 'center' : 'left',
+            textAlign: isSmallScreen ? 'center' : 'left',
+            justifyContent: isSmallScreen ? 'center' : 'left'
           }}
           color='text.secondary'
         >
-          Mas herramientas similares en:{' '}
+          Sitio con fines informativos, no representa recomendación alguna.
+        </Typography>
+        <div
+        style={{
+          display: isSmallScreen ? "block" : 'flex',
+          alignItems: isSmallScreen ? 'center' : 'left',
+          justifyContent: isSmallScreen ? 'center' : 'left'
+        }}
+        >
+          <Typography
+            style={{
+              display: 'flex',
+              alignItems: isSmallScreen ? 'center' : 'left',
+              justifyContent: isSmallScreen ? 'center' : 'left'
+            }}
+            color='text.secondary'
+          >
+            Mas herramientas similares en:{' '}
+          </Typography>
           <div
             style={{
               cursor: 'pointer',
-              width: '120px',
-              height: '40px',
+              width: isSmallScreen ? '100%' : '120px',
+              height: isSmallScreen ? '30px' : '30px',
               position: 'relative',
-              marginLeft: '0.5em'
+              marginLeft: '0.5em',
+              display: isSmallScreen ? 'flex' : "inherit",
+              justifyContent: isSmallScreen ? 'center' : "inherit",
+              alignItems: isSmallScreen ? 'center' : "inherit"
             }}
           >
             <Link
@@ -66,11 +92,41 @@ const FooterContent = () => {
               />{' '}
             </Link>
           </div>
+        </div>
+      </div>
+      <div
+        style={{
+          width: isSmallScreen ? '100%' : 'auto'
+        }}
+      >
+        <Link
+          style={{
+            display: 'flex',
+            justifyContent: isSmallScreen ? 'center' : 'right'
+          }}
+          href='/prensa'
+        >
+          Mi Crédito Hipotecario en Medios
+        </Link>
+
+        <Typography
+          style={{
+            display: 'flex',
+            justifyContent: isSmallScreen ? 'center' : 'right'
+          }}
+        >
+          Para 🇦🇷 por{' '}
+          <Link
+            style={{
+              marginLeft: '0.4em'
+            }}
+            target='_blank'
+            href='https://x.com/mgrabina'
+          >
+            Martin
+          </Link>
         </Typography>
-      </Typography>
-      <Typography>
-        Para 🇦🇷 por <Link target='_blank' href='https://x.com/mgrabina'>Martin</Link>
-      </Typography>
+      </div>
     </Box>
   )
 }

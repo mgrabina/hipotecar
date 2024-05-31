@@ -59,7 +59,7 @@ const RiskForm = () => {
         riskAssesmentPassed: true
       }
     })
-    router.push('/simulation/preferences')
+    router.push('/buscador/preferencias')
   }
 
   const allowed = !Object.values(values).some(v => v === false)

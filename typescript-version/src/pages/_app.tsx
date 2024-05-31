@@ -87,7 +87,7 @@ const App = (props: ExtendedAppProps) => {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>{`Mi credito hipotecario - Tu aliado para surfear la ola de creditos`}</title>
+        <title>{`Mi Crédito Hipotecario - Tu aliado para surfear la ola de creditos`}</title>
         <meta
           name='description'
           content='Compara y simula créditos hipotecarios en Argentina con Mi Crédito Hipotecario. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos.'
@@ -98,7 +98,8 @@ const App = (props: ExtendedAppProps) => {
         />{' '}
         <meta name='viewport' content='initial-scale=1, width=device-width' />
         {/* Add favicon */}
-        <link rel='shortcut icon' href='/images/logo.svg' />
+        <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
         {/* Canonical */}
         <link rel='canonical' href={`https://micreditohipotecario.com.ar${router.asPath}`} />
         <meta property='og:title' content='Mi Crédito Hipotecario' />

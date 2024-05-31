@@ -110,7 +110,7 @@ const DetailPage = () => {
       </Head>
 
       {!isInformative && (
-        <Link href='/simulation/comparison'>
+        <Link href='/buscador/resultado'>
           <Typography style={{ marginTop: '2em', cursor: 'pointer', textDecoration: 'underline' }}>
             Volver a la comparación
           </Typography>

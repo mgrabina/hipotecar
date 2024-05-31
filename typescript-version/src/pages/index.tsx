@@ -64,7 +64,7 @@ const Dashboard = () => {
     <div>
       {/* Metricas clave */}
       <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'center', marginTop: '1.5em' }}>
-        <Link href='/simulation' passHref={true}>
+        <Link href='/buscador' passHref={true}>
           <Button variant='contained' color='primary' style={{ width: '100%' }}>
             Buscar y simular mi credito
           </Button>
