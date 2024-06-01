@@ -68,8 +68,6 @@ const Blog = () => {
     const fetchData = async () => {
       const data = await getAllPosts()
 
-      console.log(data)
-
       if (data === undefined) return
       setAllPosts(data)
       if (data.length === 0) return

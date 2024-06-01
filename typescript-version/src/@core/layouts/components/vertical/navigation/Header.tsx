@@ -81,7 +81,7 @@ const Header = () => {
         </Link>
         <Box sx={{ display: { xs: 'none', md: 'block' } }}>
           <Button color='primary' href='/buscador'>
-            Buscar y Comparar
+            Buscador
           </Button>
           <Button color='inherit' href='/creditos/todos'>
             Todos

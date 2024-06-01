@@ -44,8 +44,17 @@ const articles: ArticleType[] = [
     description:
       'El simulador web es gratuito y está disponible para cualquier usuario. Dependiendo de los ingresos del usuario y el tipo de préstamo, calcula cuál es la mejor opción.',
     website: 'Vía País',
+    author: 'Maia Had',
     logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqyuyiGlKtkth_ibKMi_RchsOVqvyjfuItUg&s'
   },
+  {
+    url: 'https://www.losandes.com.ar/economia/creditos-hipotecarios-como-saber-cual-es-la-opcion-que-mejor-se-adapta-a-tu-bolsillo/',
+    title: 'Créditos hipotecarios: cómo saber cuál es la opción que mejor se adapta a tu bolsillo',
+    description:
+      'Hasta hoy, son doce los bancos que ofrecen los créditos hipotecarios y realmente se hace muy difícil evaluar cuál es la mejor opción. Hay una plataforma que te puede ayudar.',
+    website: 'Los Andes',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/5/51/Diario_los_andes.png'
+  }
 ]
 
 export function Article({ title, author, description, logo, url, website }: ArticleType) {

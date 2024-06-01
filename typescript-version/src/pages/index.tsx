@@ -38,20 +38,42 @@ import { PostType } from '@/lib/constants'
 import dynamic from 'next/dynamic'
 
 const DynamicStories = dynamic(() => import('@/views/contentful/more-stories'), {
-  loading: () => <Skeleton variant='rectangular' height={300} width='100%' />
+  loading: () => (
+    <Skeleton
+      style={{
+        borderRadius: '5px',
+        boxShadow: '0 0 10px rgba(0,0,0,0.1)'
+      }}
+      variant='rectangular'
+      height={300}
+      width='400px'
+    />
+  )
 })
 
 const DynamicStatistics = dynamic(() => import('@/views/dashboard/Statistics'), {
-  loading: () => <Skeleton variant='rectangular' height={300} width='100%' />
+  loading: () => (
+    <Skeleton
+      style={{
+        borderRadius: '5px',
+        boxShadow: '0 0 10px rgba(0,0,0,0.1)'
+      }}
+      variant='rectangular'
+      height={300}
+      width='400px'
+    />
+  )
 })
 
 const Dashboard = () => {
   const [allPosts, setAllPosts] = useState<PostType[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await getAllPosts()
 
+      setLoading(false)
       if (data === undefined) return
       setAllPosts(data.slice(0, 2))
       if (data.length === 0) return
@@ -66,7 +88,7 @@ const Dashboard = () => {
       <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'center', marginTop: '1.5em' }}>
         <Link href='/buscador' passHref={true}>
           <Button variant='contained' color='primary' style={{ width: '100%' }}>
-            Buscar y simular mi credito
+            Buscar, comparar y simular mi credito
           </Button>
         </Link>
       </div>
@@ -75,9 +97,38 @@ const Dashboard = () => {
         <CreditsOverviewCard></CreditsOverviewCard>
       </div>
 
-      <DynamicStories title='' morePosts={allPosts} />
-
-      <DynamicStatistics />
+      {loading ? (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+            marginTop: '2em'
+          }}
+        >
+          <Skeleton
+            style={{
+              borderRadius: '5px',
+              boxShadow: '0 0 10px rgba(0,0,0,0.1)'
+            }}
+            variant='rectangular'
+            height={300}
+            width='400px'
+          />
+          <Skeleton
+            style={{
+              borderRadius: '5px',
+              boxShadow: '0 0 10px rgba(0,0,0,0.1)'
+            }}
+            variant='rectangular'
+            height={300}
+            width='400px'
+          />
+        </div>
+      ) : (
+        <DynamicStories title='' morePosts={allPosts} />
+      )}
     </div>
   )
 }
