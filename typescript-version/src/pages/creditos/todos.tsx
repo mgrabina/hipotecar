@@ -16,7 +16,7 @@ import Button from '@mui/material/Button'
 import { Credit } from 'src/configs/constants'
 import { useData } from 'src/@core/layouts/HipotecarLayout'
 import { useTheme } from '@mui/material/styles'
-import { useMediaQuery } from '@mui/material'
+import { Skeleton, useMediaQuery } from '@mui/material'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
@@ -150,6 +150,29 @@ const CreditComparisonPage = () => {
           }) as (keyof Credit)[])
       : []
 
+  if (!context?.data.loaded || !keys.length || !sortedCredits.length)
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+          marginTop: '2em'
+        }}
+      >
+        <Skeleton
+          style={{
+            borderRadius: '5px',
+            boxShadow: '0 0 10px rgba(0,0,0,0.1)'
+          }}
+          variant='rectangular'
+          height={700}
+          width='100%'
+        />
+      </div>
+    )
+
   return (
     <div>
       <Head>
@@ -172,7 +195,7 @@ const CreditComparisonPage = () => {
         />
         <meta property='twitter:image' content='https://www.micredito.com.ar/generated/happy.png' />
       </Head>
-      <Card style={{ marginTop: '4em' }}>
+      <Card style={{ marginTop: '2em' }}>
         <CardContent>
           <TableContainer>
             <Table stickyHeader={!isSmallScreen} sx={{ minWidth: 1000 }} aria-label='comparison table'>
