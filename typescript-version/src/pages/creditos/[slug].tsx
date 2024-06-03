@@ -48,21 +48,21 @@ const DetailPage = () => {
       name: 'Mi Crédito Hipotecario',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://micreditohipotecario.com.ar/images/generated/happy.png'
+        url: 'https://www.micreditohipotecario.com.ar/images/generated/happy.png'
       },
-      sameAs: 'https://micreditohipotecario.com.ar'
+      sameAs: 'https://www.micreditohipotecario.com.ar'
     },
     publisher: {
       '@type': 'Organization',
       name: 'Mi Crédito Hipotecario',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://micreditohipotecario.com.ar/images/generated/happy.png'
+        url: 'https://www.micreditohipotecario.com.ar/images/generated/happy.png'
       }
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://micreditohipotecario.com.ar${router.asPath}`
+      '@id': `https://www.micreditohipotecario.com.ar${router.asPath}`
     }
   }
 

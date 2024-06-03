@@ -3,8 +3,8 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://micreditohipotecario.com.ar
+Host: https://www.micreditohipotecario.com.ar
 
 # Sitemaps
-Sitemap: https://micreditohipotecario.com.ar/sitemap.xml
-Sitemap: https://micreditohipotecario.com.ar/server-sitemap.xml
+Sitemap: https://www.micreditohipotecario.com.ar/sitemap.xml
+Sitemap: https://www.micreditohipotecario.com.ar/server-sitemap.xml
