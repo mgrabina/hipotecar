@@ -47,7 +47,7 @@ const generateSiteMap = async () => {
   ]
     .map(page => {
       return `<url>
-      <loc>https://micreditohipotecario.com.ar/${page}</loc>
+      <loc>https://www.micreditohipotecario.com.ar/${page}</loc>
       <changefreq>daily</changefreq>
       <priority>0.7</priority>
     </url>`
@@ -58,7 +58,7 @@ const generateSiteMap = async () => {
   const dynamicPages = posts
     .map(post => {
       return `<url>
-      <loc>https://micreditohipotecario.com.ar/posts/${post.fields.slug}</loc>
+      <loc>https://www.micreditohipotecario.com.ar/posts/${post.fields.slug}</loc>
       <lastmod>${new Date(post.sys.updatedAt).toISOString()}</lastmod>
       <changefreq>weekly</changefreq>
       <priority>0.8</priority>
@@ -78,7 +78,7 @@ const generateSiteMap = async () => {
           .toLowerCase()
 
       return `<url>
-      <loc>https://micreditohipotecario.com.ar/creditos/${slug}</loc>
+      <loc>https://www.micreditohipotecario.com.ar/creditos/${slug}</loc>
       <changefreq>weekly</changefreq>
       <priority>0.8</priority>
     </url>`
@@ -96,7 +96,7 @@ const generateSiteMap = async () => {
         .toLowerCase()
 
       return `<url>
-        <loc>https://micreditohipotecario.com.ar/banco/${slug}</loc>
+        <loc>https://www.micreditohipotecario.com.ar/banco/${slug}</loc>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
       </url>`
