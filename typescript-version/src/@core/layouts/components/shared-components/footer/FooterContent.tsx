@@ -108,27 +108,51 @@ const FooterContent = () => {
             justifyContent: isSmallScreen ? 'center' : 'right'
           }}
           href='/prensa'
+          passHref
         >
-          Mi Crédito Hipotecario en Medios
+          <Typography
+            style={{
+              cursor: 'pointer',
+              color: theme.palette.primary.main,
+              textDecoration: 'none',
+              transition: 'color 0.3s ease-in-out'
+            }}
+            onMouseEnter={e => (e.currentTarget.style.color = theme.palette.primary.dark)}
+            onMouseLeave={e => (e.currentTarget.style.color = theme.palette.primary.main)}
+          >
+            Mi Crédito Hipotecario en Medios
+          </Typography>
         </Link>
 
-        <Typography
+        <div
           style={{
             display: 'flex',
             justifyContent: isSmallScreen ? 'center' : 'right'
           }}
         >
-          Para 🇦🇷 por{' '}
-          <Link
+          <Typography
             style={{
-              marginLeft: '0.4em'
+              marginRight: '0.1em'
             }}
-            target='_blank'
-            href='https://x.com/mgrabina'
           >
-            Martin
+            Para 🇦🇷 por{' '}
+          </Typography>
+          <Link target='_blank' href='https://x.com/mgrabina' passHref>
+            <Typography
+              style={{
+                cursor: 'pointer',
+                marginLeft: '0.2em',
+                color: theme.palette.primary.main,
+                textDecoration: 'none',
+                transition: 'color 0.3s ease-in-out'
+              }}
+              onMouseEnter={e => (e.currentTarget.style.color = theme.palette.primary.dark)}
+              onMouseLeave={e => (e.currentTarget.style.color = theme.palette.primary.main)}
+            >
+              Martin
+            </Typography>
           </Link>
-        </Typography>
+        </div>
       </div>
     </Box>
   )
