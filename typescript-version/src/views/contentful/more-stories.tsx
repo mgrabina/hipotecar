@@ -16,8 +16,8 @@ export function PostPreview({
   return (
     <Link href={`/posts/${slug}`} passHref={true}>
       <Card style={{ cursor: 'pointer' }}>
-        <CardMedia sx={{ height: isHero ? '20em' : '8.5625rem' }} image={coverImage.url} />
-        <CardContent style={{ height: "10em"}}>
+        <CardMedia sx={{ height: isHero ? '20em' : '8.5625rem' }} image={coverImage.url} component='img' alt={title} />
+        <CardContent style={{ height: '10em' }}>
           <Typography variant='h6' sx={{ marginBottom: 2 }}>
             {title}
           </Typography>

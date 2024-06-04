@@ -161,7 +161,7 @@ const Header = () => {
             onClose={handleClose}
           >
             <MenuItem onClick={handleClose} component='a' href='/buscador'>
-              <Typography color='primary'>Buscar y Comparar</Typography>
+              <Typography color='primary'>Buscador</Typography>
             </MenuItem>
             <MenuItem onClick={handleClose} component='a' href='/creditos/todos'>
               Todos

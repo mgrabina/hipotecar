@@ -16,7 +16,7 @@ import Button from '@mui/material/Button'
 import { Credit } from 'src/configs/constants'
 import { useData } from 'src/@core/layouts/HipotecarLayout'
 import { useTheme } from '@mui/material/styles'
-import { Skeleton, useMediaQuery } from '@mui/material'
+import { Skeleton, Typography, useMediaQuery } from '@mui/material'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
@@ -164,6 +164,7 @@ const CreditComparisonPage = () => {
       >
         <Skeleton
           style={{
+            marginTop: '2em',
             borderRadius: '5px',
             boxShadow: '0 0 10px rgba(0,0,0,0.1)'
           }}
@@ -208,76 +209,91 @@ const CreditComparisonPage = () => {
                       style={{
                         verticalAlign: 'top',
                         minWidth: '100px',
+                        height: '100%',
                         backgroundColor: '#f5f5f5',
                         position: (index === 0 || key === 'Logo Banco') && !isSmallScreen ? 'sticky' : 'static',
                         left: key === 'Logo Banco' && !isSmallScreen ? 0 : 'auto',
                         zIndex: key === 'Logo Banco' && !isSmallScreen ? 1 : 0
                       }}
                     >
-                      <TableSortLabel
-                        active={sortConfig.key === key}
-                        direction={sortConfig.key === key ? (sortConfig.direction as 'asc' | 'desc') : 'asc'}
-                        onClick={() => handleSort(key)}
+                      <div
+                        style={{
+                          height: '10em',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'space-between'
+                        }}
                       >
-                        {key == 'Logo Banco' ? 'Banco' : key}
-                      </TableSortLabel>
+                        <TableSortLabel
+                          active={sortConfig.key === key}
+                          direction={sortConfig.key === key ? (sortConfig.direction as 'asc' | 'desc') : 'asc'}
+                          onClick={() => handleSort(key)}
+                        >
+                          {key == 'Logo Banco' ? 'Banco' : key}
+                        </TableSortLabel>
 
-                      {noFilterColumns.includes(key) ? null : isNumericColumn(key) ? (
-                        <Grid container>
-                          <br></br>
-                          <Grid item>
-                            <Select
-                              style={{ fontSize: '1em' }}
-                              value={filters[key]?.operator || '='}
-                              onChange={e => handleFilterChange(key, filters[key]?.value || '', e.target.value)}
-                            >
-                              <MenuItem value='>'>{'>'}</MenuItem>
-                              <MenuItem value='<'>{'<'}</MenuItem>
-                              <MenuItem value='='>{'='}</MenuItem>
-                            </Select>
-                          </Grid>
-                          <Grid item>
+                        {key === 'Logo Banco' && (
+                          <Typography
+                            variant='caption'
+                            style={{ textAlign: 'center', marginBottom: '0.2em', marginTop: '0.2em' }}
+                            onClick={clearFilters}
+                          >
+                            Limpiar Filtros
+                          </Typography>
+                        )}
+
+                        <div id='filter' style={{}}>
+                          {noFilterColumns.includes(key) ? null : isNumericColumn(key) ? (
+                            <Grid container>
+                              <Grid item xs={3}>
+                                <Select
+                                  size='small'
+                                  style={{ fontSize: '1em', height: '100%' }}
+                                  value={filters[key]?.operator || '='}
+                                  onChange={e => handleFilterChange(key, filters[key]?.value || '', e.target.value)}
+                                >
+                                  <MenuItem value='>'>{'>'}</MenuItem>
+                                  <MenuItem value='<'>{'<'}</MenuItem>
+                                  <MenuItem value='='>{'='}</MenuItem>
+                                </Select>
+                              </Grid>
+                              <Grid item xs={9}>
+                                <TextField
+                                  style={{
+                                    height: '100%'
+                                  }}
+                                  type='number'
+                                  value={filters[key]?.value || ''}
+                                  onChange={e => handleFilterChange(key, e.target.value, filters[key]?.operator || '=')}
+                                  variant='outlined'
+                                  size='small'
+                                />
+                              </Grid>
+                            </Grid>
+                          ) : isBooleanColumn(key) ? (
+                            <>
+                              <Select
+                                size='small'
+                                style={{ fontSize: '1em' }}
+                                value={filters[key]?.value || 'Todos'}
+                                onChange={e => handleFilterChange(key, e.target.value)}
+                              >
+                                <MenuItem value='Todos'>Todos</MenuItem>
+                                <MenuItem value='TRUE'>Si</MenuItem>
+                                <MenuItem value='FALSE'>No</MenuItem>
+                              </Select>
+                            </>
+                          ) : (
                             <TextField
-                              type='number'
                               value={filters[key]?.value || ''}
-                              onChange={e => handleFilterChange(key, e.target.value, filters[key]?.operator || '=')}
+                              onChange={e => handleFilterChange(key, e.target.value)}
                               variant='outlined'
                               size='small'
+                              fullWidth
                             />
-                          </Grid>
-                        </Grid>
-                      ) : isBooleanColumn(key) ? (
-                        <>
-                          {key}
-                          <Select
-                            style={{ fontSize: '1em' }}
-                            value={filters[key]?.value || 'Todos'}
-                            onChange={e => handleFilterChange(key, e.target.value)}
-                          >
-                            <MenuItem value='Todos'>Todos</MenuItem>
-                            <MenuItem value='TRUE'>Si</MenuItem>
-                            <MenuItem value='FALSE'>No</MenuItem>
-                          </Select>
-                        </>
-                      ) : (
-                        <TextField
-                          value={filters[key]?.value || ''}
-                          onChange={e => handleFilterChange(key, e.target.value)}
-                          variant='outlined'
-                          size='small'
-                          fullWidth
-                        />
-                      )}
-                      {key === 'Logo Banco' && (
-                        <Button
-                          variant='outlined'
-                          color='secondary'
-                          onClick={clearFilters}
-                          style={{ marginBottom: '1em', marginTop: '1em' }}
-                        >
-                          Limpiar Filtros
-                        </Button>
-                      )}
+                          )}
+                        </div>
+                      </div>
                     </TableCell>
                   ))}
                 </TableRow>

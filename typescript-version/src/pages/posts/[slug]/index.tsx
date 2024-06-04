@@ -111,7 +111,7 @@ const PostPage = () => {
         />
       </Head>
       <Card>
-        <CardMedia sx={{ height: '14.5625rem' }} image={post.coverImage.url} />
+        <CardMedia sx={{ height: '14.5625rem' }} image={post.coverImage.url} component="img" alt={post.title} />
         <CardContent>
           <Typography variant='h6' sx={{ marginBottom: 2 }}>
             {post.title}

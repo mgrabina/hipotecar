@@ -118,6 +118,7 @@ const DetailPage = () => {
       )}
       <Card style={{ marginTop: '2em' }}>
         <CardMedia
+          alt={credit['Banco']}
           sx={{ height: '10.5625rem', objectFit: 'scale-down', padding: '1em' }}
           component='img'
           image={credit['Logo Banco']}
