@@ -37,7 +37,8 @@ const BankDetailPage = () => {
       <Skeleton
         style={{
           borderRadius: '5px',
-          boxShadow: '0 0 10px rgba(0,0,0,0.1)'
+          boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+          marginTop: '2em'
         }}
         variant='rectangular'
         height='400px'

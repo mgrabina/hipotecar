@@ -139,7 +139,7 @@ const DetailPage = () => {
               </Grid>
               <Grid item xs={6}>
                 <Typography variant='body1'>
-                  <strong>Banco</strong>: {credit['Banco']}
+                  <strong>Banco</strong>: <Link href={`/banco/${credit['Banco']}`}>{credit['Banco']}</Link>
                 </Typography>
               </Grid>
               <Grid item xs={6}>
@@ -304,8 +304,9 @@ const DetailPage = () => {
               <AccordionSummary expandIcon={<ArrowDown />}>
                 <Typography variant='body1'>
                   <strong>
-                    Documentación a presentar para regimen{context.data.user.taxType && context.data.user.taxType?.length > 1 ? 'es' : ''}:
-                    {' '}{context.data.user.taxType}
+                    Documentación a presentar para regimen
+                    {context.data.user.taxType && context.data.user.taxType?.length > 1 ? 'es' : ''}:{' '}
+                    {context.data.user.taxType}
                   </strong>
                 </Typography>
               </AccordionSummary>

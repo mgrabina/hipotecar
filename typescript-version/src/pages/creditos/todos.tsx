@@ -151,7 +151,7 @@ const CreditComparisonPage = () => {
           }) as (keyof Credit)[])
       : []
 
-  if (!context?.data.loaded || !keys.length || !sortedCredits.length)
+  if (!context?.data.loaded || !keys.length || (!sortedCredits.length && !Object.keys(filters).length))
     return (
       <div
         style={{
