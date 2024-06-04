@@ -1,5 +1,5 @@
 import { Credit } from 'src/configs/constants'
-import { UserData } from '../layouts/HipotecarLayout'
+import { ContextType, UserData } from '../layouts/HipotecarLayout'
 import { parseMoney } from './string'
 
 export interface CreditEvaluationResult {
@@ -309,4 +309,12 @@ export function getLoanPlotData(loanAmount: number, tasa: number, duration: numb
   }
 
   return data
+}
+
+export function getTasa(credit: Credit, data?: ContextType): number {
+  if (!data || !data.personalizedCredits) return credit.Tasa
+
+  const personalizedCredit = data.personalizedCredits[credit.Id]
+
+  return data.personalizedCredits[credit.Id]?.Tasa ?? credit.Tasa
 }

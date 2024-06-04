@@ -272,7 +272,7 @@ const PreferencesForm = () => {
                     fullWidth
                     type='string'
                     value={Number(values.salary).toLocaleString()}
-                    label={`Sueldo ${
+                    label={`Suma de ingresos de deudores ${
                       context?.data.dolar ? `(${parseMoney(values.salary / context?.data.dolar, 'USD')})` : ''
                     }`}
                     onChange={e => {

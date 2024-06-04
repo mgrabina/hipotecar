@@ -66,48 +66,34 @@ export type UserData = {
 } & Partial<PreferencesFormState>
 
 export type ContextType = {
-  data: {
-    loaded: boolean
-    user: UserData
-    credits: Credit[]
-    provinces: string[]
-    banks: string[]
-    dolar?: number
-    UVA?: number
-  }
-  setData: Dispatch<
-    SetStateAction<{
-      user: UserData
-      credits: Credit[]
-      provinces: string[]
-      banks: string[]
-      loaded: boolean
-      dolar?: number
-      UVA?: number
-    }>
-  >
+  loaded: boolean
+  user: UserData
+  credits: Credit[]
+  provinces: string[]
+  banks: string[]
+  dolar?: number
+  UVA?: number
+  personalizedCredits: Record<number, Partial<Credit>> // id - params
 }
-const DataContext = createContext<ContextType | null>(null)
+
+export type ContextActionsType = {
+  data: ContextType
+  setData: Dispatch<SetStateAction<ContextType>>
+}
+const DataContext = createContext<ContextActionsType | null>(null)
 
 export const useData = () => useContext(DataContext)
 
 export const DataProvider = ({ children }: { children: any }) => {
-  const [data, setData] = useState<{
-    loaded: boolean
-    user: UserData
-    credits: Credit[]
-    provinces: string[]
-    banks: string[]
-    dolar?: number
-    UVA?: number
-  }>({
+  const [data, setData] = useState<ContextType>({
     loaded: false,
     user: {},
     credits: [],
     provinces: [],
     banks: [],
     dolar: undefined,
-    UVA: undefined
+    UVA: undefined,
+    personalizedCredits: {}
   })
 
   // Effect to load data from localStorage when the component mounts
@@ -207,10 +193,8 @@ const HypotecarLayout = (props: LayoutProps) => {
   // ** Toggle Functions
   const toggleNavVisibility = () => setNavVisible(!navVisible)
 
-
   const theme = useTheme()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
-
 
   return (
     <>
