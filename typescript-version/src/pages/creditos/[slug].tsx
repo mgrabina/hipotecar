@@ -64,7 +64,7 @@ const DetailPage = () => {
     }
   }
 
-  const isTasaPersonalizada = !!credit['Tasa especial por tiempo definido']
+  const isTasaPersonalizada = !!context?.data.personalizedCredits[credit.Id]
   const tasa = getTasa(credit, context.data)
 
   const loanPlotDataResults = getLoanPlotData(loan, tasa, duration)
@@ -113,7 +113,7 @@ const DetailPage = () => {
       </Head>
 
       {!isInformative && (
-        <Link href='/buscador/resultado'>
+        <Link href='/buscador/resultado' passHref>
           <Typography style={{ marginTop: '2em', cursor: 'pointer', textDecoration: 'underline' }}>
             Volver a la comparación
           </Typography>
@@ -141,7 +141,7 @@ const DetailPage = () => {
               </Grid>
               <Grid item xs={6}>
                 <Typography variant='body1'>
-                  <strong>Tasa</strong>: {tasa}% + UVA {isTasaPersonalizada && '(Tasa personalizada)'}
+                  <strong>Tasa</strong>: {tasa}% + UVA {isTasaPersonalizada && '(personalizada)'}
                 </Typography>
               </Grid>
               {!isTasaPersonalizada && !!credit['Tasa especial por tiempo definido'] && (

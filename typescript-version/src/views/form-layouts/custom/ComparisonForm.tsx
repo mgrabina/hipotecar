@@ -31,7 +31,6 @@ import {
   FormControlLabel,
   FormGroup,
   InputLabel,
-  Link,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -41,6 +40,7 @@ import {
   useTheme
 } from '@mui/material'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import {
   ArrowDown,
   ArrowDownBoldOutline,
@@ -348,7 +348,7 @@ const ComparisonForm = () => {
                     <TableRow>
                       {/* Image */}
                       <TableCell>
-                        <Link href='/creditos/todos' target='_blank'>
+                        <Link href='/creditos/todos' passHref target='_blank'>
                           <Button>Ver todos</Button>
                         </Link>
                       </TableCell>
@@ -587,10 +587,10 @@ const ComparisonForm = () => {
                                 }}
                                 onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
                                 onMouseLeave={e => (e.currentTarget.style.opacity = '0.8')}
-                                variant='body1'
                                 href={`/creditos/${createCreditSlug(row)}?loan=${loan}&duration=${context?.data.user.duration}`}
+                                passHref
                               >
-                                Ver detalles
+                                <Button variant="outlined">Ver detalles</Button>
                               </Link>
                             )}
 
@@ -598,7 +598,10 @@ const ComparisonForm = () => {
                               style={{
                                 opacity: 0.7,
                                 cursor: 'pointer',
-                                transition: 'opacity 0.1s'
+                                transition: 'opacity 0.1s',
+                                width: "100%",
+                                textAlign: "center",
+                                marginTop: "0.3em"
                               }}
                               onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
                               onMouseLeave={e => (e.currentTarget.style.opacity = '0.7')}

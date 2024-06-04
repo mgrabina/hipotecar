@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, Typography } from '@mui/material'
 import { Credit, CreditType } from '@/configs/constants'
 import { useData } from '@/configs/DataProvider'
+import { getTasa } from '@/@core/utils/misc';
 
 function AdvancedOptionsDialog({ open, onClose, credit }: { open: boolean; onClose: () => void; credit: Credit }) {
-  const [tasa, setTasa] = useState(credit.Tasa)
   const context = useData()
+
+  const [tasa, setTasa] = useState(getTasa(credit,context?.data))
 
   const handleTasaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTasa(Number(event.target.value))

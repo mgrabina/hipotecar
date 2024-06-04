@@ -1,6 +1,6 @@
 // ** MUI Imports
 import Box from '@mui/material/Box'
-import Link from '@mui/material/Link'
+import Link from 'next/link'
 import { Theme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { Button, useMediaQuery, useTheme } from '@mui/material'
@@ -43,11 +43,11 @@ const FooterContent = () => {
           Sitio con fines informativos, no representa recomendación alguna.
         </Typography>
         <div
-        style={{
-          display: isSmallScreen ? "block" : 'flex',
-          alignItems: isSmallScreen ? 'center' : 'left',
-          justifyContent: isSmallScreen ? 'center' : 'left'
-        }}
+          style={{
+            display: isSmallScreen ? 'block' : 'flex',
+            alignItems: isSmallScreen ? 'center' : 'left',
+            justifyContent: isSmallScreen ? 'center' : 'left'
+          }}
         >
           <Typography
             style={{
@@ -66,30 +66,33 @@ const FooterContent = () => {
               height: isSmallScreen ? '30px' : '30px',
               position: 'relative',
               marginLeft: '0.5em',
-              display: isSmallScreen ? 'flex' : "inherit",
-              justifyContent: isSmallScreen ? 'center' : "inherit",
-              alignItems: isSmallScreen ? 'center' : "inherit"
+              display: isSmallScreen ? 'flex' : 'inherit',
+              justifyContent: isSmallScreen ? 'center' : 'inherit',
+              alignItems: isSmallScreen ? 'center' : 'inherit'
             }}
           >
             <Link
               href='https://www.finanzasarg.com/?utm_source=micreditohipotecario'
               target='_blank'
+              passHref
               rel='noopener noreferrer'
             >
-              {' '}
-              <Image
-                src='/images/external/finanzasarg.png'
-                alt='Finanzas ARG'
-                title='El sitio definitivo para tus finanzas personales en Argentina'
-                layout='fill'
-                objectFit='contain'
-                style={{
-                  opacity: 0.5,
-                  transition: 'opacity 0.3s ease-in-out'
-                }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
-                onMouseLeave={e => (e.currentTarget.style.opacity = '0.5')}
-              />{' '}
+              <>
+                {' '}
+                <Image
+                  src='/images/external/finanzasarg.png'
+                  alt='Finanzas ARG'
+                  title='El sitio definitivo para tus finanzas personales en Argentina'
+                  layout='fill'
+                  objectFit='contain'
+                  style={{
+                    opacity: 0.5,
+                    transition: 'opacity 0.3s ease-in-out'
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
+                  onMouseLeave={e => (e.currentTarget.style.opacity = '0.5')}
+                />{' '}
+              </>
             </Link>
           </div>
         </div>

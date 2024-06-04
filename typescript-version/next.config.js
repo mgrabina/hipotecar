@@ -12,7 +12,7 @@ module.exports = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'upload.wikimedia.org'
+        hostname: 'images.ctfassets.net'
       }
     ]
   },
