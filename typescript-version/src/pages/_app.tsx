@@ -37,6 +37,8 @@ import { useEffect, useState } from 'react'
 import { useAsync } from 'react-async'
 import GoogleAnalytics from 'src/configs/GoogleAnalytics'
 import Script from 'next/script'
+import { getDolarMep } from '@/@core/utils/misc'
+import { DataProvider } from '@/configs/DataProvider'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
@@ -131,19 +133,21 @@ const App = (props: ExtendedAppProps) => {
       </Script>
 
       <SettingsProvider>
-        <SettingsConsumer>
-          {({ settings }) => {
-            return (
-              <ThemeComponent settings={settings}>
-                <>
-                  {getLayout(<Component {...pageProps} />)}
-                  <Analytics />
-                  <SpeedInsights route={router.pathname} />
-                </>
-              </ThemeComponent>
-            )
-          }}
-        </SettingsConsumer>
+        <DataProvider>
+          <SettingsConsumer>
+            {({ settings }) => {
+              return (
+                <ThemeComponent settings={settings}>
+                  <>
+                    {getLayout(<Component {...pageProps} />)}
+                    <Analytics />
+                    <SpeedInsights route={router.pathname} />
+                  </>
+                </ThemeComponent>
+              )
+            }}
+          </SettingsConsumer>
+        </DataProvider>
       </SettingsProvider>
     </CacheProvider>
   )

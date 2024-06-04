@@ -12,7 +12,7 @@ import {
   Skeleton
 } from '@mui/material'
 import { useRouter } from 'next/router'
-import { useData } from 'src/@core/layouts/HipotecarLayout'
+import { useData } from '@/configs/DataProvider'
 import { parseMoney } from 'src/@core/utils/string'
 import { calcularCuotaMensual, createCreditSlug, getBankBySlug, getLoanPlotData } from 'src/@core/utils/misc'
 import LoanChart from 'src/views/pages/detail/LoanChart'

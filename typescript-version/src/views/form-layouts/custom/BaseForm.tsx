@@ -22,7 +22,7 @@ import FormHelperText from '@mui/material/FormHelperText'
 import EyeOutline from 'mdi-material-ui/EyeOutline'
 import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
 import { useRouter } from 'next/router'
-import { useData } from 'src/@core/layouts/HipotecarLayout'
+import { useData } from '@/configs/DataProvider'
 
 interface State {
   name: string

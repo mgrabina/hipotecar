@@ -1,5 +1,5 @@
 import { Credit } from 'src/configs/constants'
-import { ContextType, UserData } from '../layouts/HipotecarLayout'
+import { ContextType, UserData } from '@/configs/DataProvider'
 import { parseMoney } from './string'
 
 export interface CreditEvaluationResult {

@@ -50,7 +50,7 @@ import {
   WalletOutline
 } from 'mdi-material-ui'
 import { Credit } from 'src/configs/constants'
-import { UserData, useData } from 'src/@core/layouts/HipotecarLayout'
+import { useData, UserData } from '@/configs/DataProvider'
 import { parseMoney } from 'src/@core/utils/string'
 import {
   CreditEvaluationResult,
@@ -404,7 +404,6 @@ const ComparisonForm = () => {
                             <Image
                               src={`/images/banks/${row.Banco}.png`}
                               alt={row.Banco}
-                              width={120}
                               layout='fill'
                               objectFit='contain'
                             />

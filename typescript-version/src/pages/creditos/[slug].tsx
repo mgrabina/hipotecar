@@ -11,10 +11,10 @@ import {
   Chip
 } from '@mui/material'
 import { useRouter } from 'next/router'
-import { useData } from 'src/@core/layouts/HipotecarLayout'
+import { useData } from '@/configs/DataProvider'
 import { parseMoney } from 'src/@core/utils/string'
 import Error404 from '../404'
-import { calcularCuotaMensual, getCreditBySlug, getLoanPlotData } from 'src/@core/utils/misc'
+import { calcularCuotaMensual, getCreditBySlug, getLoanPlotData, getTasa } from 'src/@core/utils/misc'
 import LoanChart from 'src/views/pages/detail/LoanChart'
 import LoanPaidChart from 'src/views/pages/detail/LoanPaidChart'
 import PrecancelLoanChart from 'src/views/pages/detail/PrecancelLoanChart'
@@ -35,8 +35,6 @@ const DetailPage = () => {
 
   if (!slug || loan === 0 || duration === 0 || !context?.data.credits.length) return null
   if (!credit) return <Error404 />
-
-  const loanPlotDataResults = getLoanPlotData(loan, credit['Tasa'], duration)
 
   const articleJsonLd = {
     '@context': 'https://schema.org',
@@ -66,6 +64,11 @@ const DetailPage = () => {
     }
   }
 
+  const isTasaPersonalizada = !!credit['Tasa especial por tiempo definido']
+  const tasa = getTasa(credit, context.data)
+
+  const loanPlotDataResults = getLoanPlotData(loan, tasa, duration)
+
   return (
     <>
       <Head>
@@ -75,7 +78,7 @@ const DetailPage = () => {
         <meta
           name='description'
           content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
-        con una tasa de ${credit['Tasa']}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
+        con una tasa de ${tasa}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
         `}
         />
         <meta
@@ -85,7 +88,7 @@ const DetailPage = () => {
         <meta
           property='og:description'
           content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
-        con una tasa de ${credit['Tasa']}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
+        con una tasa de ${tasa}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
         `}
         />
         <meta property='og:image' content={credit['Logo Banco']} />
@@ -97,7 +100,7 @@ const DetailPage = () => {
         <meta
           property='twitter:description'
           content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
-        con una tasa de ${credit['Tasa']}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
+        con una tasa de ${tasa}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
         `}
         />
         <script
@@ -138,10 +141,10 @@ const DetailPage = () => {
               </Grid>
               <Grid item xs={6}>
                 <Typography variant='body1'>
-                  <strong>Tasa</strong>: {credit['Tasa']}% + UVA
+                  <strong>Tasa</strong>: {tasa}% + UVA {isTasaPersonalizada && '(Tasa personalizada)'}
                 </Typography>
               </Grid>
-              {!!credit['Tasa especial por tiempo definido'] && (
+              {!isTasaPersonalizada && !!credit['Tasa especial por tiempo definido'] && (
                 <Grid item xs={6}>
                   <Typography variant='body1'>
                     <strong>Tasa especial</strong>: {credit['Tasa especial por tiempo definido']}% por{' '}
@@ -174,7 +177,7 @@ const DetailPage = () => {
               {loan && duration && (
                 <Grid item xs={6}>
                   <Typography variant='body1'>
-                    <strong>Valor de Cuota</strong>: {parseMoney(calcularCuotaMensual(loan, credit['Tasa'], duration))}
+                    <strong>Valor de Cuota</strong>: {parseMoney(calcularCuotaMensual(loan, tasa, duration))}
                   </Typography>
                 </Grid>
               )}

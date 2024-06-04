@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, Typography } from '@mui/material'
 import { Credit, CreditType } from '@/configs/constants'
-import { useData } from '@/@core/layouts/HipotecarLayout'
+import { useData } from '@/configs/DataProvider'
 
 function AdvancedOptionsDialog({ open, onClose, credit }: { open: boolean; onClose: () => void; credit: Credit }) {
   const [tasa, setTasa] = useState(credit.Tasa)

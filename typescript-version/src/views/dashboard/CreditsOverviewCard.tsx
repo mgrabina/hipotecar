@@ -21,7 +21,7 @@ import AccountOutline from 'mdi-material-ui/AccountOutline'
 // ** Types
 import { ThemeColor } from 'src/@core/layouts/types'
 import { Bank, HoopHouse, TestTube, Text } from 'mdi-material-ui'
-import { useData } from 'src/@core/layouts/HipotecarLayout'
+import { useData } from '@/configs/DataProvider'
 import { parseMoney } from 'src/@core/utils/string'
 
 interface DataType {
