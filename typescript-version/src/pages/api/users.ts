@@ -1,7 +1,7 @@
 // pages/api/users.ts
 import { sql } from '@vercel/postgres'
 import type { NextApiRequest, NextApiResponse } from 'next/types'
-import { UserData } from 'src/@core/layouts/HipotecarLayout'
+import { UserData } from "@/configs/DataProvider"
 import { Credit } from 'src/configs/constants'
 
 export type SubmitUserBody = {

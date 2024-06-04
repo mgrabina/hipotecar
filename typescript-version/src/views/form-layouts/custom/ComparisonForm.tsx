@@ -31,7 +31,6 @@ import {
   FormControlLabel,
   FormGroup,
   InputLabel,
-  Link,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -41,6 +40,7 @@ import {
   useTheme
 } from '@mui/material'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import {
   ArrowDown,
   ArrowDownBoldOutline,
@@ -50,7 +50,7 @@ import {
   WalletOutline
 } from 'mdi-material-ui'
 import { Credit } from 'src/configs/constants'
-import { UserData, useData } from 'src/@core/layouts/HipotecarLayout'
+import { useData, UserData } from '@/configs/DataProvider'
 import { parseMoney } from 'src/@core/utils/string'
 import {
   CreditEvaluationResult,
@@ -58,12 +58,15 @@ import {
   calcularCuotaMensual,
   createCreditSlug,
   getBiggestLoanBasedOnSalary,
-  getCompatibleCredits
+  getCompatibleCredits,
+  getTasa
 } from 'src/@core/utils/misc'
 import { useAsync } from 'react-async'
 import { SubmitUserBody } from 'src/pages/api/users'
 import { set } from 'nprogress'
 import Image from 'next/image'
+import Dialog from '@/@core/theme/overrides/dialog'
+import AdvancedOptionsDialog from './AdvancedOptionsDialog'
 
 const sortTypes = [
   'Monto Total mas alto',
@@ -157,15 +160,15 @@ const ComparisonForm = () => {
 
       if (sortType === 'Cuota Mensual mas baja') {
         return (
-          calcularCuotaMensual(a.loan, a.credit.Tasa, context?.data.user.duration ?? 20) -
-          calcularCuotaMensual(b.loan, b.credit.Tasa, context?.data.user.duration ?? 20)
+          calcularCuotaMensual(a.loan, getTasa(a.credit, context?.data), context?.data.user.duration ?? 20) -
+          calcularCuotaMensual(b.loan, getTasa(b.credit, context?.data), context?.data.user.duration ?? 20)
         )
       }
 
       if (sortType === 'Cuota Mensual mas alta') {
         return (
-          calcularCuotaMensual(b.loan, b.credit.Tasa, context?.data.user.duration ?? 20) -
-          calcularCuotaMensual(a.loan, a.credit.Tasa, context?.data.user.duration ?? 20)
+          calcularCuotaMensual(b.loan, getTasa(b.credit, context?.data), context?.data.user.duration ?? 20) -
+          calcularCuotaMensual(a.loan, getTasa(a.credit, context?.data), context?.data.user.duration ?? 20)
         )
       }
 
@@ -201,7 +204,20 @@ const ComparisonForm = () => {
       ...compatibleCreditsResults,
       creditosCompatibles: sortedCredits
     })
-  }, [values.sortType])
+  }, [values.sortType, context?.data.personalizedCredits])
+
+  const [openAdvancedOptions, setOpenAdvancedOptions] = useState(false)
+  const [selectedCredit, setSelectedCredit] = useState({} as Credit)
+
+  const handleOpenAdvancedOptionsDialog = (credit: Credit) => {
+    setSelectedCredit(credit)
+
+    setOpenAdvancedOptions(true)
+  }
+
+  const handleCloseAdvancedOptionsDialog = () => {
+    setOpenAdvancedOptions(false)
+  }
 
   return (
     <Card>
@@ -332,7 +348,7 @@ const ComparisonForm = () => {
                     <TableRow>
                       {/* Image */}
                       <TableCell>
-                        <Link href='/creditos/todos' target='_blank'>
+                        <Link href='/creditos/todos' passHref target='_blank'>
                           <Button>Ver todos</Button>
                         </Link>
                       </TableCell>
@@ -388,7 +404,6 @@ const ComparisonForm = () => {
                             <Image
                               src={`/images/banks/${row.Banco}.png`}
                               alt={row.Banco}
-                              width={120}
                               layout='fill'
                               objectFit='contain'
                             />
@@ -463,6 +478,16 @@ const ComparisonForm = () => {
                                   />
                                 </Typography>
                               )}
+                              {context?.data.personalizedCredits[row.Id]?.Tasa && (
+                                <Typography variant='caption' margin='0.3em'>
+                                  <Chip
+                                    style={{ margin: '0.2em 0 0.2em 0' }}
+                                    label={`Tasa personalizada`}
+                                    size='small'
+                                    color='warning'
+                                  />
+                                </Typography>
+                              )}
 
                               {/*  */}
                             </div>
@@ -486,7 +511,9 @@ const ComparisonForm = () => {
                             <Grid item xs={12} color='blueviolet'>
                               {loan &&
                                 context?.data.user.duration &&
-                                parseMoney(calcularCuotaMensual(loan, row.Tasa, context?.data.user.duration))}
+                                parseMoney(
+                                  calcularCuotaMensual(loan, getTasa(row, context?.data), context?.data.user.duration)
+                                )}
                             </Grid>
                             <Grid item xs={12} color='blueviolet' style={{ opacity: 0.7 }}>
                               {row['Tasa especial por tiempo definido'] &&
@@ -505,7 +532,7 @@ const ComparisonForm = () => {
                                 context?.data.user.duration &&
                                 context.data.dolar &&
                                 parseMoney(
-                                  calcularCuotaMensual(loan, row.Tasa, context?.data.user.duration) /
+                                  calcularCuotaMensual(loan, getTasa(row, context?.data), context?.data.user.duration) /
                                     context.data.dolar,
                                   'USD'
                                 )}{' '}
@@ -543,13 +570,52 @@ const ComparisonForm = () => {
                         </TableCell>
 
                         <TableCell>
-                          {row.Link.length > 0 && (
-                            <Link
-                              href={`/creditos/${createCreditSlug(row)}?loan=${loan}&duration=${context?.data.user.duration}`}
+                          <div
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent: 'start',
+                              alignItems: 'left'
+                            }}
+                          >
+                            {row.Link.length > 0 && (
+                              <Link
+                                style={{
+                                  opacity: 0.8,
+                                  cursor: 'pointer',
+                                  transition: 'opacity 0.1s'
+                                }}
+                                onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
+                                onMouseLeave={e => (e.currentTarget.style.opacity = '0.8')}
+                                href={`/creditos/${createCreditSlug(row)}?loan=${loan}&duration=${context?.data.user.duration}`}
+                                passHref
+                              >
+                                <Button variant="outlined">Ver detalles</Button>
+                              </Link>
+                            )}
+
+                            <Typography
+                              style={{
+                                opacity: 0.7,
+                                cursor: 'pointer',
+                                transition: 'opacity 0.1s',
+                                width: "100%",
+                                textAlign: "center",
+                                marginTop: "0.3em"
+                              }}
+                              onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
+                              onMouseLeave={e => (e.currentTarget.style.opacity = '0.7')}
+                              variant='body2'
+                              onClick={() => handleOpenAdvancedOptionsDialog(row)}
                             >
-                              Ver detalles
-                            </Link>
-                          )}
+                              Opciones avanzadas
+                            </Typography>
+                            <AdvancedOptionsDialog
+                              credit={selectedCredit}
+                              open={openAdvancedOptions}
+                              onClose={handleCloseAdvancedOptionsDialog}
+                            />
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}

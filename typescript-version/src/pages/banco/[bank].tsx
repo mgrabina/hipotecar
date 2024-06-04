@@ -12,7 +12,7 @@ import {
   Skeleton
 } from '@mui/material'
 import { useRouter } from 'next/router'
-import { useData } from 'src/@core/layouts/HipotecarLayout'
+import { useData } from '@/configs/DataProvider'
 import { parseMoney } from 'src/@core/utils/string'
 import { calcularCuotaMensual, createCreditSlug, getBankBySlug, getLoanPlotData } from 'src/@core/utils/misc'
 import LoanChart from 'src/views/pages/detail/LoanChart'
@@ -37,7 +37,8 @@ const BankDetailPage = () => {
       <Skeleton
         style={{
           borderRadius: '5px',
-          boxShadow: '0 0 10px rgba(0,0,0,0.1)'
+          boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+          marginTop: '2em'
         }}
         variant='rectangular'
         height='400px'

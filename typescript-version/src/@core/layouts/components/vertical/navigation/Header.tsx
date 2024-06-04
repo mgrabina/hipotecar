@@ -10,7 +10,7 @@ import { useState, useContext } from 'react'
 import { useMediaQuery, useTheme } from '@mui/material'
 import { MenuDownOutline, Share, ShareAllOutline, ShareCircle, ShareOff, ShareVariant } from 'mdi-material-ui'
 import Link from 'next/link'
-import { useData } from '@/@core/layouts/HipotecarLayout'
+import { useData, UserData } from '@/configs/DataProvider'
 import { bankNameToSlug } from '@/@core/utils/misc'
 import ShareComponent from '@/@core/components/shared/Share'
 import Image from 'next/image'
@@ -161,7 +161,7 @@ const Header = () => {
             onClose={handleClose}
           >
             <MenuItem onClick={handleClose} component='a' href='/buscador'>
-              <Typography color='primary'>Buscar y Comparar</Typography>
+              <Typography color='primary'>Buscador</Typography>
             </MenuItem>
             <MenuItem onClick={handleClose} component='a' href='/creditos/todos'>
               Todos

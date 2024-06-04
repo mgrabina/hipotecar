@@ -23,7 +23,7 @@ import EyeOutline from 'mdi-material-ui/EyeOutline'
 import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material'
 import { useRouter } from 'next/router'
-import { useData } from 'src/@core/layouts/HipotecarLayout'
+import { useData } from '@/configs/DataProvider'
 import { Island } from 'mdi-material-ui'
 
 interface State {

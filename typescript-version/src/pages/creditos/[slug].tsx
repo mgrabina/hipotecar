@@ -8,13 +8,16 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Chip
+  Chip,
+  List,
+  ListItem,
+  ListSubheader
 } from '@mui/material'
 import { useRouter } from 'next/router'
-import { useData } from 'src/@core/layouts/HipotecarLayout'
+import { useData } from '@/configs/DataProvider'
 import { parseMoney } from 'src/@core/utils/string'
 import Error404 from '../404'
-import { calcularCuotaMensual, getCreditBySlug, getLoanPlotData } from 'src/@core/utils/misc'
+import { calcularCuotaMensual, getCreditBySlug, getLoanPlotData, getTasa } from 'src/@core/utils/misc'
 import LoanChart from 'src/views/pages/detail/LoanChart'
 import LoanPaidChart from 'src/views/pages/detail/LoanPaidChart'
 import PrecancelLoanChart from 'src/views/pages/detail/PrecancelLoanChart'
@@ -35,8 +38,6 @@ const DetailPage = () => {
 
   if (!slug || loan === 0 || duration === 0 || !context?.data.credits.length) return null
   if (!credit) return <Error404 />
-
-  const loanPlotDataResults = getLoanPlotData(loan, credit['Tasa'], duration)
 
   const articleJsonLd = {
     '@context': 'https://schema.org',
@@ -66,6 +67,11 @@ const DetailPage = () => {
     }
   }
 
+  const isTasaPersonalizada = !!context?.data.personalizedCredits[credit.Id]
+  const tasa = getTasa(credit, context.data)
+
+  const loanPlotDataResults = getLoanPlotData(loan, tasa, duration)
+
   return (
     <>
       <Head>
@@ -75,7 +81,7 @@ const DetailPage = () => {
         <meta
           name='description'
           content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
-        con una tasa de ${credit['Tasa']}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
+        con una tasa de ${tasa}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
         `}
         />
         <meta
@@ -85,7 +91,7 @@ const DetailPage = () => {
         <meta
           property='og:description'
           content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
-        con una tasa de ${credit['Tasa']}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
+        con una tasa de ${tasa}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
         `}
         />
         <meta property='og:image' content={credit['Logo Banco']} />
@@ -97,7 +103,7 @@ const DetailPage = () => {
         <meta
           property='twitter:description'
           content={`Información sobre el credito ${credit['Nombre']} del banco ${credit['Banco']}
-        con una tasa de ${credit['Tasa']}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
+        con una tasa de ${tasa}% + UVA. Monto máximo de ${credit['Monto Maximo en UVAs']} UVAs. Duración máxima de ${credit['Duracion']} años.
         `}
         />
         <script
@@ -110,7 +116,7 @@ const DetailPage = () => {
       </Head>
 
       {!isInformative && (
-        <Link href='/buscador/resultado'>
+        <Link href='/buscador/resultado' passHref>
           <Typography style={{ marginTop: '2em', cursor: 'pointer', textDecoration: 'underline' }}>
             Volver a la comparación
           </Typography>
@@ -118,6 +124,7 @@ const DetailPage = () => {
       )}
       <Card style={{ marginTop: '2em' }}>
         <CardMedia
+          alt={credit['Banco']}
           sx={{ height: '10.5625rem', objectFit: 'scale-down', padding: '1em' }}
           component='img'
           image={credit['Logo Banco']}
@@ -132,15 +139,15 @@ const DetailPage = () => {
               </Grid>
               <Grid item xs={6}>
                 <Typography variant='body1'>
-                  <strong>Banco</strong>: {credit['Banco']}
+                  <strong>Banco</strong>: <Link href={`/banco/${credit['Banco']}`}>{credit['Banco']}</Link>
                 </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography variant='body1'>
-                  <strong>Tasa</strong>: {credit['Tasa']}% + UVA
+                  <strong>Tasa</strong>: {tasa}% + UVA {isTasaPersonalizada && '(personalizada)'}
                 </Typography>
               </Grid>
-              {!!credit['Tasa especial por tiempo definido'] && (
+              {!isTasaPersonalizada && !!credit['Tasa especial por tiempo definido'] && (
                 <Grid item xs={6}>
                   <Typography variant='body1'>
                     <strong>Tasa especial</strong>: {credit['Tasa especial por tiempo definido']}% por{' '}
@@ -173,7 +180,7 @@ const DetailPage = () => {
               {loan && duration && (
                 <Grid item xs={6}>
                   <Typography variant='body1'>
-                    <strong>Valor de Cuota</strong>: {parseMoney(calcularCuotaMensual(loan, credit['Tasa'], duration))}
+                    <strong>Valor de Cuota</strong>: {parseMoney(calcularCuotaMensual(loan, tasa, duration))}
                   </Typography>
                 </Grid>
               )}
@@ -296,6 +303,51 @@ const DetailPage = () => {
             <Accordion>
               <AccordionSummary expandIcon={<ArrowDown />}>
                 <Typography variant='body1'>
+                  <strong>
+                    Documentación a presentar para regimen
+                    {context.data.user.taxType && context.data.user.taxType?.length > 1 ? 'es' : ''}:{' '}
+                    {context.data.user.taxType}
+                  </strong>
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <div>
+                  {context.data.user.taxType?.includes('Relacion de Dependencia') && (
+                    <List>
+                      <ListItem>
+                        Últimos 3 recibos de sueldo. Si trabajaste en distintos lugares el último año, envía también el
+                        úlitmo recibo de tu trabajo anterior para que podamos verificar tu antigüedad
+                      </ListItem>
+                    </List>
+                  )}{' '}
+                  {context.data.user.taxType?.includes('Monotributo') && (
+                    <List>
+                      <ListItem>
+                        - Constancia de inscripción, de categoría B en adelante. Deberás contar con al menos 1 año de
+                        antigüedad.
+                      </ListItem>
+                    </List>
+                  )}{' '}
+                  {context.data.user.taxType?.includes('Autonomo') && (
+                    <List>
+                      <ListItem>
+                        Última Declaración Jurada de Ganancias o Certificación de ingresos. Si presentás la Declaración
+                        Jurada, enviá también el ticket de presentación y una nota voluntaria con tu firma
+                      </ListItem>
+                    </List>
+                  )}
+                  <List>
+                    <ListItem>
+                      Si vas a combinar ingresos, tenés que envíar la misma documentación de tu o tus codeudores. En
+                      este paso podés agregar codeudores que no hayas podido sumar en tu solicitud
+                    </ListItem>
+                  </List>
+                </div>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary expandIcon={<ArrowDown />}>
+                <Typography variant='body1'>
                   <strong>Preguntas Frecuentes</strong>
                 </Typography>
               </AccordionSummary>
@@ -373,35 +425,11 @@ const DetailPage = () => {
                 >
                   Nadie puede predecir el futuro, y cada persona tiene su propia situación financiera y personal. Es muy
                   importante que antes de tomar un crédito hipotecario, te asesores con un profesional financiero y
-                  legal para entender los riesgos y beneficios de tomar un crédito hipotecario.
+                  legal para entender los riesgos y beneficios de este.
                 </Typography>
               </AccordionDetails>
             </Accordion>
-            <Accordion>
-              <AccordionSummary expandIcon={<ArrowDown />}>
-                <Typography variant='body1'>
-                  <strong>Documentos a presentar</strong>
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>
-                  Si estás en relación de dependencia:
-                  {/* List */}- - Últimos 3 recibos de sueldo. Si trabajaste en distintos lugares el último año, envía
-                  también el úlitmo recibo de tu trabajo anterior para que podamos verificar tu antigüedad  Si sos
-                  Monotributista:- Constancia de inscripción, de categoría B en adelante. Deberás contar con al menos 1
-                  año de antigüedad.- Comprobante de los últimos 3 pagos  Si sos Autónomo o Responsable Inscripto:-
-                  Última Declaración Jurada de Ganancias o Certificación de ingresos.Si presentás la Declaración Jurada,
-                  enviá también el ticket de presentación y una nota voluntaria con tu firma Si vas a combinar ingresos,
-                  tenés que envíar la misma documentación de tu o tus codeudores. En este paso podés agregar codeudores
-                  que no hayas podido sumar en tu solicitud
-                </Typography>
 
-                <Typography variant='body2'>
-                  Confirmar con el banco los documentos requeridos para solicitar este crédito ya que tienden a cambiar
-                  constantemente.
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
             <Accordion>
               <AccordionSummary expandIcon={<ArrowDown />}>
                 <Typography variant='body1'>

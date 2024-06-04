@@ -15,7 +15,7 @@ import { AlertOutline, Check, FileSettingsOutline, FolderTableOutline } from 'md
 import { Box, useMediaQuery } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { useRouter } from 'next/router'
-import { UserData, useData } from 'src/@core/layouts/HipotecarLayout'
+import { useData, UserData } from '@/configs/DataProvider'
 import Link from 'next/link'
 
 const QontoConnector = styled(StepConnector)(({ theme }) => ({

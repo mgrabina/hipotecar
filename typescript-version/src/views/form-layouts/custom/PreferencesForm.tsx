@@ -27,7 +27,7 @@ import { Checkbox, FormControlLabel, FormGroup, MenuItem, ToggleButton, ToggleBu
 import { useRouter } from 'next/router'
 import { MessageOutline, TimerOutline, WalletOutline } from 'mdi-material-ui'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
-import { UserData, useData } from 'src/@core/layouts/HipotecarLayout'
+import { useData, UserData } from '@/configs/DataProvider'
 import { CreditType, CreditTypes, Province, Provinces } from 'src/configs/constants'
 import { parseMoney } from 'src/@core/utils/string'
 import { getBiggestLoanBasedOnSalary } from 'src/@core/utils/misc'
@@ -115,18 +115,19 @@ const PreferencesForm = () => {
       }
     })
 
-    sendEmail()
-      .then(resp => {
-        if (resp?.ok) {
-          console.info('Saved successfully.')
-        } else {
-          console.error('Error:', resp?.statusText)
-        }
-        router.push('/buscador/resultado')
-      })
-      .catch(e => {
-        console.error('Error:', e)
-      })
+    if (values.turnOnAlerts)
+      sendEmail()
+        .then(resp => {
+          if (resp?.ok) {
+            console.info('Saved successfully.')
+          } else {
+            console.error('Error:', resp?.statusText)
+          }
+          router.push('/buscador/resultado')
+        })
+        .catch(e => {
+          console.error('Error:', e)
+        })
   }
 
   useEffect(() => {
@@ -272,7 +273,7 @@ const PreferencesForm = () => {
                     fullWidth
                     type='string'
                     value={Number(values.salary).toLocaleString()}
-                    label={`Sueldo ${
+                    label={`Suma de ingresos de deudores ${
                       context?.data.dolar ? `(${parseMoney(values.salary / context?.data.dolar, 'USD')})` : ''
                     }`}
                     onChange={e => {
