@@ -20,6 +20,7 @@ import { Skeleton, useMediaQuery } from '@mui/material'
 import Link from 'next/link'
 import Image from 'next/image'
 import Head from 'next/head'
+import { createCreditSlug } from '@/@core/utils/misc'
 
 const columnsNotToShow = ['Id', 'Nombre', 'Banco']
 const firstColumns = ['Logo Banco', 'Tipo', 'Nombre']
@@ -320,7 +321,7 @@ const CreditComparisonPage = () => {
                         ) : credit[key as keyof Credit] === 'FALSE' ? (
                           'No'
                         ) : key === 'Link' ? (
-                          <Link href={credit[key as keyof Credit] as string}>Ver</Link>
+                          <Link href={`/creditos/${createCreditSlug(credit)}`}>Ver</Link>
                         ) : (
                           credit[key as keyof Credit] +
                           `${!!credit[key as keyof Credit] && (key.includes('Tasa') || key.includes('%')) ? '%' : ''}`

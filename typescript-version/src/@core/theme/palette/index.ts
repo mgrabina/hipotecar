@@ -42,9 +42,9 @@ const DefaultPalette = (mode: PaletteMode, themeColor: ThemeColor) => {
       contrastText: '#FFF'
     },
     secondary: {
-      light: '#9C9FA4',
-      main: '#8A8D93',
-      dark: '#777B82',
+      light: '#B0B4BA',
+      main: '#4A4D53',
+      dark: '#1D1F23',
       contrastText: '#FFF'
     },
     success: {
@@ -89,7 +89,7 @@ const DefaultPalette = (mode: PaletteMode, themeColor: ThemeColor) => {
     },
     text: {
       primary: `rgba(${mainColor}, 0.87)`,
-      secondary: `rgba(${mainColor}, 0.68)`,
+      secondary: `rgba(${mainColor}, 0.78)`,
       disabled: `rgba(${mainColor}, 0.38)`
     },
     divider: `rgba(${mainColor}, 0.12)`,

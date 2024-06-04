@@ -63,16 +63,19 @@ export function Article({ title, author, description, logo, url, website }: Arti
       <Card sx={{ cursor: 'pointer', width: '100%', color: 'common.secondary', backgroundColor: 'secondary' }}>
         <CardContent sx={{ padding: theme => `${theme.spacing(3.25, 5, 4.5)} !important` }}>
           <Typography
-            variant='h6'
-            sx={{ display: 'flex', marginBottom: 2.75, alignItems: 'center', color: 'common.secondary' }}
+            variant="subtitle1"
+            sx={{ display: 'flex', marginBottom: 1, alignItems: 'center', color: 'common.secondary' }}
           >
             <img src={logo} alt={website} style={{ width: '4rem', marginRight: '1rem' }} />
             {website}
           </Typography>
-          <Typography variant='body2' sx={{ marginBottom: 3, color: 'common.secondary' }}>
+          <Typography variant="h6" sx={{ color: 'common.secondary' }}>
             {title}
           </Typography>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography variant='caption' sx={{ color: 'common.secondary' }}>
+            {description}
+          </Typography>
+          <Box sx={{ display: 'flex', marginTop: "1em", flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
             <Box sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
               <Avatar
                 alt='Avatar'
