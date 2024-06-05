@@ -323,7 +323,7 @@ const DetailPage = () => {
                   {context.data.user.taxType?.includes('Monotributo') && (
                     <List>
                       <ListItem>
-                        - Constancia de inscripción, de categoría B en adelante. Deberás contar con al menos 1 año de
+                        Constancia de inscripción, de categoría B en adelante. Deberás contar con al menos 1 año de
                         antigüedad.
                       </ListItem>
                     </List>

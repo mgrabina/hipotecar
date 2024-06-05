@@ -31,17 +31,60 @@ const FooterContent = () => {
           width: isSmallScreen ? '100%' : 'auto'
         }}
       >
-        <Typography
+        <div
           style={{
             display: 'flex',
             alignItems: isSmallScreen ? 'center' : 'left',
-            textAlign: isSmallScreen ? 'center' : 'left',
             justifyContent: isSmallScreen ? 'center' : 'left'
           }}
-          color='text.secondary'
         >
-          Sitio con fines informativos, no representa recomendación alguna.
-        </Typography>
+          <Link
+            href='https://www.argentina.gob.ar/normativa/nacional/resoluci%C3%B3n-1002-2024-399372/texto'
+            target='_blank'
+            passHref
+          >
+            <Typography
+              style={{
+                cursor: 'pointer',
+                color: theme.palette.primary.dark,
+                textDecoration: 'none',
+                transition: 'color 0.3s ease-in-out',
+                marginRight: '0.2em'
+              }}
+              onMouseEnter={e => (e.currentTarget.style.color = theme.palette.primary.main)}
+              onMouseLeave={e => (e.currentTarget.style.color = theme.palette.primary.dark)}
+            >
+              Sitio con fines informativos.
+            </Typography>
+          </Link>
+          <Typography
+            style={{
+              display: 'flex',
+              alignItems: isSmallScreen ? 'center' : 'left',
+              textAlign: isSmallScreen ? 'center' : 'left',
+              justifyContent: isSmallScreen ? 'center' : 'left',
+              marginRight: '0.2em'
+            }}
+            color='text.secondary'
+          >
+            Datos desactualizados? Avisanos
+          </Typography>
+          <Link href='https://t.me/micreditohipotecario/34' passHref target='_blank'>
+            <Typography
+              style={{
+                cursor: 'pointer',
+                color: theme.palette.primary.main,
+                textDecoration: 'none',
+                transition: 'color 0.3s ease-in-out'
+              }}
+              onMouseEnter={e => (e.currentTarget.style.color = theme.palette.primary.dark)}
+              onMouseLeave={e => (e.currentTarget.style.color = theme.palette.primary.main)}
+            >
+              acá
+            </Typography>
+          </Link>
+          .
+        </div>
         <div
           style={{
             display: isSmallScreen ? 'block' : 'flex',

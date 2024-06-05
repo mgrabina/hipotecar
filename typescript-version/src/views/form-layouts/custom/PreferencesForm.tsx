@@ -115,7 +115,7 @@ const PreferencesForm = () => {
       }
     })
 
-    if (values.turnOnAlerts)
+    if (values.turnOnAlerts) {
       sendEmail()
         .then(resp => {
           if (resp?.ok) {
@@ -128,6 +128,9 @@ const PreferencesForm = () => {
         .catch(e => {
           console.error('Error:', e)
         })
+    } else {
+      router.push('/buscador/resultado')
+    }
   }
 
   useEffect(() => {
