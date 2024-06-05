@@ -15,13 +15,13 @@ export function PostPreview({
 }: PostType & { isHero: boolean }) {
   return (
     <Link href={`/posts/${slug}`} passHref={true}>
-      <Card style={{ cursor: 'pointer' }}>
+      <Card style={{ cursor: 'pointer', height: "fit-content", paddingBottom: "1em" }}>
         <CardMedia sx={{ height: isHero ? '20em' : '8.5625rem' }} image={coverImage.url} component='img' alt={title} />
-        <CardContent style={{ height: '10em' }}>
+        <CardContent style={{ minHeight: '10em' }}>
           <Typography variant='h6' sx={{ marginBottom: 2 }}>
             {title}
           </Typography>
-          <Typography variant='caption' sx={{ marginBottom: 2 }}>
+          <Typography variant='caption'>
             {description}
           </Typography>
         </CardContent>

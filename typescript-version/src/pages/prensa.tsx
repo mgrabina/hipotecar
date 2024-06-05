@@ -4,6 +4,7 @@ import axios from 'axios'
 import Link from 'next/link'
 import { Avatar, Box, Card, CardContent, CardMedia, Typography } from '@mui/material'
 import { Heart, ShareVariant } from 'mdi-material-ui'
+import Head from 'next/head'
 
 type ArticleType = {
   title: string
@@ -63,19 +64,27 @@ export function Article({ title, author, description, logo, url, website }: Arti
       <Card sx={{ cursor: 'pointer', width: '100%', color: 'common.secondary', backgroundColor: 'secondary' }}>
         <CardContent sx={{ padding: theme => `${theme.spacing(3.25, 5, 4.5)} !important` }}>
           <Typography
-            variant="subtitle1"
+            variant='subtitle1'
             sx={{ display: 'flex', marginBottom: 1, alignItems: 'center', color: 'common.secondary' }}
           >
             <img src={logo} alt={website} style={{ width: '4rem', marginRight: '1rem' }} />
             {website}
           </Typography>
-          <Typography variant="h6" sx={{ color: 'common.secondary' }}>
+          <Typography variant='h6' sx={{ color: 'common.secondary' }}>
             {title}
           </Typography>
           <Typography variant='caption' sx={{ color: 'common.secondary' }}>
             {description}
           </Typography>
-          <Box sx={{ display: 'flex', marginTop: "1em", flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              marginTop: '1em',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}
+          >
             <Box sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
               <Avatar
                 alt='Avatar'
@@ -95,31 +104,50 @@ export function Article({ title, author, description, logo, url, website }: Arti
 
 const PrensaPage = () => {
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: '2rem',
-        marginTop: '2rem'
-      }}
-    >
-      {articles.map((article, index) => (
-        <div
-          key={index}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: '2rem'
-          }}
-        >
-          <Article key={article.title} {...article} />
-        </div>
-      ))}
-    </div>
+    <>
+      <Head>
+        <title>Mi Credito Hipotecario en los Medios</title>
+        <meta name='description' content='Apariciones de Mi Credito Hipotecario en los medios de comunicación.' />
+        <meta property='og:title' content='Mi Credito Hipotecario en los Medios' />
+        <meta
+          property='og:description'
+          content='Apariciones de Mi Credito Hipotecario en los medios de comunicación.'
+        />
+        <meta property='og:url' content='https://www.micredito.com.ar/blog' />
+        <meta property='og:image' content='https://www.micredito.com.ar/generated/happy.png' />
+        <meta property='twitter:title' content='Mi Credito Hipotecario en los Medios' />
+        <meta
+          property='twitter:description'
+          content='Apariciones de Mi Credito Hipotecario en los medios de comunicación.'
+        />
+        <meta property='twitter:image' content='https://www.micredito.com.ar/generated/happy.png' />
+      </Head>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginBottom: '2rem',
+          marginTop: '2rem'
+        }}
+      >
+        {articles.map((article, index) => (
+          <div
+            key={index}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: '2rem'
+            }}
+          >
+            <Article key={article.title} {...article} />
+          </div>
+        ))}
+      </div>
+    </>
   )
 }
 

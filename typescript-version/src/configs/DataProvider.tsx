@@ -7,7 +7,9 @@ export type UserData = {
   name?: string
   riskAssesmentPassed?: boolean
   email?: string
-} & Partial<PreferencesFormState>
+} & Partial<PreferencesFormState> & {
+    selectedCredit?: Credit
+  }
 
 export type ContextType = {
   loaded: boolean
@@ -102,24 +104,27 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         loaded: true
       }))
 
-      localStorage.setItem('data', JSON.stringify({
-        credits: loadedCredits,
-        provinces: provinceNames,
-        banks: bankNames,
-        dolar,
-        UVA
-      }))
+      localStorage.setItem(
+        'data',
+        JSON.stringify({
+          credits: loadedCredits,
+          provinces: provinceNames,
+          banks: bankNames,
+          dolar,
+          UVA
+        })
+      )
       localStorage.setItem('timestamp', String(Date.now()))
     }
 
     const cachedData = localStorage.getItem('data')
     const cachedTimestamp = localStorage.getItem('timestamp')
 
-    console.log("Fetching data")
+    console.log('Fetching data')
     if (cachedData && cachedTimestamp && Date.now() - Number(cachedTimestamp) < 60 * 60 * 1000) {
       const cached = JSON.parse(cachedData)
 
-      console.log("Using cached data")
+      console.log('Using cached data')
       setData(prevData => ({
         ...prevData,
         credits: cached.credits,
@@ -130,7 +135,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         loaded: true
       }))
     } else {
-      console.log("Fetching new data")
+      console.log('Fetching new data')
       fetchData()
     }
   }, [data.loaded])

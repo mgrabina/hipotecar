@@ -86,6 +86,7 @@ type ComparisonTableState = {
 const ComparisonForm = () => {
   const context = useData()
   const theme = useTheme()
+  const router = useRouter()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   const [compatibleCreditsResults, setCompatibleCreditsResult] = useState<CreditEvaluationResult>({
@@ -580,17 +581,31 @@ const ComparisonForm = () => {
                           >
                             {row.Link.length > 0 && (
                               <Link
-                                style={{
-                                  opacity: 0.8,
-                                  cursor: 'pointer',
-                                  transition: 'opacity 0.1s'
-                                }}
-                                onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
-                                onMouseLeave={e => (e.currentTarget.style.opacity = '0.8')}
                                 href={`/creditos/${createCreditSlug(row)}?loan=${loan}&duration=${context?.data.user.duration}`}
                                 passHref
                               >
-                                <Button variant="outlined">Ver detalles</Button>
+                                <Button
+                                  style={{
+                                    opacity: 0.8,
+                                    cursor: 'pointer',
+                                    transition: 'opacity 0.1s'
+                                  }}
+                                  onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
+                                  onMouseLeave={e => (e.currentTarget.style.opacity = '0.8')}
+                                  onClick={() => {
+                                    context?.setData(prevData => ({
+                                      ...prevData,
+                                      user: { ...prevData.user, selectedCredit: row, loanAmount: loan }
+                                    }))
+
+                                    router.push(
+                                      `/creditos/${createCreditSlug(row)}?loan=${loan}&duration=${context?.data.user.duration}`
+                                    )
+                                  }}
+                                  variant='outlined'
+                                >
+                                  Seleccionar
+                                </Button>
                               </Link>
                             )}
 
@@ -599,9 +614,9 @@ const ComparisonForm = () => {
                                 opacity: 0.7,
                                 cursor: 'pointer',
                                 transition: 'opacity 0.1s',
-                                width: "100%",
-                                textAlign: "center",
-                                marginTop: "0.3em"
+                                width: '100%',
+                                textAlign: 'center',
+                                marginTop: '0.3em'
                               }}
                               onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
                               onMouseLeave={e => (e.currentTarget.style.opacity = '0.7')}

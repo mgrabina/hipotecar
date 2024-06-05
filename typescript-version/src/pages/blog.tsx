@@ -8,6 +8,7 @@ import MoreStories, { PostPreview } from '@/views/contentful/more-stories'
 import { getAllPosts } from '@/lib/api'
 import { CMS_NAME, CMS_URL, PostType } from '@/lib/constants'
 import { useEffect, useState } from 'react'
+import Head from 'next/head'
 
 export const metadata = {
   title: 'Blog | Mi Crédito Hipotecario',
@@ -79,11 +80,33 @@ const Blog = () => {
   }, [])
 
   return (
-    <div className='container mx-auto px-5' style={{ marginTop: '2em' }}>
-      {/* <Intro /> */}
-      {heroPost != undefined && <PostPreview isHero={true} {...heroPost} />}
-      <MoreStories morePosts={morePosts} />
-    </div>
+    <>
+      <Head>
+        <title>El Blog de Mi Credito Hipotecario</title>
+        <meta
+          name='description'
+          content='La libreria de contenido mas completa sobre creditos hipotecarios en Argentina. Encuentra la información que necesitas para tomar la mejor decisión.'
+        />
+        <meta property='og:title' content='El Blog de Mi Credito Hipotecario' />
+        <meta
+          property='og:description'
+          content='La libreria de contenido mas completa sobre creditos hipotecarios en Argentina. Encuentra la información que necesitas para tomar la mejor decisión.'
+        />
+        <meta property='og:url' content='https://www.micredito.com.ar/blog' />
+        <meta property='og:image' content='https://www.micredito.com.ar/generated/happy.png' />
+        <meta property='twitter:title' content='El Blog de Mi Credito Hipotecario' />
+        <meta
+          property='twitter:description'
+          content='La libreria de contenido mas completa sobre creditos hipotecarios en Argentina. Encuentra la información que necesitas para tomar la mejor decisión.'
+        />
+        <meta property='twitter:image' content='https://www.micredito.com.ar/generated/happy.png' />
+      </Head>
+      <div className='container mx-auto px-5' style={{ marginTop: '2em' }}>
+        {/* <Intro /> */}
+        {heroPost != undefined && <PostPreview isHero={true} {...heroPost} />}
+        <MoreStories morePosts={morePosts} />
+      </div>
+    </>
   )
 }
 

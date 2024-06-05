@@ -40,7 +40,7 @@ const isNumericColumn = (key: string | string[]) =>
   key.includes('Cuota') ||
   key.includes('Duracion')
 const isBooleanColumn = (key: string | string[]) =>
-  key.includes('Acepta') || key.includes('Requiere') || key.includes('Apto') || key.includes('Ingresos')
+  key.includes('Acepta') || key.includes('Requiere') || key.includes('Apto') || key.includes('Sueldo en Banco')
 
 const CreditComparisonPage = () => {
   const context = useData()
@@ -235,7 +235,16 @@ const CreditComparisonPage = () => {
                         {key === 'Logo Banco' && (
                           <Typography
                             variant='caption'
-                            style={{ textAlign: 'center', marginBottom: '0.2em', marginTop: '0.2em' }}
+                            style={{
+                              textAlign: 'center',
+                              marginBottom: '0.2em',
+                              marginTop: '0.2em',
+                              cursor: 'pointer',
+                              color: theme.palette.primary.main,
+                              opacity: 0.7
+                            }}
+                            onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
+                            onMouseLeave={e => (e.currentTarget.style.opacity = '0.7')}
                             onClick={clearFilters}
                           >
                             Limpiar Filtros
