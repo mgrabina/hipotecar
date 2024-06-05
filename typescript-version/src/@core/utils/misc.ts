@@ -318,3 +318,9 @@ export function getTasa(credit: Credit, data?: ContextType): number {
 
   return data.personalizedCredits[credit.Id]?.Tasa ?? credit.Tasa
 }
+
+export function getMaxFinancing(credit: Credit, data?: ContextType): number {
+  if (data?.user.secondHome) return credit['% Maximo de Financiacion Segunda Vivienda']
+
+  return credit['% Maximo de Financiacion']
+}

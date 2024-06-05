@@ -59,6 +59,7 @@ import {
   createCreditSlug,
   getBiggestLoanBasedOnSalary,
   getCompatibleCredits,
+  getMaxFinancing,
   getTasa
 } from 'src/@core/utils/misc'
 import { useAsync } from 'react-async'
@@ -175,15 +176,15 @@ const ComparisonForm = () => {
 
       if (sortType === 'Adelanto mas bajo') {
         return (
-          calcularAdelanto(a.loan, a.credit['% Maximo de Financiacion']) -
-          calcularAdelanto(b.loan, b.credit['% Maximo de Financiacion'])
+          calcularAdelanto(a.loan, getMaxFinancing(a.credit, context?.data)) -
+          calcularAdelanto(b.loan, getMaxFinancing(b.credit, context?.data))
         )
       }
 
       if (sortType === 'Adelanto mas alto') {
         return (
-          calcularAdelanto(b.loan, b.credit['% Maximo de Financiacion']) -
-          calcularAdelanto(a.loan, a.credit['% Maximo de Financiacion'])
+          calcularAdelanto(b.loan, getMaxFinancing(b.credit, context?.data)) -
+          calcularAdelanto(a.loan, getMaxFinancing(a.credit, context?.data))
         )
       }
 
@@ -557,13 +558,13 @@ const ComparisonForm = () => {
                         <TableCell>
                           <Grid container>
                             <Grid item xs={12} color='blueviolet'>
-                              {loan && parseMoney(calcularAdelanto(loan, row['% Maximo de Financiacion']))}
+                              {loan && parseMoney(calcularAdelanto(loan, getMaxFinancing(row, context?.data)))}
                             </Grid>
                             <Grid item xs={12} color='green'>
                               {loan &&
                                 context?.data.dolar &&
                                 parseMoney(
-                                  calcularAdelanto(loan, row['% Maximo de Financiacion']) / context?.data.dolar,
+                                  calcularAdelanto(loan, getMaxFinancing(row, context?.data)) / context?.data.dolar,
                                   'USD'
                                 )}{' '}
                             </Grid>
