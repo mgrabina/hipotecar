@@ -59,6 +59,7 @@ import {
   createCreditSlug,
   getBiggestLoanBasedOnSalary,
   getCompatibleCredits,
+  getMaxFinancing,
   getTasa
 } from 'src/@core/utils/misc'
 import { useAsync } from 'react-async'
@@ -86,6 +87,7 @@ type ComparisonTableState = {
 const ComparisonForm = () => {
   const context = useData()
   const theme = useTheme()
+  const router = useRouter()
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   const [compatibleCreditsResults, setCompatibleCreditsResult] = useState<CreditEvaluationResult>({
@@ -174,15 +176,15 @@ const ComparisonForm = () => {
 
       if (sortType === 'Adelanto mas bajo') {
         return (
-          calcularAdelanto(a.loan, a.credit['% Maximo de Financiacion']) -
-          calcularAdelanto(b.loan, b.credit['% Maximo de Financiacion'])
+          calcularAdelanto(a.loan, getMaxFinancing(a.credit, context?.data)) -
+          calcularAdelanto(b.loan, getMaxFinancing(b.credit, context?.data))
         )
       }
 
       if (sortType === 'Adelanto mas alto') {
         return (
-          calcularAdelanto(b.loan, b.credit['% Maximo de Financiacion']) -
-          calcularAdelanto(a.loan, a.credit['% Maximo de Financiacion'])
+          calcularAdelanto(b.loan, getMaxFinancing(b.credit, context?.data)) -
+          calcularAdelanto(a.loan, getMaxFinancing(a.credit, context?.data))
         )
       }
 
@@ -556,13 +558,13 @@ const ComparisonForm = () => {
                         <TableCell>
                           <Grid container>
                             <Grid item xs={12} color='blueviolet'>
-                              {loan && parseMoney(calcularAdelanto(loan, row['% Maximo de Financiacion']))}
+                              {loan && parseMoney(calcularAdelanto(loan, getMaxFinancing(row, context?.data)))}
                             </Grid>
                             <Grid item xs={12} color='green'>
                               {loan &&
                                 context?.data.dolar &&
                                 parseMoney(
-                                  calcularAdelanto(loan, row['% Maximo de Financiacion']) / context?.data.dolar,
+                                  calcularAdelanto(loan, getMaxFinancing(row, context?.data)) / context?.data.dolar,
                                   'USD'
                                 )}{' '}
                             </Grid>
@@ -580,17 +582,31 @@ const ComparisonForm = () => {
                           >
                             {row.Link.length > 0 && (
                               <Link
-                                style={{
-                                  opacity: 0.8,
-                                  cursor: 'pointer',
-                                  transition: 'opacity 0.1s'
-                                }}
-                                onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
-                                onMouseLeave={e => (e.currentTarget.style.opacity = '0.8')}
                                 href={`/creditos/${createCreditSlug(row)}?loan=${loan}&duration=${context?.data.user.duration}`}
                                 passHref
                               >
-                                <Button variant="outlined">Ver detalles</Button>
+                                <Button
+                                  style={{
+                                    opacity: 0.8,
+                                    cursor: 'pointer',
+                                    transition: 'opacity 0.1s'
+                                  }}
+                                  onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
+                                  onMouseLeave={e => (e.currentTarget.style.opacity = '0.8')}
+                                  onClick={() => {
+                                    context?.setData(prevData => ({
+                                      ...prevData,
+                                      user: { ...prevData.user, selectedCredit: row, loanAmount: loan }
+                                    }))
+
+                                    router.push(
+                                      `/creditos/${createCreditSlug(row)}?loan=${loan}&duration=${context?.data.user.duration}`
+                                    )
+                                  }}
+                                  variant='outlined'
+                                >
+                                  Seleccionar
+                                </Button>
                               </Link>
                             )}
 
@@ -599,9 +615,9 @@ const ComparisonForm = () => {
                                 opacity: 0.7,
                                 cursor: 'pointer',
                                 transition: 'opacity 0.1s',
-                                width: "100%",
-                                textAlign: "center",
-                                marginTop: "0.3em"
+                                width: '100%',
+                                textAlign: 'center',
+                                marginTop: '0.3em'
                               }}
                               onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
                               onMouseLeave={e => (e.currentTarget.style.opacity = '0.7')}

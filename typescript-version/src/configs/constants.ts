@@ -69,6 +69,7 @@ export type Credit = {
   Duracion: number
   'Monto Maximo en UVAs': number
   '% Maximo de Financiacion': number
+  '% Maximo de Financiacion Segunda Vivienda': number
   'Relacion Cuota Ingreso': number
   Tasa: number
   'Tasa especial por tiempo definido': number

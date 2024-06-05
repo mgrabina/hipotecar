@@ -34,8 +34,10 @@ const FooterContent = () => {
         <div
           style={{
             display: 'flex',
-            alignItems: isSmallScreen ? 'center' : 'left',
-            justifyContent: isSmallScreen ? 'center' : 'left'
+            flexDirection: isSmallScreen ? 'column' : 'row',
+            alignItems: isSmallScreen ? 'center' : 'flex-start',
+            justifyContent: isSmallScreen ? 'center' : 'flex-start',
+            textAlign: isSmallScreen ? 'center' : 'left'
           }}
         >
           <Link
@@ -49,7 +51,8 @@ const FooterContent = () => {
                 color: theme.palette.primary.dark,
                 textDecoration: 'none',
                 transition: 'color 0.3s ease-in-out',
-                marginRight: '0.2em'
+                marginBottom: isSmallScreen ? '0.5em' : 0,
+                marginRight: isSmallScreen ? 0 : '0.2em'
               }}
               onMouseEnter={e => (e.currentTarget.style.color = theme.palette.primary.main)}
               onMouseLeave={e => (e.currentTarget.style.color = theme.palette.primary.dark)}
@@ -59,11 +62,8 @@ const FooterContent = () => {
           </Link>
           <Typography
             style={{
-              display: 'flex',
-              alignItems: isSmallScreen ? 'center' : 'left',
-              textAlign: isSmallScreen ? 'center' : 'left',
-              justifyContent: isSmallScreen ? 'center' : 'left',
-              marginRight: '0.2em'
+              marginBottom: isSmallScreen ? '0.5em' : 0,
+              marginRight: isSmallScreen ? 0 : '0.2em'
             }}
             color='text.secondary'
           >
@@ -83,7 +83,6 @@ const FooterContent = () => {
               acá
             </Typography>
           </Link>
-          .
         </div>
         <div
           style={{

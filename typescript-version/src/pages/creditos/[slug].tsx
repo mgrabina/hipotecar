@@ -215,7 +215,14 @@ const DetailPage = () => {
                 <>
                   <Grid item xs={6}>
                     <Typography variant='body1'>
-                      <strong>% Máximo de financiación</strong>: {credit['% Maximo de Financiacion']}
+                      <strong>% Máximo de financiación</strong>:{' '}
+                      {context.data.user.secondHome
+                        ? credit['% Maximo de Financiacion Segunda Vivienda']
+                        : credit['% Maximo de Financiacion']}
+                      {isInformative &&
+                        credit['% Maximo de Financiacion Segunda Vivienda'] !== credit['% Maximo de Financiacion'] && (
+                          <Chip label={`Segunda Vivienda: ${credit['% Maximo de Financiacion Segunda Vivienda']}%`} />
+                        )}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>

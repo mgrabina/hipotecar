@@ -51,36 +51,48 @@ const Header = () => {
   return (
     <AppBar position='static' elevation={0} variant='outlined' color='inherit'>
       <Toolbar>
-        <Link href='/' passHref={true} style={{ cursor: 'pointer' }}>
-          <div
-            style={{
+        <div
+          style={{
+            flexGrow: 1,
+            paddingLeft: '1em',
+            paddingRight: '1em',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'baseline',
+            width: 'fit-content',
+            verticalAlign: 'bottom',
+            textAlign: isSmallScreen ? 'center' : 'inherit',
+            justifyContent: isSmallScreen ? 'center' : 'inherit'
+          }}
+        >
+          <Link href='/' passHref style={{ cursor: 'pointer' }}>
+            <div style={{
               cursor: 'pointer',
-              flexGrow: 1,
-              paddingLeft: '1em',
-              paddingRight: '1em',
-              height: '100%',
               display: 'flex',
-              alignItems: 'baseline',
-              width: 'fit-content',
-              verticalAlign: 'bottom',
-              textAlign: isSmallScreen ? 'center' : 'inherit',
-              justifyContent: isSmallScreen ? 'center' : 'inherit'
+            alignItems: 'baseline',
+            width: 'fit-content',
+            }}>
+              <Image
+                alt='Logo Mi Crédito Hipotecario'
+                src='/images/logo.svg'
+                height={isSmallScreen ? '26em' : '30em'}
+                width={isSmallScreen ? '26em' : '30em'}
+                style={{ paddingRight: '0.5em', cursor: "pointer" }}
+              />
+              <Typography variant='h6' style={{ marginLeft: '0.3em', fontSize: isSmallScreen ? '1.2em' : '1.5em', cursor: "pointer" }}>
+                Mi Crédito Hipotecario{' '}
+              </Typography>
+            </div>
+          </Link>
+        </div>
+        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
+          <Button
+            color='primary'
+            href='/buscador'
+            style={{
+              cursor: 'pointer'
             }}
           >
-            <Image
-              alt='Bandera Argentina'
-              src='/images/logo.svg'
-              height={isSmallScreen ? '26em' : '30em'}
-              width={isSmallScreen ? '26em' : '30em'}
-              style={{ paddingRight: '0.5em' }}
-            />
-            <Typography variant='h6' style={{ marginLeft: '0.3em', fontSize: isSmallScreen ? '1.2em' : '1.5em' }}>
-              Mi Crédito Hipotecario{' '}
-            </Typography>
-          </div>
-        </Link>
-        <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-          <Button color='primary' href='/buscador'>
             Buscador
           </Button>
           <Button color='inherit' href='/creditos/todos'>
