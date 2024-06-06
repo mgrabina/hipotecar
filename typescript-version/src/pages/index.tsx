@@ -240,6 +240,36 @@ const Dashboard = () => {
         </Card>
       )}
 
+      <Card
+        style={{
+          marginTop: '2em'
+        }}
+      >
+        <CardContent>
+          <Typography
+            variant='h1'
+            style={{
+              fontSize: '1.5em'
+            }}
+          >
+            Bienvenido/a!
+          </Typography>
+          <Typography
+            variant='h2'
+            style={{
+              fontSize: '1.2em',
+              fontWeight: 'normal',
+              marginTop: '0.5em',
+            }}
+          >
+            Mi Crédito Hipotecario es un sitio web independiente que te permite comparar y simular créditos hipotecarios
+            UVA en Argentina. Aqui podrás encontrar, información sobre tasas, plazos, montos y más de
+            todos los bancos del país. Además podrás simular tu préstamo hipotecario, segun tu regimen impositivo (monotributo, autonomo, relación de dependencia), obteniendo calculos de cuotas, amortizaciones, pre-cancelaciones, etc!
+            Con ayuda de Mi Crédito Hipotecario, tomá la mejor decisión.
+          </Typography>
+        </CardContent>
+      </Card>
+
       <div style={{ marginTop: '2em' }}>
         <CreditsOverviewCard></CreditsOverviewCard>
       </div>

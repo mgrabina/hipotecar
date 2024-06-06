@@ -72,13 +72,20 @@ const BankDetailPage = () => {
 
       <Card style={{ marginTop: '2em' }}>
         <CardMedia
+          alt='Logo del banco'
           sx={{ height: '10.5625rem', objectFit: 'scale-down', padding: '1em' }}
           component='img'
           image={credits[0]['Logo Banco']}
         />
         <CardContent>
           <div>
-            <Typography variant='body1'>
+            <Typography
+              variant='h1'
+              style={{
+                fontSize: '1.2em',
+                fontWeight: 'normal'
+              }}
+            >
               El banco {credits[0].Banco} ofrece los siguientes {credits.length} creditos hipotecarios UVA:
             </Typography>
 

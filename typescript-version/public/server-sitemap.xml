@@ -517,6 +517,42 @@
       >https://www.micreditohipotecario.com.ar/creditos/hipotecario-ampliacion-patagonia-sueldo-en-banco</loc
     >
     <changefreq>weekly</changefreq>
+    <priority>0.8</priority> </url
+  ><url>
+    <loc
+      >https://www.micreditohipotecario.com.ar/creditos/hipotecario-adquisicion-credicoop-externo</loc
+    >
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority> </url
+  ><url>
+    <loc
+      >https://www.micreditohipotecario.com.ar/creditos/hipotecario-adquisicion-credicoop-sueldo-en-banco</loc
+    >
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority> </url
+  ><url>
+    <loc
+      >https://www.micreditohipotecario.com.ar/creditos/hipotecario-ampliacion-credicoop-externo</loc
+    >
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority> </url
+  ><url>
+    <loc
+      >https://www.micreditohipotecario.com.ar/creditos/hipotecario-ampliacion-credicoop-sueldo-en-banco</loc
+    >
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority> </url
+  ><url>
+    <loc
+      >https://www.micreditohipotecario.com.ar/creditos/hipotecario-construccion-credicoop-externo</loc
+    >
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority> </url
+  ><url>
+    <loc
+      >https://www.micreditohipotecario.com.ar/creditos/hipotecario-construccion-credicoop-sueldo-en-banco</loc
+    >
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
@@ -577,6 +613,10 @@
     <priority>0.8</priority> </url
   ><url>
     <loc>https://www.micreditohipotecario.com.ar/banco/patagonia</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority> </url
+  ><url>
+    <loc>https://www.micreditohipotecario.com.ar/banco/credicoop</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
