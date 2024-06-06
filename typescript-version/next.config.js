@@ -16,21 +16,6 @@ module.exports = {
       }
     ]
   },
-  async redirects() {
-    return [
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'micreditohipotecario.com.ar'
-          }
-        ],
-        destination: 'https://www.micreditohipotecario.com.ar/:path*',
-        permanent: true
-      }
-    ]
-  },
   i18n: {
     locales: ['es-AR'],
     defaultLocale: 'es-AR'
