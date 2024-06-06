@@ -130,13 +130,32 @@ const DetailPage = () => {
           image={credit['Logo Banco']}
         />
         <CardContent>
+        <Typography
+            variant='h1'
+            style={{
+              width: '100%',
+              textAlign: 'center',
+              fontSize: '1.5em',
+              fontWeight: 'bold'
+            }}
+          >
+            Credito {credit['Nombre']} del {credit['Banco']}
+          </Typography>
+          <Typography
+            variant='h2'
+            style={{
+              width: '100%',
+              textAlign: 'center',
+              fontSize: '1.2em',
+              fontWeight: 'normal',
+              marginTop: '0.5em',
+              marginBottom: '2em'
+            }}
+          >
+            {credit['Tipo']}
+          </Typography>
           <div>
             <Grid container spacing={2} padding={1}>
-              <Grid item xs={6}>
-                <Typography variant='body1'>
-                  <strong>Credito</strong>: {credit['Nombre']}
-                </Typography>
-              </Grid>
               <Grid item xs={6}>
                 <Typography variant='body1'>
                   <strong>Banco</strong>: <Link href={`/banco/${credit['Banco']}`}>{credit['Banco']}</Link>
@@ -155,11 +174,6 @@ const DetailPage = () => {
                   </Typography>
                 </Grid>
               )}
-              <Grid item xs={6}>
-                <Typography variant='body1'>
-                  <strong>Tipo</strong>: {credit['Tipo']}
-                </Typography>
-              </Grid>
               {loan && context?.data.UVA ? (
                 <Grid item xs={6}>
                   <Typography variant='body1'>

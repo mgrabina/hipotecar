@@ -90,10 +90,10 @@ const App = (props: ExtendedAppProps) => {
     <DataProvider>
       <CacheProvider value={emotionCache}>
         <Head>
-          <title>{`Mi Crédito Hipotecario - Tu aliado para surfear la ola de creditos`}</title>
+          <title>{`Mi Crédito Hipotecario`}</title>
           <meta
             name='description'
-            content='Buscá, compará y simulá tu crédito hipotecario ideal en Argentina. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos.'
+            content='Buscá, compará y simulá tu crédito hipotecario ideal en Argentina. Descubrí todos los disponibles, filtra por tus preferencias y encontrá todos los datos necesarios para tomar la desición.'
           />
           <meta
             name='keywords'
@@ -108,7 +108,7 @@ const App = (props: ExtendedAppProps) => {
           <meta property='og:title' content='Mi Crédito Hipotecario' />
           <meta
             property='og:description'
-            content='Buscá, Compará y simulá todos los créditos hipotecarios UVA disponibles en Argentina. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos.'
+            content='Buscá, compará y simulá tu crédito hipotecario ideal en Argentina. Descubrí todos los disponibles, filtra por tus preferencias y encontrá todos los datos necesarios para tomar la desición.'
           />
           <meta property='og:image' content='https://www.micreditohipotecario.com.ar/images/generated/happy.png' />
           <meta property='og:url' content={`https://www.micreditohipotecario.com.ar`} />
@@ -119,7 +119,7 @@ const App = (props: ExtendedAppProps) => {
           <meta property='twitter:title' content='Mi Crédito Hipotecario' />
           <meta
             property='twitter:description'
-            content='Buscá, compará y simulá tu crédito hipotecario ideal en Argentina. Encuentra las mejores tasas, cuotas y requisitos de los principales bancos.'
+            content='Buscá, compará y simulá tu crédito hipotecario ideal en Argentina. Descubrí todos los disponibles, filtra por tus preferencias y encontrá todos los datos necesarios para tomar la desición.'
           />
           <script async type='application/ld+json' dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         </Head>

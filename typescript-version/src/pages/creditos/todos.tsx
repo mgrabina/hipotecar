@@ -199,6 +199,32 @@ const CreditComparisonPage = () => {
       </Head>
       <Card style={{ marginTop: '2em' }}>
         <CardContent>
+          <Typography
+            variant='h1'
+            style={{
+              width: '100%',
+              textAlign: 'center',
+              fontSize: '1.5em',
+              fontWeight: 'bold',
+              marginTop: "0.5em"
+            }}
+          >
+            Todos los créditos hipotecarios UVA disponibles en Argentina.
+          </Typography>
+          <Typography
+            variant='h2'
+            style={{
+              width: '100%',
+              textAlign: 'center',
+              fontSize: '1.2em',
+              fontWeight: 'normal',
+              marginTop: '0.5em',
+              marginBottom: '2em'
+            }}
+          >
+            Compará tasas, condiciones, requisitos y mas. Ordená y filtrá según tus necesidades.
+          </Typography>
+
           <TableContainer>
             <Table stickyHeader={!isSmallScreen} sx={{ minWidth: 1000 }} aria-label='comparison table'>
               <TableHead>
