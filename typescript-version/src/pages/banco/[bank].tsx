@@ -28,6 +28,8 @@ const BankDetailPage = () => {
   const context = useData()
   const bank = getBankBySlug(context?.data?.banks ?? [], router.query.bank?.toString() ?? '')
 
+  console.log('BankDetailPage', bank, context?.data.credits)
+
   const credits = context?.data.credits.filter(
     credit => credit.Banco.toLowerCase().localeCompare(bank?.toLowerCase() ?? '') === 0
   )
@@ -48,7 +50,7 @@ const BankDetailPage = () => {
 
   console.log(context.data.credits, credits, !credits?.length)
 
-  if (!credits?.length) return <Error404 />
+  if (!credits?.length) return <Error404 title='Banco no encontrado.' />
 
   return (
     <>
