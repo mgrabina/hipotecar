@@ -120,11 +120,9 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     const cachedData = localStorage.getItem('data')
     const cachedTimestamp = localStorage.getItem('timestamp')
 
-    console.log('Fetching data')
     if (cachedData && cachedTimestamp && Date.now() - Number(cachedTimestamp) < 60 * 60 * 1000) {
       const cached = JSON.parse(cachedData)
 
-      console.log('Using cached data')
       setData(prevData => ({
         ...prevData,
         credits: cached.credits,
@@ -135,7 +133,6 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         loaded: true
       }))
     } else {
-      console.log('Fetching new data')
       fetchData()
     }
   }, [data.loaded])
