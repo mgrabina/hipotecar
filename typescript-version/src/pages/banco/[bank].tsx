@@ -45,6 +45,9 @@ const BankDetailPage = () => {
         width='100%'
       />
     )
+
+  console.log(context.data.credits, credits, !credits?.length)
+
   if (!credits?.length) return <Error404 />
 
   return (
