@@ -49,7 +49,6 @@ const generateSiteMap = async () => {
       return `<url>
       <loc>https://micreditohipotecario.com.ar/${page}</loc>
       <changefreq>daily</changefreq>
-      <priority>0.7</priority>
     </url>`
     })
     .join('')
@@ -60,7 +59,7 @@ const generateSiteMap = async () => {
       return `<url>
       <loc>https://micreditohipotecario.com.ar/posts/${post.fields.slug}</loc>
       <lastmod>${new Date(post.sys.updatedAt).toISOString()}</lastmod>
-      <changefreq>weekly</changefreq>
+      <changefreq>daily</changefreq>
       <priority>0.8</priority>
     </url>`
     })
@@ -79,7 +78,7 @@ const generateSiteMap = async () => {
 
       return `<url>
       <loc>https://micreditohipotecario.com.ar/creditos/${slug}</loc>
-      <changefreq>weekly</changefreq>
+      <changefreq>daily</changefreq>
       <priority>0.8</priority>
     </url>`
     })
@@ -97,7 +96,7 @@ const generateSiteMap = async () => {
 
       return `<url>
         <loc>https://micreditohipotecario.com.ar/banco/${slug}</loc>
-        <changefreq>weekly</changefreq>
+        <changefreq>daily</changefreq>
         <priority>0.8</priority>
       </url>`
     })
