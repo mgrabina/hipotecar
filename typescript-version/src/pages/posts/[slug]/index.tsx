@@ -71,23 +71,23 @@ const PostPage = () => {
       name: 'Mi Crédito Hipotecario',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://www.micreditohipotecario.com.ar/images/generated/happy.png'
+        url: 'https://micreditohipotecario.com.ar/images/generated/happy.png'
       },
-      sameAs: 'https://www.micreditohipotecario.com.ar'
+      sameAs: 'https://micreditohipotecario.com.ar'
     },
     publisher: {
       '@type': 'Organization',
       name: 'Mi Crédito Hipotecario',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://www.micreditohipotecario.com.ar/images/generated/happy.png'
+        url: 'https://micreditohipotecario.com.ar/images/generated/happy.png'
       }
     },
     datePublished: post.date,
     dateModified: post.date,
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://www.micreditohipotecario.com.ar${router.asPath}`
+      '@id': `https://micreditohipotecario.com.ar${router.asPath}`
     }
   }
 
@@ -111,7 +111,7 @@ const PostPage = () => {
         />
       </Head>
       <Card>
-        <CardMedia sx={{ height: '14.5625rem' }} image={post.coverImage.url} component="img" alt={post.title} />
+        <CardMedia sx={{ height: '14.5625rem' }} image={post.coverImage.url} component='img' alt={post.title} />
         <CardContent>
           <Typography variant='h6' sx={{ marginBottom: 2 }}>
             {post.title}

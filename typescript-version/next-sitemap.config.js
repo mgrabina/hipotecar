@@ -1,10 +1,8 @@
 module.exports = {
-  siteUrl: 'https://www.micreditohipotecario.com.ar',
+  siteUrl: 'https://micreditohipotecario.com.ar',
   generateRobotsTxt: true,
   exclude: ['/server-sitemap.xml'],
   robotsTxtOptions: {
-    additionalSitemaps: [
-      'https://www.micreditohipotecario.com.ar/server-sitemap.xml',
-    ],
-  },
-};
+    additionalSitemaps: ['https://micreditohipotecario.com.ar/server-sitemap.xml']
+  }
+}

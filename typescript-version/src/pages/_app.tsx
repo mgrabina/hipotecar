@@ -83,7 +83,7 @@ const App = (props: ExtendedAppProps) => {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Mi Crédito Hipotecario',
-    url: 'https://www.micreditohipotecario.com.ar'
+    url: 'https://micreditohipotecario.com.ar'
   }
 
   return (
@@ -104,17 +104,17 @@ const App = (props: ExtendedAppProps) => {
           <link rel='icon' href='/images/favicon.ico' type='image/x-icon' />
           <link rel='shortcut icon' href='/images/favicon.ico' type='image/x-icon' />
           {/* Canonical */}
-          <link rel='canonical' href={`https://www.micreditohipotecario.com.ar${router.asPath}`} />
+          <link rel='canonical' href={`https://micreditohipotecario.com.ar${router.asPath}`} />
           <meta property='og:title' content='Mi Crédito Hipotecario' />
           <meta
             property='og:description'
             content='Buscá, compará y simulá tu crédito hipotecario ideal en Argentina. Descubrí todos los disponibles, filtra por tus preferencias y encontrá todos los datos necesarios para tomar la desición.'
           />
-          <meta property='og:image' content='https://www.micreditohipotecario.com.ar/images/generated/happy.png' />
-          <meta property='og:url' content={`https://www.micreditohipotecario.com.ar`} />
+          <meta property='og:image' content='https://micreditohipotecario.com.ar/images/generated/happy.png' />
+          <meta property='og:url' content={`https://micreditohipotecario.com.ar`} />
           <meta property='og:type' content='website' />
           <meta property='og:site_name' content='Mi Crédito Hipotecario' />
-          <meta property='twitter:image' content='https://www.micreditohipotecario.com.ar/images/generated/happy.png' />
+          <meta property='twitter:image' content='https://micreditohipotecario.com.ar/images/generated/happy.png' />
           <meta property='twitter:card' content='summary_large_image' />
           <meta property='twitter:title' content='Mi Crédito Hipotecario' />
           <meta

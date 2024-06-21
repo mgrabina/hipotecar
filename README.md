@@ -7,7 +7,7 @@
 
 Mi Credito Hipotecario es una aplicación web que permite a los usuarios simular un crédito hipotecario, con el fin de obtener una idea de cuánto tendrían que pagar mensualmente por un crédito hipotecario.
 
-www.micreditohipotecario.com.ar
+micreditohipotecario.com.ar
 
 Telegram: www.t.me/micreditohipotecario
 
