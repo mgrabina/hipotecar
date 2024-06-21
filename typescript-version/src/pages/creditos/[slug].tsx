@@ -413,6 +413,82 @@ const DetailPage = () => {
                 </Typography>
               </AccordionDetails>
             </Accordion>
+
+            <Accordion>
+              <AccordionSummary expandIcon={<ArrowDown />}>
+                <Typography variant='body1'>
+                  <strong>Gastos Operativos</strong>
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography variant='body2'>
+                  <strong>Honorarios de la inmobiliaria:</strong> mientras no sea una compra directa, es decir sin un
+                  intermediario que facilite el proceso, el comprador deberá pagar un porcentaje por el servicio
+                  ofrecido tanto al corredor que buscó la vivienda y que está en contacto con la inmobiliaria que la
+                  gestiona y con el vendedor. En la Ciudad Autónoma de Buenos Aires usualmente este porcentaje es del
+                  4%.
+                  <br />
+                  <strong>Gastos post-escriturarios: </strong> le corresponde a quien adquiere la propiedad hacerse
+                  cargo de este gasto y es de aproximadamente el 1% del precio del inmueble.
+                  <br />
+                  <strong>Honorarios del escribano: </strong> estos gastos los paga el comprador ya que es quien designa
+                  al escribano y suelen ser de aproximadamente el entre el 1% y 2% del precio de la vivienda.
+                  <br />
+                  <strong>Tasacion/Hipoteca</strong> Estos gastos operativos suelen ser cubiertos por el banco, pero en
+                  algunos casos el banco puede solicitar que el solicitante cubra estos gastos.
+                </Typography>
+
+                <Typography
+                  style={{
+                    marginTop: '1em',
+                    border: '1px solid #f0f0f0',
+                    padding: '1em',
+                    textDecoration: 'italic'
+                  }}
+                  variant='body2'
+                >
+                  En promedio, los gastos operativos llegan al 10% del valor de la propiedad.
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion>
+              <AccordionSummary expandIcon={<ArrowDown />}>
+                <Typography variant='body1'>
+                  <strong>Deducción de Impuesto a las Ganancias</strong>
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography variant='body2'>
+                  Es importante tener en cuenta que los intereses pagados por un crédito hipotecario pueden ser
+                  deducidos de impuesto a las ganancias. Esto significa que el monto de los intereses pagados se
+                  descuentan del monto total de impuesto a las ganancias a pagar. Es importante que consultes con un
+                  contador para entender cómo aplicar esta deducción en tu caso. El tope propuesto por la ley bases es
+                  de aproximadamente 3 millones de pesos anuales, actualizado por inflación.
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion>
+              <AccordionSummary expandIcon={<ArrowDown />}>
+                <Typography variant='body1'>
+                  <strong>Como es el proceso?</strong>
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <List>
+                  <ListItem>
+                    1. Entrega de documentacion y solicitud de credito en el banco. Apertura de "carpeta".
+                  </ListItem>
+                  <ListItem>2. Tasacion y determinacion del credito de parte del banco.</ListItem>
+                  <ListItem>3. Contratacion seguro contra incendios/seguro de vida.</ListItem>
+                  <ListItem>4. Firma oficial de hipoteca con el banco.</ListItem>
+                  <ListItem>5. Eleccion de escribania y proforma.</ListItem>
+                  <ListItem>6. Escritura final.</ListItem>
+                </List>
+              </AccordionDetails>
+            </Accordion>
+
             <Accordion>
               <AccordionSummary expandIcon={<ArrowDown />}>
                 <Typography variant='body1'>
